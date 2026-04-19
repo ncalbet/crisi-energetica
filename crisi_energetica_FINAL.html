@@ -1,0 +1,2804 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Crisi Energètica — Consell Assessor Jove UE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #07091a;
+      --bg2:       #0c1022;
+      --bg3:       #111827;
+      --border:    rgba(255,255,255,0.06);
+      --border-acc:rgba(245,166,35,0.3);
+      --text:      #dde1ec;
+      --text-dim:  #6b7590;
+      --acc:       #F5A623;
+      --acc-glow:  rgba(245,166,35,0.15);
+      --red:       #e63946;
+      --green:     #52b788;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Scanlines texture */
+    body::after {
+      content:'';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 2px,
+        rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px
+      );
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ══════════════════════════════════════
+       HEADER — MARCADOR
+    ══════════════════════════════════════ */
+    #header {
+      position: fixed;
+      top:0; left:0; right:0;
+      z-index: 100;
+      height: 58px;
+      background: rgba(7,9,26,0.96);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      padding: 0 2rem;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    #header.vis { display: flex; }
+
+    .h-brand {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--acc);
+      white-space: nowrap;
+    }
+    .h-brand em { color: var(--text-dim); font-style:normal; font-weight:500; }
+
+    /* Marcador */
+    .marcador {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex:1;
+      justify-content: center;
+    }
+    .marc-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    .marc-bar { display:flex; gap:3px; }
+    .marc-seg {
+      width:26px; height:9px;
+      border-radius:2px;
+      background: rgba(255,255,255,0.05);
+      transition: background 0.6s, box-shadow 0.6s;
+    }
+    .marc-seg.on-0 { background:#9b0000; box-shadow:0 0 7px #9b0000; }
+    .marc-seg.on-1 { background:#e63946; box-shadow:0 0 7px #e63946; }
+    .marc-seg.on-2 { background:#f77f00; box-shadow:0 0 7px #f77f00; }
+    .marc-seg.on-3 { background:#fcbf49; box-shadow:0 0 7px #fcbf49; }
+    .marc-seg.on-4 { background:#90be6d; box-shadow:0 0 7px #90be6d; }
+    .marc-seg.on-5 { background:#52b788; box-shadow:0 0 7px #52b788; }
+    .marc-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .h-user {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      white-space: nowrap;
+    }
+    .h-grup {
+      background: var(--acc-glow);
+      border: 1px solid var(--border-acc);
+      color: var(--acc);
+      padding: 2px 8px;
+      border-radius: 2px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+    }
+
+    /* ══════════════════════════════════════
+       SCREENS
+    ══════════════════════════════════════ */
+    .screen { display:none; min-height:100vh; flex-direction:column; }
+    .screen.on  { display:flex; }
+
+    /* LOGIN */
+    #scr-login {
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .login-bg {
+      position:absolute; inset:0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% -5%, rgba(245,166,35,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 35% at 85% 90%, rgba(230,57,70,0.04) 0%, transparent 50%);
+      pointer-events:none;
+    }
+    .login-grid {
+      position:absolute; inset:0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events:none;
+    }
+    .login-wrap {
+      position:relative; z-index:1;
+      width:100%; max-width:430px;
+      padding: 2rem;
+    }
+    .login-logo {
+      text-align:center;
+      margin-bottom: 2.5rem;
+    }
+    .login-logo-icon {
+      font-size: 2.75rem;
+      display:block;
+      margin-bottom: 0.6rem;
+      filter: drop-shadow(0 0 22px rgba(245,166,35,0.55));
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100%{ transform:translateY(0); }
+      50%    { transform:translateY(-4px); }
+    }
+    .login-logo-title {
+      font-family:'Rajdhani', sans-serif;
+      font-size:1.6rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase;
+    }
+    .login-logo-sub {
+      font-size:0.72rem; color:var(--text-dim);
+      letter-spacing:0.14em; text-transform:uppercase;
+      margin-top:0.3rem;
+    }
+    .login-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--acc);
+      border-radius: 3px;
+      padding: 1.75rem 2rem;
+    }
+    .login-alert {
+      background: rgba(230,57,70,0.07);
+      border: 1px solid rgba(230,57,70,0.18);
+      border-left: 3px solid var(--red);
+      border-radius: 2px;
+      padding: 0.7rem 1rem;
+      margin-bottom: 1.4rem;
+      font-size: 0.8rem;
+      color: #f0a8ac;
+      line-height: 1.55;
+    }
+    .login-alert strong {
+      display:block; margin-bottom:0.2rem;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.68rem; letter-spacing:0.12em;
+      text-transform:uppercase; color:var(--red);
+    }
+    .fgroup { margin-bottom:1.1rem; }
+    .flabel {
+      display:block;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.7rem; font-weight:700;
+      letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:0.45rem;
+    }
+    .finput {
+      width:100%;
+      background:var(--bg3);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:0.7rem 0.9rem;
+      color:var(--text);
+      font-family:'IBM Plex Sans',sans-serif;
+      font-size:0.92rem;
+      outline:none;
+      transition:border-color 0.2s, box-shadow 0.2s;
+    }
+    .finput:focus {
+      border-color:var(--acc);
+      box-shadow:0 0 0 3px var(--acc-glow);
+    }
+    .finput::placeholder { color:var(--text-dim); opacity:0.45; }
+    textarea.finput { min-height:90px; resize:vertical; line-height:1.6; font-size:0.88rem; }
+
+    .btn-main {
+      width:100%;
+      background:var(--acc); color:#07091a;
+      border:none; border-radius:2px;
+      padding:0.8rem 1.5rem;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.95rem; font-weight:700;
+      letter-spacing:0.12em; text-transform:uppercase;
+      cursor:pointer;
+      transition:background 0.2s, box-shadow 0.2s, transform 0.15s;
+      margin-top:0.4rem;
+    }
+    .btn-main:hover:not(:disabled) {
+      background:#ffc147;
+      box-shadow:0 4px 22px rgba(245,166,35,0.35);
+      transform:translateY(-1px);
+    }
+    .btn-main:active:not(:disabled) { transform:translateY(0); }
+    .btn-main:disabled { opacity:0.45; cursor:not-allowed; }
+
+    .login-err {
+      background:rgba(230,57,70,0.1);
+      border:1px solid rgba(230,57,70,0.28);
+      color:#f0a8ac;
+      border-radius:2px;
+      padding:0.7rem 1rem;
+      font-size:0.83rem;
+      margin-top:0.9rem;
+      display:none;
+    }
+    .btn-demo {
+      background: transparent;
+      border: 1px dashed rgba(245,166,35,0.35);
+      color: var(--acc);
+      border-radius: 2px;
+      padding: 6px 16px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+      opacity: 0.75;
+    }
+    .btn-demo:hover { background: var(--acc-glow); opacity:1; }
+    .login-foot {
+      text-align:center; margin-top:1.5rem;
+      font-size:0.72rem; color:var(--text-dim);
+    }
+
+    /* ══════════════════════════════════════
+       LAYOUT GENÈRIC DE PANTALLA
+    ══════════════════════════════════════ */
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 80px 2rem 4rem;
+      animation: fadeUp 0.4s ease both;
+    }
+    .page.wide { max-width:820px; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(12px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ══════════════════════════════════════
+       COMPONENTS COMUNS
+    ══════════════════════════════════════ */
+    .badge {
+      display:inline-flex; align-items:center; gap:0.45rem;
+      padding:3px 11px; border-radius:2px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.7rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      margin-bottom:1.25rem;
+    }
+    .badge-red {
+      background:rgba(230,57,70,0.1);
+      border:1px solid rgba(230,57,70,0.25);
+      color:#f0a8ac;
+    }
+    .badge-red::before {
+      content:''; width:6px; height:6px;
+      border-radius:50%; background:var(--red);
+      animation:blink 1.6s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%,100%{ opacity:1; } 50%{ opacity:0.3; }
+    }
+
+    .page-h1 {
+      font-family:'Rajdhani',sans-serif;
+      font-size:2.4rem; font-weight:700;
+      line-height:1.1; margin-bottom:0.5rem;
+    }
+    .page-h1 .hi { color:var(--acc); }
+    .page-h2 {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.45rem; font-weight:700;
+      margin-bottom:1.25rem;
+    }
+    .page-lead {
+      color:var(--text-dim); font-size:0.95rem;
+      line-height:1.7; margin-bottom:2rem;
+    }
+
+    .card {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:1.4rem;
+      margin-bottom:1.25rem;
+    }
+    .card-label {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.68rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:0.85rem;
+    }
+    .card p { font-size:0.93rem; line-height:1.7; }
+    .card p + p { margin-top:0.65rem; }
+    .card em { font-style:italic; color:var(--acc); }
+
+    .chips {
+      display:flex; gap:0.85rem;
+      margin-bottom:1.75rem;
+      flex-wrap:wrap;
+    }
+    .chip {
+      background:var(--bg3);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:0.9rem 1.25rem;
+      flex:1; min-width:100px;
+      text-align:center;
+    }
+    .chip-label {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.65rem; letter-spacing:0.12em;
+      text-transform:uppercase; color:var(--text-dim);
+      margin-bottom:0.4rem;
+    }
+    .chip-val {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.7rem; font-weight:700;
+      color:var(--acc);
+    }
+
+    .btn-cont {
+      background:var(--acc); color:#07091a;
+      border:none; border-radius:2px;
+      padding:0.8rem 2.2rem;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.95rem; font-weight:700;
+      letter-spacing:0.12em; text-transform:uppercase;
+      cursor:pointer;
+      transition:background 0.2s, box-shadow 0.2s, transform 0.15s;
+    }
+    .btn-cont:hover:not(:disabled) {
+      background:#ffc147;
+      box-shadow:0 4px 22px rgba(245,166,35,0.35);
+      transform:translateY(-1px);
+    }
+    .btn-cont:disabled { opacity:0.35; cursor:not-allowed; }
+
+    .btn-ghost {
+      background:transparent;
+      border:1px solid var(--acc); color:var(--acc);
+      border-radius:2px;
+      padding:0.75rem 1.4rem;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.88rem; font-weight:700;
+      letter-spacing:0.1em; text-transform:uppercase;
+      cursor:pointer;
+      transition:background 0.2s;
+    }
+    .btn-ghost:hover:not(:disabled) { background:var(--acc-glow); }
+    .btn-ghost:disabled { opacity:0.35; cursor:not-allowed; }
+
+    /* ══════════════════════════════════════
+       PROGRESS STEPS
+    ══════════════════════════════════════ */
+    .steps {
+      display:flex; align-items:center;
+      gap:0.4rem; margin-bottom:1.75rem;
+    }
+    .step-bar {
+      flex:1; height:4px;
+      background:var(--border); border-radius:2px;
+      transition:background 0.4s;
+    }
+    .step-bar.done    { background:var(--acc); }
+    .step-bar.current { background:var(--acc); animation:step-pulse 2s ease-in-out infinite; }
+    @keyframes step-pulse { 0%,100%{opacity:1} 50%{opacity:0.55} }
+    .step-dot {
+      width:7px; height:7px; border-radius:50%;
+      background:var(--border); flex-shrink:0;
+      transition:background 0.4s;
+    }
+    .step-dot.done    { background:var(--acc); }
+    .step-dot.current { background:var(--acc); box-shadow:0 0 0 3px var(--acc-glow); }
+
+    /* Breadcrumb */
+    .bc {
+      display:flex; align-items:center; gap:0.4rem;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.7rem; letter-spacing:0.1em;
+      text-transform:uppercase; color:var(--text-dim);
+      margin-bottom:1.25rem;
+    }
+    .bc .cur { color:var(--acc); }
+
+    /* ══════════════════════════════════════
+       S1 — ELEMENTS ESPECÍFICS
+    ══════════════════════════════════════ */
+    .news-flash {
+      background:rgba(230,57,70,0.055);
+      border:1px solid rgba(230,57,70,0.15);
+      border-left:4px solid var(--red);
+      border-radius:2px;
+      padding:1.1rem 1.4rem;
+      margin-bottom:1.75rem;
+    }
+    .news-tag {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.62rem; font-weight:700;
+      letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--red); margin-bottom:0.45rem;
+    }
+    .news-head {
+      font-size:1.05rem; font-weight:500;
+      line-height:1.45; color:var(--text);
+    }
+
+    .stats {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:0.85rem; margin-bottom:1.75rem;
+    }
+    .stat {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:1rem; text-align:center;
+    }
+    .stat-val {
+      font-family:'Rajdhani',sans-serif;
+      font-size:1.7rem; font-weight:700;
+      color:var(--red); margin-bottom:0.2rem;
+    }
+    .stat-val.amb { color:var(--acc); }
+    .stat-lbl { font-size:0.72rem; color:var(--text-dim); line-height:1.4; }
+
+    /* SVG Map */
+    .map-wrap {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:1.25rem;
+      margin-bottom:1.75rem;
+    }
+    .map-title {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.7rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:0.9rem;
+    }
+    .world-map { width:100%; height:auto; display:block; }
+    .map-legend {
+      display:flex; gap:1.25rem;
+      margin-top:0.85rem; flex-wrap:wrap;
+    }
+    .leg {
+      display:flex; align-items:center; gap:0.45rem;
+      font-size:0.77rem; color:var(--text-dim);
+    }
+    .leg-dot { width:7px; height:7px; border-radius:50%; }
+
+    /* Briefing box */
+    .briefing {
+      background:rgba(245,166,35,0.035);
+      border:1px solid rgba(245,166,35,0.14);
+      border-left:4px solid var(--acc);
+      border-radius:2px;
+      padding:1.1rem 1.4rem;
+      margin-bottom:1.75rem;
+    }
+    .briefing-tag {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.62rem; font-weight:700;
+      letter-spacing:0.2em; text-transform:uppercase;
+      color:var(--acc); margin-bottom:0.45rem;
+    }
+    .briefing p { font-size:0.92rem; line-height:1.7; font-style:italic; }
+
+    /* Individual questions */
+    .qblock {
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:2px;
+      padding:1.3rem 1.4rem;
+      margin-bottom:1.25rem;
+    }
+    .qnum {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.65rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--text-dim); margin-bottom:0.4rem;
+    }
+    .qtxt { font-size:0.97rem; line-height:1.6; margin-bottom:0.85rem; }
+
+    .bonus-wrap {
+      background:rgba(245,166,35,0.025);
+      border:1px dashed rgba(245,166,35,0.18);
+      border-radius:2px;
+      padding:1.2rem 1.4rem;
+      margin-bottom:1.5rem;
+      display:none;
+    }
+    .bonus-wrap.vis { display:block; animation:fadeUp 0.3s ease both; }
+    .bonus-tag {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.65rem; font-weight:700;
+      letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--acc); margin-bottom:0.4rem;
+    }
+
+    .row-actions {
+      display:flex; align-items:center;
+      gap:0.85rem; flex-wrap:wrap;
+      margin-top:0.5rem;
+    }
+    .saved-ok {
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.78rem; letter-spacing:0.08em;
+      color:var(--green); display:none;
+    }
+    .saved-ok.vis { display:inline; }
+
+    /* Source cards S2 */
+    .source-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 1.1rem 1.3rem;
+      transition: border-color 0.2s;
+    }
+    .source-card:hover { border-color: rgba(255,255,255,0.12); }
+    .src-meta {
+      display: flex; align-items: center; gap: 0.6rem;
+      margin-bottom: 0.55rem; flex-wrap: wrap;
+    }
+    .src-tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 2px;
+    }
+    .tag-corp { background: rgba(245,166,35,0.12); color: var(--acc); border: 1px solid rgba(245,166,35,0.2); }
+    .tag-ong  { background: rgba(82,183,136,0.1);  color: #52b788;    border: 1px solid rgba(82,183,136,0.2); }
+    .tag-dipl { background: rgba(230,57,70,0.09);  color: #f0a8ac;    border: 1px solid rgba(230,57,70,0.18); }
+    .tag-sci  { background: rgba(100,149,237,0.1); color: #8ab4f8;    border: 1px solid rgba(100,149,237,0.2); }
+    .src-name { font-size: 0.75rem; color: var(--text-dim); font-style: italic; }
+    .src-head {
+      font-size: 0.97rem; font-weight: 500;
+      line-height: 1.45; margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+    .src-body {
+      font-size: 0.84rem; line-height: 1.7;
+      color: var(--text-dim);
+      border-top: 1px solid var(--border);
+      padding-top: 0.6rem;
+    }
+
+    /* Rol card */
+    .rol-icon { font-size: 2.2rem; margin-bottom: 0.5rem; }
+    .rol-sobre {
+      display: inline-block;
+      background: var(--acc-glow);
+      border: 1px solid var(--border-acc);
+      color: var(--acc);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700; font-size: 1rem;
+      letter-spacing: 0.1em;
+      padding: 4px 14px; border-radius: 2px;
+      margin-top: 0.6rem;
+    }
+
+    /* placeholder center */
+    .placeholder-ctr {
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:4rem 2rem;
+      gap:1rem;
+    }
+    .placeholder-ctr .icon { font-size:3rem; }
+    .placeholder-ctr p { color:var(--text-dim); max-width:480px; line-height:1.7; font-size:0.92rem; }
+
+    /* Badges missions */
+    .badge-ora { background:rgba(247,127,0,0.1); border:1px solid rgba(247,127,0,0.25); color:#f77f00; }
+    .badge-gro { background:rgba(252,191,73,0.1); border:1px solid rgba(252,191,73,0.22); color:#fcbf49; }
+    .badge-ver { background:rgba(82,183,136,0.1); border:1px solid rgba(82,183,136,0.25); color:#52b788; }
+
+    /* Actor cards S3 */
+    .actor-card {
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.85rem 0.9rem;
+    }
+    .actor-icon { font-size:1.5rem; display:block; margin-bottom:0.35rem; }
+    .actor-nom  { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.85rem;
+                  letter-spacing:0.05em; color:var(--acc); margin-bottom:0.3rem; }
+    .actor-desc { font-size:0.8rem; line-height:1.6; color:var(--text-dim); }
+
+    /* Pistes box */
+    .pistes-box {
+      background:rgba(245,166,35,0.03);
+      border:1px dashed rgba(245,166,35,0.18);
+      border-radius:2px; padding:1.1rem 1.3rem;
+      margin-bottom:1.75rem;
+    }
+    .pistes-tag {
+      font-family:'Rajdhani',sans-serif; font-size:0.68rem;
+      font-weight:700; letter-spacing:0.14em; text-transform:uppercase;
+      color:var(--acc); margin-bottom:0.65rem;
+    }
+    .pistes-list { list-style:none; display:grid; gap:0.5rem; }
+    .pistes-list li {
+      font-size:0.86rem; line-height:1.6; color:var(--text-dim);
+      padding-left:1.1rem; position:relative;
+    }
+    .pistes-list li::before {
+      content:'›'; position:absolute; left:0; color:var(--acc); font-weight:700;
+    }
+
+    /* Opcions energètiques S4 */
+    .opcio-card {
+      background:var(--bg2); border:1px solid var(--border);
+      border-radius:2px; overflow:hidden;
+    }
+    .opcio-head {
+      display:flex; align-items:center; gap:0.9rem;
+      padding:0.9rem 1.1rem; border-bottom:1px solid var(--border);
+    }
+    .opcio-letra {
+      font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1.6rem;
+      width:40px; height:40px; display:flex; align-items:center; justify-content:center;
+      border-radius:2px; flex-shrink:0;
+    }
+    .opcio-a .opcio-letra { background:rgba(247,127,0,0.12); color:#f77f00; }
+    .opcio-b .opcio-letra { background:rgba(82,183,136,0.12); color:#52b788; }
+    .opcio-c .opcio-letra { background:rgba(100,149,237,0.12); color:#8ab4f8; }
+    .opcio-titol { font-size:0.97rem; font-weight:500; margin-bottom:0.15rem; }
+    .opcio-sub   { font-size:0.78rem; color:var(--text-dim); }
+    .opcio-cos   { padding:0.9rem 1.1rem; }
+    .opcio-trio  { display:grid; gap:0.6rem; }
+    .opcio-trio > div { font-size:0.84rem; line-height:1.6; color:var(--text-dim); }
+    .trio-lab {
+      font-family:'Rajdhani',sans-serif; font-size:0.65rem; font-weight:700;
+      letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.2rem;
+      color:var(--text);
+    }
+
+    /* React cards M3 */
+    .react-card {
+      background:var(--bg2); border:1px solid var(--border);
+      border-left-width:4px; border-radius:2px; padding:1rem 1.2rem;
+    }
+    .react-rus  { border-left-color:#8ab4f8; }
+    .react-golf { border-left-color:var(--acc); }
+    .react-xi   { border-left-color:#e63946; }
+    .react-qui  { font-family:'Rajdhani',sans-serif; font-weight:700;
+                  font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase;
+                  margin-bottom:0.45rem; color:var(--text); }
+    .react-txt  { font-size:0.87rem; line-height:1.68; color:var(--text-dim); font-style:italic; }
+
+    /* Rol S4 */
+    .rol-icon { font-size:2.2rem; margin-bottom:0.5rem; }
+    .rol-sobre {
+      display:inline-block; background:var(--acc-glow);
+      border:1px solid var(--border-acc); color:var(--acc);
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:1rem; letter-spacing:0.1em;
+      padding:4px 14px; border-radius:2px; margin-top:0.6rem;
+    }
+
+    /* Resum M4 */
+    .resum-pas {
+      display:flex; gap:0.85rem; align-items:flex-start;
+      background:var(--bg2); border:1px solid var(--border);
+      border-radius:2px; padding:0.85rem 1rem;
+    }
+    .resum-ara { border-color:rgba(82,183,136,0.2); background:rgba(82,183,136,0.03); }
+    .resum-num {
+      font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem;
+      letter-spacing:0.1em; background:var(--bg3); border:1px solid var(--border);
+      padding:3px 8px; border-radius:2px; flex-shrink:0; color:var(--text-dim);
+      align-self:flex-start; margin-top:0.1rem;
+    }
+    .resum-txt { font-size:0.9rem; line-height:1.65; }
+
+    /* Elements proposta M4 */
+    .elem-card {
+      display:flex; gap:0.85rem; align-items:flex-start;
+      background:var(--bg2); border:1px solid var(--border);
+      border-radius:2px; padding:0.75rem 1rem; font-size:0.9rem; line-height:1.6;
+    }
+    .elem-n {
+      font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.85rem;
+      background:var(--bg3); border:1px solid var(--border);
+      width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+      border-radius:50%; flex-shrink:0; color:var(--text-dim);
+    }
+
+    /* Demo ribbon */
+    .demo-ribbon {
+      position:fixed; bottom:1rem; right:1rem;
+      background:rgba(245,166,35,0.09);
+      border:1px solid rgba(245,166,35,0.28);
+      color:var(--acc);
+      padding:5px 11px;
+      border-radius:3px;
+      font-family:'Rajdhani',sans-serif;
+      font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+      z-index:200;
+    }
+
+    /* Loading dots */
+    .dots { display:inline-flex; gap:3px; vertical-align:middle; }
+    .dots span {
+      width:4px; height:4px; border-radius:50%;
+      background:var(--bg);
+      animation:db 0.8s ease-in-out infinite;
+    }
+    .dots span:nth-child(2){ animation-delay:0.15s; }
+    .dots span:nth-child(3){ animation-delay:0.3s; }
+    @keyframes db {
+      0%,80%,100%{ transform:scale(0.7); opacity:0.4; }
+      40%        { transform:scale(1.2); opacity:1; }
+    }
+
+    /* Placeholder final */
+    .placeholder-ctr {
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center; padding:4rem 2rem;
+      gap:1rem;
+    }
+    .placeholder-ctr .icon { font-size:3rem; }
+    .placeholder-ctr p { color:var(--text-dim); max-width:480px; line-height:1.7; font-size:0.92rem; }
+  </style>
+</head>
+<body>
+
+<!-- DEMO RIBBON -->
+<div class="demo-ribbon">Mode demo · Fase 1</div>
+
+<!-- ══════════════════════════════════════
+     HEADER / MARCADOR (fix top)
+══════════════════════════════════════ -->
+<header id="header">
+  <div class="h-brand">⚡ <em>Consell Assessor Jove</em> — UE</div>
+
+  <div class="marcador">
+    <span class="marc-label">Alerta energètica</span>
+    <div class="marc-bar" id="marc-bar">
+      <div class="marc-seg" id="s0"></div>
+      <div class="marc-seg" id="s1"></div>
+      <div class="marc-seg" id="s2"></div>
+      <div class="marc-seg" id="s3"></div>
+      <div class="marc-seg" id="s4"></div>
+      <div class="marc-seg" id="s5"></div>
+    </div>
+    <span class="marc-text" id="marc-text"></span>
+  </div>
+
+  <div class="h-user">
+    <span id="h-nom">—</span>
+    <span class="h-grup" id="h-grup">—</span>
+  </div>
+</header>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 0 — IDENTIFICACIÓ
+══════════════════════════════════════ -->
+<div class="screen on" id="scr-login">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+  <div class="login-wrap">
+    <div class="login-logo">
+      <span class="login-logo-icon">⚡</span>
+      <div class="login-logo-title">Crisi Energètica</div>
+      <div class="login-logo-sub">Consell Assessor Jove · Unió Europea</div>
+    </div>
+    <div class="login-card">
+      <div class="login-alert">
+        <strong>⚠ Protocol d'emergència activat</strong>
+        El Consell Assessor Jove ha estat convocat d'urgència. Identifica't per accedir a la plataforma segura.
+      </div>
+      <div class="fgroup">
+        <label class="flabel" for="inp-nom">Nom complet</label>
+        <input class="finput" id="inp-nom" type="text" placeholder="Maria Garcia" autocomplete="name">
+      </div>
+      <div class="fgroup">
+        <label class="flabel" for="inp-email">Correu electrònic</label>
+        <input class="finput" id="inp-email" type="email" placeholder="alumne@escola.cat" autocomplete="email">
+      </div>
+      <button class="btn-main" id="btn-login" onclick="doLogin()">
+        Accedir al Consell
+      </button>
+      <div class="login-err" id="login-err">
+        No hem trobat aquest correu al registre del Consell. Comprova que l'has escrit bé o parla amb el teu docent.
+      </div>
+      <div style="margin-top:1rem; text-align:center;">
+        <button class="btn-demo" onclick="doDemo()">▶ Entrar en mode demo</button>
+      </div>
+    </div>
+    <div class="login-foot">Institut de Matadepera · Curs 2025-26</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN 1 — BENVINGUDA I ROL
+══════════════════════════════════════ -->
+<div class="screen" id="scr-benv">
+  <div class="page">
+    <div class="badge badge-red">🔴 Missió 1 — L'Emergència</div>
+    <h1 class="page-h1">Benvingut/da al <span class="hi">Consell Assessor Jove</span> de la UE</h1>
+    <p class="page-lead">Ets membre d'un organisme independent creat per donar una veu jove, crítica i sense interessos polítics als debats de la Unió Europea.</p>
+
+    <div class="chips">
+      <div class="chip">
+        <div class="chip-label">El teu grup</div>
+        <div class="chip-val" id="benv-grup">—</div>
+      </div>
+      <div class="chip">
+        <div class="chip-label">Membres al grup</div>
+        <div class="chip-val">4</div>
+      </div>
+      <div class="chip">
+        <div class="chip-label">Sessions totals</div>
+        <div class="chip-val">7</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">El vostre encàrrec</div>
+      <p>Aquesta matinada s'ha activat el protocol d'emergència energètica de la UE. La crisi ha esclatat: tensió a l'estret d'Ormuz, el gas rus bloquejat, i la Xina avisant que pot tallar el subministrament de minerals estratègics.</p>
+      <p>El Consell Assessor Jove ha estat convocat perquè <em>sou els únics que podeu fer una anàlisi independent, sense interessos polítics ni econòmics.</em> Les vostres decisions tindran impacte real. Teniu 7 sessions.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Com funciona la plataforma</div>
+      <p>Cada sessió avança pas a pas: obertura, reflexió individual, treball de grup i tancament. No pots saltar passos ni tornar enrere. El botó «Continuar» s'activa quan has completat l'acció requerida.</p>
+      <p>A la barra superior veuràs sempre el <em>marcador d'alerta energètica</em>: l'indicador de l'estat de la crisi. Comença en vermell. Depèn de vosaltres que millori.</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s1-ob')">Iniciar Missió 1 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN S1 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s1-ob">
+  <div class="page wide">
+
+    <div class="bc">
+      <span>Missió 1</span><span>›</span>
+      <span>Sessió 1: El món s'apaga</span><span>›</span>
+      <span class="cur">Obertura</span>
+    </div>
+
+    <!-- Progress steps: Obertura · Individual · Grup · Tancament -->
+    <div class="steps">
+      <div class="step-dot current"></div>
+      <div class="step-bar current"></div>
+      <div class="step-dot"></div>
+      <div class="step-bar"></div>
+      <div class="step-dot"></div>
+      <div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="news-flash">
+      <div class="news-tag">⚡ Urgència — Aquesta matinada</div>
+      <div class="news-head">Tensió a l'estret d'Ormuz: els mercats energètics europeus s'han desplomat. La UE ha activat el protocol d'emergència energètica.</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val">+43%</div>
+        <div class="stat-lbl">Preu de la llum avui</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">23%</div>
+        <div class="stat-lbl">Reserves de gas europees</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val amb">−1°C</div>
+        <div class="stat-lbl">Temperatura prevista a Catalunya aquesta setmana</div>
+      </div>
+    </div>
+
+    <!-- WORLD MAP (D3 + Natural Earth) -->
+    <div class="map-wrap">
+      <div class="map-title">🌍 Punts de conflicte actius</div>
+      <div id="map-d3" style="width:100%; background:#0c1525; border-radius:2px; overflow:hidden; position:relative;">
+        <div id="map-loading" style="height:320px; display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-family:'Rajdhani',sans-serif; font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase;">
+          Carregant mapa…
+        </div>
+      </div>
+      <div class="map-legend">
+        <div class="leg"><div class="leg-dot" style="background:var(--red)"></div>Punt de conflicte actiu</div>
+        <div class="leg"><div class="leg-dot" style="background:var(--acc)"></div>Unió Europea</div>
+      </div>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">📋 Encàrrec del Consell</div>
+      <p>«El Consell Assessor Jove de la UE ha estat convocat d'urgència. Sou els únics que podeu elaborar una proposta independent, sense interessos polítics ni econòmics. Les vostres decisions tindran impacte real. Teniu 7 sessions.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s1-ind')">Continuar → Reflexió individual</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     SCREEN S1 — INDIVIDUAL
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s1-ind">
+  <div class="page">
+
+    <div class="bc">
+      <span>Missió 1</span><span>›</span>
+      <span>Sessió 1</span><span>›</span>
+      <span class="cur">Reflexió individual</span>
+    </div>
+
+    <div class="steps">
+      <div class="step-dot done"></div>
+      <div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+      <div class="step-bar"></div>
+      <div class="step-dot"></div>
+      <div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Diagnosi inicial — La teva visió</h2>
+    <p class="page-lead" style="margin-bottom:1.5rem;">Respon individualment. Les teves respostes es guardaran i les podràs comparar amb el que penses al final del projecte.</p>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 2</div>
+      <div class="qtxt">Quan sents «crisi energètica», de què creus que parla?</div>
+      <textarea class="finput" id="r1" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 2</div>
+      <div class="qtxt">Creus que t'afecta? Com?</div>
+      <textarea class="finput" id="r2" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
+    </div>
+
+    <!-- Bonus — apareix després de guardar -->
+    <div class="bonus-wrap" id="bonus-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Qui creus que té la culpa? (intuïció, no cal justificar)</div>
+      <textarea class="finput" id="r-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-save" onclick="saveInd()" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-cont-ind" onclick="go('scr-s1-grup')" disabled style="display:none;">
+        Continuar → Tasca de grup
+      </button>
+      <span class="saved-ok" id="saved-ok">✓ Respostes guardades</span>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S1 — GRUP
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s1-grup">
+  <div class="page wide">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 1</span><span>›</span><span class="cur">Tasca de grup</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Anàlisi de grup — El mapa de la crisi</h2>
+    <p class="page-lead">Observeu el mapa junts. Teniu informació sobre els tres conflictes actius que amenacen el subministrament energètic d'Europa.</p>
+
+    <div class="card" style="margin-bottom:1.25rem;">
+      <div class="card-label">Context dels tres conflictes</div>
+      <div style="display:grid; gap:0.85rem; margin-top:0.2rem;">
+        <div style="padding:0.85rem; background:var(--bg3); border-left:3px solid var(--red); border-radius:2px;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:#ff8a93; margin-bottom:0.35rem;">🔴 Estret d'Ormuz</div>
+          <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">Per aquest estret de 33 km d'amplada transita el <strong>21% del petroli mundial</strong>. La tensió entre Iran i les forces navals dels EUA ha provocat l'aturada de diversos vaixells cisterna. Cada dia de bloqueig costa a Europa uns 800 milions d'euros en increment de preu.</p>
+        </div>
+        <div style="padding:0.85rem; background:var(--bg3); border-left:3px solid var(--red); border-radius:2px;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:#ff8a93; margin-bottom:0.35rem;">🔴 Rússia / Ucraïna</div>
+          <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">El gas rus representava el <strong>40% del consum europeu</strong> el 2021. Des de les sancions, Europa ha reduït la dependència al 15%, però el tall total dels gasoductes restants amenaça països com Hongria, Eslovàquia i Àustria, que no han pogut substituir el subministrament.</p>
+        </div>
+        <div style="padding:0.85rem; background:var(--bg3); border-left:3px solid var(--red); border-radius:2px;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:#ff8a93; margin-bottom:0.35rem;">🔴 Xina — Minerals estratègics</div>
+          <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">La Xina controla el <strong>60% de la producció mundial de liti</strong> i el <strong>85% del processament de terres rares</strong> necessàries per a bateries i aerogeneradors. Ha anunciat restriccions a les exportacions com a resposta als aranzels europeus sobre panells solars xinesos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="briefing" style="margin-bottom:1.5rem;">
+      <div class="briefing-tag">📋 Pregunta del Consell</div>
+      <p>«Quin d'aquests conflictes creieu que afecta més directament la vida quotidiana a Europa — i a Matadepera? Com a Consell, quin considereu prioritari abordar primer, i per quins motius?»</p>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Resposta conjunta del grup</div>
+      <div class="qtxt" style="font-size:0.88rem;">Poseu-vos d'acord i escriviu la posició del vostre grup. Heu d'identificar quin conflicte prioritzeu i justificar-ho amb almenys dos arguments.</div>
+      <textarea class="finput" id="s1g-r" placeholder="La nostra posició com a grup és..." oninput="chkGrup('s1g-r','btn-s1g-save')"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s1g-save" onclick="saveGrup('s1g-r','S1','s1g','scr-s1-tanca')" disabled>Guardar resposta de grup</button>
+      <button class="btn-cont" id="btn-s1g-cont" onclick="go('scr-s1-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s1g">✓ Resposta guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S1 — TANCAMENT
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s1-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 1</span><span>›</span><span class="cur">Tancament</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <div class="badge badge-red">Sessió 1 completada</div>
+    <h2 class="page-h2">Bona feina, Consell.</h2>
+
+    <div class="card">
+      <div class="card-label">El docent tanca la sessió</div>
+      <p>El vostre docent recollirà ara les posicions dels grups i farà una posada en comú. Escolteu amb atenció: les perspectives dels altres grups us ajudaran a la propera sessió.</p>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">🔍 La pregunta que obre la Sessió 2</div>
+      <p>«Però, com sabeu que allò que acabeu de llegir és veritat? Com a Consell independent, la vostra credibilitat depèn de treballar amb informació fiable. Demà aprendreu a detectar els interessos que hi ha darrere de cada font.»</p>
+    </div>
+
+    <div class="card" style="border-color:rgba(230,57,70,0.2);">
+      <div class="card-label" style="color:var(--red);">⚠ Estat de la crisi</div>
+      <p style="font-size:0.9rem;">La crisi s'ha entès, però no s'ha resolt. El Consell ha identificat els focus de tensió. La propera sessió revelarà que les fonts d'informació tampoc no són neutrals.</p>
+    </div>
+
+    <button class="btn-cont" id="btn-s1-fi" onclick="completarSessio('S1','scr-s2-ob')">Tancar Sessió 1 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S2 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s2-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 2: A qui creure?</span><span>›</span><span class="cur">Obertura</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-red">🔴 Missió 1 — Sessió 2</div>
+    <h2 class="page-h2">A qui creure?</h2>
+    <p class="page-lead">El Consell necessita fonts fiables per fer una anàlisi sòlida. Però totes les fonts tenen interessos. Llegiu aquests quatre titulars sobre el <em>mateix fet</em>: la crisi energètica europea d'aquesta setmana.</p>
+
+    <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
+
+      <div class="source-card" data-src="A">
+        <div class="src-meta"><span class="src-tag tag-corp">Empresa · Gas</span><span class="src-name">GasEuropa Consortium — Butlletí de mercat</span></div>
+        <div class="src-head">«El gas natural segueix sent l'única garantia de subministrament estable per a la indústria europea»</div>
+        <div class="src-body">«Les energies renovables no poden cobrir la demanda base en condicions de fred extrem. En les dues últimes onades de fred, la generació eòlica va caure un 60% mentre el gas compensava el dèficit. Sense infraestructura gasística robusta, Europa s'arrisca a apagades industrials que podrien costar 2,3 milions de llocs de treball. La transició energètica és necessària, però ha de ser gradual i realista, no ideològica.»</div>
+      </div>
+
+      <div class="source-card" data-src="B">
+        <div class="src-meta"><span class="src-tag tag-ong">ONG · Transició</span><span class="src-name">Xarxa Europea per la Transició Justa — Informe urgent</span></div>
+        <div class="src-head">«La crisi energètica és el resultat directe de dècades de bloqueig de les renovables per part del lobby dels combustibles fòssils»</div>
+        <div class="src-body">«Si Europa hagués seguit el pla de renovables del 2010, avui seria autosuficient en un 78%. En comptes d'això, les empreses gasistes han invertit 4.200 milions d'euros en pressió política a Brussel·les per retardar la transició. La crisi actual no és un accident: és el cost de la dependència que ells mateixos han cultivat. La solució és accelerar, no frenar.»</div>
+      </div>
+
+      <div class="source-card" data-src="C">
+        <div class="src-meta"><span class="src-tag tag-dipl">Diplomàtica · Filtrada</span><span class="src-name">Nota interna de l'Ambaixada de la Federació Russa a Brussel·les — filtrada</span></div>
+        <div class="src-head">«Europa ha escollit la inestabilitat per raons ideològiques; Rússia continua sent el soci més fiable que ha tingut mai»</div>
+        <div class="src-body">«Durant 50 anys, Rússia va subministrar gas a Europa sense cap interrupció unilateral. Les sancions imposades unilateralment per la UE han trencat una relació que beneficiava les dues parts. Les economies europees ara paguen el doble per un GNL nord-americà que emet tres vegades més CO₂ en el transport. La porta al diàleg continua oberta, però no indefinidament. Europa hauria de preguntar-se qui se n'ha beneficiat realment, de les sancions.»</div>
+      </div>
+
+      <div class="source-card" data-src="D">
+        <div class="src-meta"><span class="src-tag tag-sci">Científic · Institut</span><span class="src-name">Institut Internacional d'Energia i Recursos — Estudi sobre reserves mundials 2024</span></div>
+        <div class="src-head">«Les reserves mundials de gas natural garanteixen subministrament global fins al 2082, però la seva distribució geogràfica crea vulnerabilitats estructurals per a Europa»</div>
+        <div class="src-body">«Amb les dades actuals de consum, les reserves provades de gas natural equivalen a 58 anys de subministrament global. No obstant, el 71% es concentra en cinc països: Rússia, Iran, Qatar, Turkmenistan i EUA. Europa no en té. La dependència estructural no és un problema de mercat, sinó geopolític: cap política energètica europea pot ignorar que els seus proveïdors potencials tenen interessos que no coincideixen necessàriament amb els seus. La transició a renovables redueix aquesta exposició, però crea noves dependències en minerals crítics.»</div>
+      </div>
+
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">🔍 La tasca d'avui</div>
+      <p>«El Consell rebrà ara un document diferent per a cada membre. Cap document és mentida, però cap és completament neutral. La vostra tasca és aprendre a llegir entre línies.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s2-rol')">Continuar → Rebre el teu document →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S2 — ASSIGNACIÓ DE ROL
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s2-rol">
+  <div class="page">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 2</span><span>›</span><span class="cur">El teu document</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">El teu document confidencial</h2>
+    <p class="page-lead">Cada membre del grup rep un document diferent. <strong>No el llegeixis en veu alta</strong> — només pots explicar-ne el contingut amb les teves pròpies paraules.</p>
+
+    <div id="rol-card" class="card" style="border-top:3px solid var(--acc); margin-bottom:1.5rem;">
+      <!-- S'omple per JS -->
+    </div>
+
+    <div class="card" style="background:rgba(245,166,35,0.03); border-color:rgba(245,166,35,0.15);">
+      <div class="card-label">Regles del document</div>
+      <p style="font-size:0.9rem; line-height:1.7;">① Llegeix-lo amb atenció al paper que et lliurarà el teu docent.<br>② Respon les preguntes individuals a continuació.<br>③ A la tasca de grup, explica el contingut <em>oralment i amb les teves paraules</em>.<br>④ Cap membre pot veure el document dels altres.</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s2-ind')">He rebut el sobre. Continuar →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S2 — INDIVIDUAL
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s2-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 2</span><span>›</span><span class="cur">Reflexió individual</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Analitza la teva font</h2>
+    <p class="page-lead">Has llegit el document del teu sobre. Ara analitza'l individualment, <em>sense parlar-ne amb el grup encara</em>.</p>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 2</div>
+      <div class="qtxt">Qui ha escrit aquest document i per quins motius? Quins interessos pot tenir l'organització o la persona que l'ha redactat?</div>
+      <textarea class="finput" id="s2i-r1" placeholder="L'ha escrit..." oninput="chkInd2()"></textarea>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 2</div>
+      <div class="qtxt">Hi ha alguna dada o argument al document que et sembla sòlid i ben fonamentat? I algun que et genera dubtes o que podria estar esbiaixat? Explica el per quès.</div>
+      <textarea class="finput" id="s2i-r2" placeholder="Sòlid: ... / Em genera dubtes: ..." oninput="chkInd2()"></textarea>
+    </div>
+
+    <div class="bonus-wrap" id="bonus2-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Quina part creus que és fiable i per quins criteris ho decideixes? Pots imaginar un lector que s'ho cregués tot sense qüestionar-ho? Qui seria?</div>
+      <textarea class="finput" id="s2i-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s2i-save" onclick="saveInd2()" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-s2i-cont" onclick="go('scr-s2-grup')" disabled style="display:none;">Continuar → Tasca de grup</button>
+      <span class="saved-ok" id="saved-s2i">✓ Respostes guardades</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S2 — GRUP
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s2-grup">
+  <div class="page">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 2</span><span>›</span><span class="cur">Tasca de grup</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <h2 class="page-h2">Construir una versió independent</h2>
+
+    <div class="card" style="margin-bottom:1.25rem;">
+      <div class="card-label">Com fer la posada en comú</div>
+      <p style="font-size:0.9rem; line-height:1.7;">① Cada membre explica <em>oralment</em> el contingut del seu document i quins interessos ha detectat.<br>② Ningú llegeix en veu alta cap fragment literal.<br>③ Discutiu: quines parts de cada document us sembles sòlides? Quines sospitoses?<br>④ Amb tot el que sabeu, escriviu junts la resposta a la pregunta central.</p>
+    </div>
+
+    <div class="briefing" style="margin-bottom:1.5rem;">
+      <div class="briefing-tag">📋 Pregunta central del Consell</div>
+      <p>«Tenint els quatre documents, podeu respondre: per què hi ha crisi energètica europea? Construïu una versió dels fets que sigui independent i argumentada — reconeixent quines parts encara no podeu verificar.»</p>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Resposta conjunta del grup</div>
+      <div class="qtxt" style="font-size:0.88rem;">La vostra conclusió ha de tenir tres elements: (1) les causes de la crisi que considereu ben documentades, (2) els interessos dels actors implicats que heu detectat, i (3) una cosa que encara no podeu saber amb les fonts que teniu.</div>
+      <textarea class="finput" id="s2g-r" placeholder="Causes documentades: ...&#10;Interessos detectats: ...&#10;Allò que encara no sabem: ..." style="min-height:130px;" oninput="chkGrup('s2g-r','btn-s2g-save')"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s2g-save" onclick="saveGrup('s2g-r','S2','s2g','scr-s2-tanca')" disabled>Guardar resposta de grup</button>
+      <button class="btn-cont" id="btn-s2g-cont" onclick="go('scr-s2-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s2g">✓ Resposta guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     S2 — TANCAMENT / FI M1
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s2-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 1</span><span>›</span><span>Sessió 2</span><span>›</span><span class="cur">Tancament</span></div>
+
+    <div class="badge badge-red">Missió 1 completada ✓</div>
+    <h2 class="page-h2">El Consell ha après a llegir entre línies.</h2>
+
+    <div class="card" style="margin-bottom:1.1rem;">
+      <div class="card-label">Resum de la Missió 1</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Heu identificat els tres focus de la crisi energètica i heu analitzat fonts amb interessos molt diferents. Heu construït una versió independent dels fets — reconeixent el que sabeu i el que no. Això és exactament el que fa un Consell seriós.</p>
+    </div>
+
+    <div class="card" style="background:rgba(230,57,70,0.04); border-color:rgba(230,57,70,0.18); margin-bottom:1.1rem;">
+      <div class="card-label" style="color:var(--red);">Marcador d'alerta energètica</div>
+      <p style="font-size:0.9rem; line-height:1.7;">La crisi s'ha entès però no s'ha resolt. El Consell ha guanyat perspectiva crítica. El marcador no puja encara — la comprensió del problema és el primer pas, no la solució.</p>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">🔜 Missió 2 — El poder i la decisió</div>
+      <p>«Si les fonts no es poden fiar cegament, com decidim com a societat? Qui té el poder real de decidir sobre l'energia d'Europa, i per quins interessos ho fa? Això és el que investigareu a la propera missió.»</p>
+    </div>
+
+    <button class="btn-cont" id="btn-s2-fi" onclick="completarSessio('S2','scr-fase3')">Tancar Missió 1 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     PLACEHOLDER FASE 3
+══════════════════════════════════════ -->
+<!-- ══════════════════════════════════════
+     M2 S3 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s3-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 3: Qui decideix?</span><span>›</span><span class="cur">Obertura</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-ora">🟠 Missió 2 — El poder i la decisió</div>
+    <h2 class="page-h2">Qui decideix sobre l'energia d'Europa?</h2>
+    <p class="page-lead">El Consell ha après a detectar interessos darrere de les fonts. Ara cal entendre qui té el poder real de decidir. La UE ha de triar d'on compra energia els pròxims 10 anys. <em>Tothom vol influir en la decisió. Però qui pot realment?</em></p>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="card-label">La sala de reunions</div>
+      <p style="font-size:0.9rem; margin-bottom:1rem;">Cinc actors principals volen influir en la decisió energètica europea. Cadascun té arguments. Però no tots tenen el mateix tipus de poder.</p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.65rem;">
+        <div class="actor-card">
+          <span class="actor-icon">🏛️</span>
+          <div class="actor-nom">Govern d'un estat membre</div>
+          <div class="actor-desc">Té mandat democràtic. Però depèn de cicles electorals i pressions nacionals. Pot bloquejar decisions europees si afecten la seva indústria.</div>
+        </div>
+        <div class="actor-card">
+          <span class="actor-icon">🏦</span>
+          <div class="actor-nom">Gran empresa energètica</div>
+          <div class="actor-desc">Inverteix milions en lobbies a Brussel·les. Finança think tanks i campanyes. Pot amenaçar amb deslocalitzar inversions si les normes no li convenen.</div>
+        </div>
+        <div class="actor-card">
+          <span class="actor-icon">🌿</span>
+          <div class="actor-nom">ONG mediambiental</div>
+          <div class="actor-desc">Representa valors i mobilitza opinió pública. Però no té vots ni diners. El seu poder és la pressió moral i la visibilitat mediàtica.</div>
+        </div>
+        <div class="actor-card">
+          <span class="actor-icon">👷</span>
+          <div class="actor-nom">Sindicat de treballadors</div>
+          <div class="actor-desc">Defensa els llocs de treball actuals (mineria, refineries, centrals). Por a la transició que pot eliminar el seu sector. Té poder de vaga i mobilització.</div>
+        </div>
+        <div class="actor-card" style="grid-column:1/-1; max-width:340px; margin:0 auto;">
+          <span class="actor-icon">🔬</span>
+          <div class="actor-nom">Comunitat científica</div>
+          <div class="actor-desc">Diu el que diuen les dades. Però qui decideix quines investigacions es financen? I qui escolta els científics quan les seves conclusions incomoden els altres actors?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pistes-box">
+      <div class="pistes-tag">💡 Cinc pistes per reflexionar</div>
+      <ul class="pistes-list">
+        <li>Les empreses energètiques inverteixen milions en lobbies a Brussel·les. Els científics, no.</li>
+        <li>Un govern pot ser escollit democràticament i alhora prendre decisions influenciades per interessos privats. Passa sovint.</li>
+        <li>Les ONG representen valors, però no vots. Té el mateix pes una organització amb 2 milions de seguidors que un govern escollit?</li>
+        <li>Els sindicats defensen treballadors d'indústries actuals. Però si la transició elimina els seus llocs de treball, qui els defensa?</li>
+        <li>La comunitat científica diu el que diuen les dades. Però qui decideix quines dades es financen i quines no?</li>
+      </ul>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s3-ind')">Continuar → Reflexió individual</button>
+  </div>
+</div>
+
+
+<!-- S3 — INDIVIDUAL -->
+<div class="screen" id="scr-s3-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 3</span><span>›</span><span class="cur">Reflexió individual</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Poder real vs. poder legítim</h2>
+    <p class="page-lead">Respon individualment, tenint en compte les cinc pistes que acabes de llegir.</p>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 3</div>
+      <div class="qtxt">Qui creus que té <strong>més poder real</strong> en la decisió energètica europea? Per quins motius concrets?</div>
+      <textarea class="finput" id="s3i-r1" placeholder="L'actor amb més poder real és... perquè..." oninput="chkN('s3i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 3</div>
+      <div class="qtxt">Qui creus que <strong>hauria de tenir</strong> més poder per decidir sobre l'energia? Per quins motius?</div>
+      <textarea class="finput" id="s3i-r2" placeholder="Hauria de tenir més poder... perquè..." oninput="chkN('s3i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 3 de 3</div>
+      <div class="qtxt">Com a Consell Assessor, <strong>a qui escoltaríeu</strong> per elaborar la vostra proposta? Podeu donar veu a uns i no als altres?</div>
+      <textarea class="finput" id="s3i-r3" placeholder="Com a Consell, escoltaríem..." oninput="chkN('s3i',3)"></textarea>
+    </div>
+
+    <div class="bonus-wrap" id="bonus3-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha diferència entre les teves dues primeres respostes? Si és que sí, què ens diu això sobre com funciona la democràcia real?</div>
+      <textarea class="finput" id="s3i-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s3i-save" onclick="saveIndN('s3i',3,'S3','bonus3-wrap')" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-s3i-cont" onclick="go('scr-s3-grup')" disabled style="display:none;">Continuar → Tasca de grup</button>
+      <span class="saved-ok" id="saved-s3i">✓ Respostes guardades</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S3 — GRUP -->
+<div class="screen" id="scr-s3-grup">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 3</span><span>›</span><span class="cur">Tasca de grup</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">La posició del Consell sobre el poder</h2>
+    <p class="page-lead">Poseu en comú les vostres reflexions individuals. Cadascú explica a qui donaria més poder i per quins motius.</p>
+
+    <div class="briefing" style="margin-bottom:1.4rem;">
+      <div class="briefing-tag">📋 Pregunta guia del Consell</div>
+      <p>«Com a Consell independent, a qui escoltaríeu per elaborar la vostra proposta energètica? Podeu escoltar uns i no els altres? Quins criteris faríeu servir per decidir-ho?»</p>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Posició conjunta del grup</div>
+      <div class="qtxt" style="font-size:0.88rem;">Descriviu (1) a qui escoltaríeu i per quins criteris, i (2) si considereu que hi ha diferència entre qui té poder real i qui hauria de tenir-lo.</div>
+      <textarea class="finput" id="s3g-r" placeholder="Com a Consell, escoltaríem... perquè els nostres criteris són..." oninput="chkGrup('s3g-r','btn-s3g-save')"></textarea>
+    </div>
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s3g-save" onclick="saveGrupN('s3g-r','S3','s3g','scr-s3-tanca')" disabled>Guardar resposta de grup</button>
+      <button class="btn-cont" id="btn-s3g-cont" onclick="go('scr-s3-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s3g">✓ Resposta guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S3 — TANCAMENT -->
+<div class="screen" id="scr-s3-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 3</span><span>›</span><span class="cur">Tancament</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <div class="badge badge-ora">Sessió 3 completada</div>
+    <h2 class="page-h2">Sabeu qui pressiona i per quins interessos.</h2>
+
+    <div class="card">
+      <div class="card-label">El docent tanca la sessió</div>
+      <p>El vostre docent recollirà les posicions dels grups i farà una posada en comú. Escolteu com altres grups han resolt la tensió entre poder real i poder legítim.</p>
+    </div>
+    <div class="briefing">
+      <div class="briefing-tag">🔜 La Sessió 4</div>
+      <p>«Sabeu qui pressiona. Ara cal veure quines opcions concretes té Europa sobre la taula, i quines conseqüències té cadascuna. Perquè el Consell haurà de triar.»</p>
+    </div>
+
+    <button class="btn-cont" id="btn-s3-fi" onclick="completarSessioN('S3','scr-s4-ob')">Tancar Sessió 3 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     M2 S4 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s4-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 4: El mapa del poder</span><span>›</span><span class="cur">Obertura</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-ora">🟠 Missió 2 — Sessió 4</div>
+    <h2 class="page-h2">Les tres opcions energètiques d'Europa</h2>
+    <p class="page-lead">Europa té tres camins possibles. Cap és perfecte. Tots tenen costos polítics, econòmics i ètics. El Consell ha d'analitzar-los i prendre la primera decisió formal.</p>
+
+    <div style="display:grid; gap:1rem; margin-bottom:1.75rem;">
+      <div class="opcio-card opcio-a">
+        <div class="opcio-head">
+          <span class="opcio-letra">A</span>
+          <div>
+            <div class="opcio-titol">🛢️ Gas del Golf Pèrsic</div>
+            <div class="opcio-sub">Dependre de l'estret d'Ormuz i dels emirats</div>
+          </div>
+        </div>
+        <div class="opcio-cos">
+          <div class="opcio-trio">
+            <div><div class="trio-lab">✓ A favor</div>Infraestructura existent. Subministrament immediat. Preus negociables a llarg termini.</div>
+            <div><div class="trio-lab">✗ En contra</div>L'estret d'Ormuz pot tancar-se per conflicte. Els emirats exigiran contrapartides polítiques. És gas, segueix emetent CO₂.</div>
+            <div><div class="trio-lab">⚖️ El preu ocult</div>Legitima règims autoritaris. Europa finançaria economies que no respecten drets laborals ni ambientals.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opcio-card opcio-b">
+        <div class="opcio-head">
+          <span class="opcio-letra">B</span>
+          <div>
+            <div class="opcio-titol">⚡ Accelerar renovables pròpies</div>
+            <div class="opcio-sub">Dependre de minerals rars de la Xina</div>
+          </div>
+        </div>
+        <div class="opcio-cos">
+          <div class="opcio-trio">
+            <div><div class="trio-lab">✓ A favor</div>Independència energètica a llarg termini. Reducció d'emissions. Creació de llocs de treball europeus.</div>
+            <div><div class="trio-lab">✗ En contra</div>La Xina controla el 85% del processament de terres rares necessàries. Inversió massiva inicial. 5-10 anys fins a tenir impacte real.</div>
+            <div><div class="trio-lab">⚖️ El preu ocult</div>Miner el liti a l'Amèrica Llatina o a l'Àfrica té costos socials i ambientals importants que no apareixen a la factura europea.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="opcio-card opcio-c">
+        <div class="opcio-head">
+          <span class="opcio-letra">C</span>
+          <div>
+            <div class="opcio-titol">🤝 Acord negociat amb Rússia</div>
+            <div class="opcio-sub">Dependre d'un país en guerra</div>
+          </div>
+        </div>
+        <div class="opcio-cos">
+          <div class="opcio-trio">
+            <div><div class="trio-lab">✓ A favor</div>Infraestructura gasística existent. Gas més barat que el GNL nord-americà. Rússia necessita ingressos.</div>
+            <div><div class="trio-lab">✗ En contra</div>Finança una guerra activa. Legitimaria les accions russes internacionalment. Ruptura dels compromisos amb Ucraïna i socis.</div>
+            <div><div class="trio-lab">⚖️ El preu ocult</div>Quin missatge enviaríem a Ucraïna i a tots els països que pateixen agressions si tornem a comprar gas rus?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pistes-box" style="margin-bottom:1.75rem;">
+      <div class="pistes-tag">🔍 Pistes per al Fast Finisher — hi ha una Opció D?</div>
+      <ul class="pistes-list">
+        <li>Europa té molt més potencial eòlic i solar del que aprofita. Per què no s'ha desplegat ja? Qui o què ho frena?</li>
+        <li>I si el problema no és d'on ve l'energia, sinó quanta en consumim? És possible una economia que funcioni consumint menys?</li>
+        <li>Els minerals rars són un problema, però les renovables en necessiten molts menys que els combustibles fòssils. És l'argument dels minerals una excusa?</li>
+        <li>Hi ha països del Sud Global que podrien ser grans productors d'energia neta. Qui se'n beneficiaria realment?</li>
+      </ul>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s4-rol')">Continuar → El teu document d'anàlisi</button>
+  </div>
+</div>
+
+
+<!-- S4 — ROL (informació asimètrica) -->
+<div class="screen" id="scr-s4-rol">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 4</span><span>›</span><span class="cur">El teu document</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">El teu document d'anàlisi</h2>
+    <p class="page-lead">Cada membre del grup ha rebut una fitxa amb dades més detallades d'una de les opcions. A la tasca de grup, compartireu la informació oralment.</p>
+    <div id="s4-rol-card" class="card" style="border-top:3px solid var(--acc); margin-bottom:1.5rem;"></div>
+    <div class="card" style="background:rgba(245,166,35,0.03); border-color:rgba(245,166,35,0.15);">
+      <div class="card-label">Recordatori de regles</div>
+      <p style="font-size:0.9rem; line-height:1.7;">① Llegeix la fitxa que et lliurarà el docent.<br>② Respon les preguntes individuals.<br>③ A la tasca de grup, explica el contingut <em>oralment i amb les teves paraules</em>.<br>④ Cap membre pot llegir la fitxa dels altres.</p>
+    </div>
+    <button class="btn-cont" onclick="go('scr-s4-ind')">He rebut la fitxa. Continuar →</button>
+  </div>
+</div>
+
+
+<!-- S4 — INDIVIDUAL -->
+<div class="screen" id="scr-s4-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 4</span><span>›</span><span class="cur">Reflexió individual</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Analitza la teva opció</h2>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 2</div>
+      <div class="qtxt">Quins riscos veus en l'opció que has analitzat? Hi ha riscos que no apareixen explícitament a la fitxa però que intuïtes?</div>
+      <textarea class="finput" id="s4i-r1" placeholder="Els riscos que veig són..." oninput="chkN('s4i',2)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 2</div>
+      <div class="qtxt">Si haguessis de descartar una de les tres opcions, quina seria i per quins motius? Pots descartar-ne la teva pròpia si creus que té massa riscos.</div>
+      <textarea class="finput" id="s4i-r2" placeholder="Descartaria l'opció... perquè..." oninput="chkN('s4i',2)"></textarea>
+    </div>
+
+    <div class="bonus-wrap" id="bonus4-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha una Opció D que no surt al mapa? Basant-te en les pistes de l'obertura, formula-la i argumenta per quins motius no s'ha considerat fins ara.</div>
+      <textarea class="finput" id="s4i-bonus" placeholder="L'Opció D podria ser... No s'ha considerat perquè..." style="min-height:80px;"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s4i-save" onclick="saveIndN('s4i',2,'S4','bonus4-wrap')" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-s4i-cont" onclick="go('scr-s4-grup')" disabled style="display:none;">Continuar → Primera decisió del Consell</button>
+      <span class="saved-ok" id="saved-s4i">✓ Respostes guardades</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S4 — GRUP: Primera decisió formal -->
+<div class="screen" id="scr-s4-grup">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 4</span><span>›</span><span class="cur">Primera decisió formal</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <div class="badge badge-ora">⚡ Primera decisió formal del Consell</div>
+    <h2 class="page-h2">La recomanació del Consell</h2>
+
+    <div class="card" style="margin-bottom:1.1rem;">
+      <div class="card-label">Com fer la posada en comú</div>
+      <p style="font-size:0.9rem; line-height:1.7;">① Cada membre explica oralment els costos i riscos de la seva opció.<br>② Compareu les quatre perspectives.<br>③ Debatre quina opció o combinació recomanaríeu com a Consell.<br>④ La vostra recomanació ha d'estar argumentada amb <em>valors</em>, no només amb dades econòmiques.</p>
+    </div>
+
+    <div class="briefing" style="margin-bottom:1.4rem;">
+      <div class="briefing-tag">📋 Format de la recomanació</div>
+      <p>«Recomanem [opció o combinació] perquè creiem que una democràcia ha de prioritzar... També considerem que cal explorar [opció alternativa] perquè...»</p>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Recomanació conjunta — Primera posició formal del Consell</div>
+      <div class="qtxt" style="font-size:0.88rem;">Escriviu la recomanació completa: quina opció o combinació, per quins motius argumentats amb valors, i quines limitacions reconeixeu en la vostra pròpia recomanació.</div>
+      <textarea class="finput" id="s4g-r" placeholder="Recomanem... perquè creiem que una democràcia ha de prioritzar...&#10;Reconeixem que la nostra recomanació té el límit de..." style="min-height:130px;" oninput="chkGrup('s4g-r','btn-s4g-save')"></textarea>
+    </div>
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s4g-save" onclick="saveGrupN('s4g-r','S4','s4g','scr-s4-tanca')" disabled>Guardar recomanació</button>
+      <button class="btn-cont" id="btn-s4g-cont" onclick="go('scr-s4-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s4g">✓ Recomanació guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S4 — TANCAMENT M2 -->
+<div class="screen" id="scr-s4-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 2</span><span>›</span><span>Sessió 4</span><span>›</span><span class="cur">Tancament</span></div>
+
+    <div class="badge badge-ora">Missió 2 completada ✓</div>
+    <h2 class="page-h2">El Consell ha pres la primera decisió formal.</h2>
+
+    <div class="card" style="margin-bottom:1.1rem;">
+      <div class="card-label">Resum de la Missió 2</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Heu vist qui té el poder real i qui el poder legítim. Heu analitzat les tres opcions energètiques i heu pres una recomanació argumentada amb valors. Ara els actors internacionals han reaccionat. No estan d'acord.</p>
+    </div>
+    <div class="briefing">
+      <div class="briefing-tag">🔜 Missió 3 — Negociar o trencar</div>
+      <p>«Heu pres la primera decisió formal com a Consell. Però Rússia amenaça, el Golf exigeix, la Xina adverteix. Ara cal negociar. I negociar significa entendre l'altre, no només defensar els propis interessos.»</p>
+    </div>
+    <button class="btn-cont" id="btn-s4-fi" onclick="completarSessioN('S4','scr-s5-ob')">Tancar Missió 2 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     M3 S5 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s5-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 3</span><span>›</span><span>Sessió 5: Negociar o trencar</span><span>›</span><span class="cur">Obertura</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-gro">🟡 Missió 3 — Negociar o trencar</div>
+    <h2 class="page-h2">Les reaccions internacionals</h2>
+    <p class="page-lead">Les opcions energètiques que el Consell ha analitzat han generat reaccions. Ara cal preparar una estratègia de negociació.</p>
+
+    <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
+      <div class="react-card react-rus">
+        <div class="react-qui">🇷🇺 Federació Russa</div>
+        <p class="react-txt">«Si Europa manté les sancions i accelera la transició a renovables, no garantim el subministrament als països que en depenen. Hem estat socis fiables durant 50 anys. Podríem tornar-ho a ser, però no a qualsevol preu.»</p>
+      </div>
+      <div class="react-card react-golf">
+        <div class="react-qui">🛢️ Països del Golf Pèrsic</div>
+        <p class="react-txt">«Estem disposats a augmentar el subministrament a Europa, però exigim garanties a llarg termini i un tractat de no-ingerència en els nostres afers interns. I esperem que Europa reconsideri la seva posició sobre els drets humans en el context del diàleg energètic.»</p>
+      </div>
+      <div class="react-card react-xi">
+        <div class="react-qui">🇨🇳 República Popular de la Xina</div>
+        <p class="react-txt">«Si Europa imposa aranzels als nostres panells solars, revisarem les quotes d'exportació de liti i terres rares. La transició energètica europea no pot ser un instrument de guerra comercial contra la Xina. Esperem coherència en les relacions bilaterals.»</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-label">Les tres condicions d'un acord acceptable</div>
+      <div style="display:grid; gap:0.5rem; margin-top:0.3rem;">
+        <div style="display:flex; gap:0.7rem; align-items:flex-start; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); font-weight:700; flex-shrink:0;">①</span>
+          <span>L'acord <strong>no és una rendició d'Europa</strong> — respecta els valors i els compromisos previs.</span>
+        </div>
+        <div style="display:flex; gap:0.7rem; align-items:flex-start; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); font-weight:700; flex-shrink:0;">②</span>
+          <span>L'acord <strong>no humilia cap de les altres parts</strong> — tothom pot presentar-lo com un resultat acceptable.</span>
+        </div>
+        <div style="display:flex; gap:0.7rem; align-items:flex-start; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); font-weight:700; flex-shrink:0;">③</span>
+          <span>L'acord <strong>respecta els principis bàsics del dret internacional</strong> — no legitima accions que els violen.</span>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s5-rol')">Continuar → El teu rol a la negociació</button>
+  </div>
+</div>
+
+
+<!-- S5 — ROL NEGOCIACIÓ -->
+<div class="screen" id="scr-s5-rol">
+  <div class="page">
+    <div class="bc"><span>Missió 3</span><span>›</span><span>Sessió 5</span><span>›</span><span class="cur">El teu rol</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">El teu rol a la negociació</h2>
+    <p class="page-lead">Cada membre del grup representa un actor internacional. <strong>No pots llegir el teu document en veu alta</strong> — només pots explicar-ne el contingut amb les teves paraules.</p>
+    <div id="s5-rol-card" class="card" style="border-top:3px solid var(--acc); margin-bottom:1.5rem;"></div>
+    <div class="card" style="background:rgba(245,166,35,0.03); border-color:rgba(245,166,35,0.15);">
+      <div class="card-label">Recordatori: com negociar bé</div>
+      <p style="font-size:0.9rem; line-height:1.7;">Negociar no és guanyar. Negociar és trobar un terreny comú on tothom pugui acceptar el resultat. Entén els interessos del teu actor <em>i</em> els dels altres.</p>
+    </div>
+    <button class="btn-cont" onclick="go('scr-s5-ind')">He rebut el sobre. Continuar →</button>
+  </div>
+</div>
+
+
+<!-- S5 — INDIVIDUAL -->
+<div class="screen" id="scr-s5-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 3</span><span>›</span><span>Sessió 5</span><span>›</span><span class="cur">Reflexió individual</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Prepara la negociació</h2>
+    <p class="page-lead">Abans de negociar, analitza el teu actor i els altres. La negociació comença aquí.</p>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 2</div>
+      <div class="qtxt">Quins interessos té el teu actor? Què vol <strong>realment</strong> més enllà de l'energia — poder, reconeixement, seguretat, diners, prestigi?</div>
+      <textarea class="finput" id="s5i-r1" placeholder="El meu actor vol realment..." oninput="chkN('s5i',2)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 2</div>
+      <div class="qtxt">Què podria oferir Europa al teu actor que <strong>no sigui energia ni diners</strong> directament? Pensa en garanties, reconeixements, acords comercials, estatus internacional...</div>
+      <textarea class="finput" id="s5i-r2" placeholder="Europa podria oferir..." oninput="chkN('s5i',2)"></textarea>
+    </div>
+
+    <div class="bonus-wrap" id="bonus5-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha alguna cosa que Europa i el teu actor tinguin en comú? Quin podria ser el terreny compartit — un interès o un valor que tots dos comparteixen — sobre el qual construir l'acord?</div>
+      <textarea class="finput" id="s5i-bonus" placeholder="El terreny compartit podria ser..." style="min-height:72px;"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s5i-save" onclick="saveIndN('s5i',2,'S5','bonus5-wrap')" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-s5i-cont" onclick="go('scr-s5-grup')" disabled style="display:none;">Continuar → La negociació</button>
+      <span class="saved-ok" id="saved-s5i">✓ Respostes guardades</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S5 — GRUP: La negociació -->
+<div class="screen" id="scr-s5-grup">
+  <div class="page">
+    <div class="bc"><span>Missió 3</span><span>›</span><span>Sessió 5</span><span>›</span><span class="cur">La negociació</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <h2 class="page-h2">La taula de negociació</h2>
+    <div class="card" style="margin-bottom:1.1rem;">
+      <div class="card-label">Regles de la negociació</div>
+      <p style="font-size:0.9rem; line-height:1.72;">① Cada membre explica oralment la posició del seu actor (mai llegint el document).<br>② El membre de la posició 4 (Europa/Consell) actua de moderador natural.<br>③ Heu d'intentar arribar a un acord que compleixi les tres condicions.<br>④ Si no hi ha acord, heu de justificar quina línia vermella no ha pogut creuar-se.</p>
+    </div>
+
+    <div class="briefing" style="margin-bottom:1.4rem;">
+      <div class="briefing-tag">💬 Pregunta de reflexió post-negociació (el docent la farà en veu alta)</div>
+      <p>«L'acord al qual heu arribat, beneficia tothom per igual? Els països productors d'energia en surten guanyant o perdent? Qui no estava a la taula i hauria d'haver-hi estat?»</p>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Resultat de la negociació</div>
+      <div class="qtxt" style="font-size:0.88rem;">Descriviu si heu arribat a un acord o no. Si hi ha acord: amb qui, en quines condicions i amb quins límits. Si no hi ha acord: quina línia vermella no s'ha pogut creuar i per quin motiu.</div>
+      <textarea class="finput" id="s5g-r" placeholder="Hem / No hem arribat a un acord perquè...&#10;Les condicions de l'acord / la línia vermella és..." style="min-height:120px;" oninput="chkGrup('s5g-r','btn-s5g-save')"></textarea>
+    </div>
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s5g-save" onclick="saveGrupN('s5g-r','S5','s5g','scr-s5-tanca')" disabled>Guardar resultat</button>
+      <button class="btn-cont" id="btn-s5g-cont" onclick="go('scr-s5-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s5g">✓ Resultat guardat</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S5 — TANCAMENT M3 -->
+<div class="screen" id="scr-s5-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 3</span><span>›</span><span>Sessió 5</span><span>›</span><span class="cur">Tancament</span></div>
+
+    <div class="badge badge-gro">Missió 3 completada ✓</div>
+    <h2 class="page-h2">Heu negociat.</h2>
+    <div class="card" style="margin-bottom:1.1rem;">
+      <div class="card-label">Resum de la Missió 3</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Heu vist que les solucions no són netes ni fàcils. Que entendre l'altre és diferent de cedir-li la raó. Que negociar requereix identificar interessos reals, no només posicions declarades.</p>
+    </div>
+    <div class="briefing">
+      <div class="briefing-tag">🔜 Missió 4 — La proposta final</div>
+      <p>«Heu negociat. Heu vist que les solucions no són netes ni fàcils. Ara cal convertir tot el que heu après en una proposta real, honesta sobre els seus límits, i defensable davant de la UE.»</p>
+    </div>
+    <button class="btn-cont" id="btn-s5-fi" onclick="completarSessioN('S5','scr-s6-ob')">Tancar Missió 3 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     M4 S6 — OBERTURA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s6-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 6: La nostra proposta</span><span>›</span><span class="cur">Obertura</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-ver">🟢 Missió 4 — La proposta final</div>
+    <h2 class="page-h2">El camí recorregut pel Consell</h2>
+    <p class="page-lead">Ara el Consell Assessor Jove ha de presentar la seva proposta energètica per als pròxims 10 anys. Ha de ser realista, justa i argumentada. <em>Les vostres decisions tindran impacte en milions de persones.</em></p>
+
+    <div style="display:grid; gap:0.65rem; margin-bottom:1.75rem;">
+      <div class="resum-pas">
+        <div class="resum-num">M1</div>
+        <div class="resum-txt"><strong>Hem analitzat les fonts</strong> i hem entès per què hi ha crisi energètica. Hem après a detectar interessos darrere de cada informació.</div>
+      </div>
+      <div class="resum-pas">
+        <div class="resum-num">M2</div>
+        <div class="resum-txt"><strong>Hem vist qui té el poder</strong> de decidir i quines opcions reals existeixen. Hem pres la primera recomanació formal argumentada amb valors.</div>
+      </div>
+      <div class="resum-pas">
+        <div class="resum-num">M3</div>
+        <div class="resum-txt"><strong>Hem negociat</strong> amb els actors internacionals. Hem vist que les solucions tenen costos i que entendre l'altre és diferent de cedir-li la raó.</div>
+      </div>
+      <div class="resum-pas resum-ara">
+        <div class="resum-num" style="color:var(--acc);">M4</div>
+        <div class="resum-txt"><strong>Ara cal construir la proposta final.</strong> Ha de recollir tot el que heu après. I ha de ser honesta sobre els seus límits.</div>
+      </div>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">📋 Encàrrec de la Missió 4</div>
+      <p>«La proposta final del Consell Assessor Jove ha de tenir cinc elements. Cadascun connecta amb una missió anterior. El més important és l'últim: heu de ser honestos sobre qui podria sortir perjudicat per la vostra pròpia proposta.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s6-ind')">Continuar → Reflexió individual</button>
+  </div>
+</div>
+
+
+<!-- S6 — INDIVIDUAL -->
+<div class="screen" id="scr-s6-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 6</span><span>›</span><span class="cur">Reflexió individual</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">La teva visió personal</h2>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 3</div>
+      <div class="qtxt">Quina ha estat la idea, pregunta o descoberta que més t'ha fet pensar durant tot el projecte? Per quins motius?</div>
+      <textarea class="finput" id="s6i-r1" placeholder="El que més m'ha fet pensar és..." oninput="chkN('s6i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 3</div>
+      <div class="qtxt">Quina decisió creus que Europa hauria de prendre sobre l'energia? Per quins motius, i quins valors guien la teva resposta?</div>
+      <textarea class="finput" id="s6i-r2" placeholder="Crec que Europa hauria de... perquè els valors que em guien són..." oninput="chkN('s6i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 3 de 3 — <span style="color:var(--acc);">Obligatòria</span></div>
+      <div class="qtxt">Qui podria sortir perjudicat per la decisió que defenses? Treballadors d'indústries fòssils, països productors, comunitats mineres, generacions futures... És acceptable aquest cost? Per quins motius?</div>
+      <textarea class="finput" id="s6i-r3" placeholder="Podria sortir perjudicat/da... Crec que és/no és acceptable perquè..." oninput="chkN('s6i',3)"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s6i-save" onclick="saveIndN('s6i',3,'S6',null)" disabled>Guardar respostes</button>
+      <button class="btn-cont" id="btn-s6i-cont" onclick="go('scr-s6-grup')" disabled style="display:none;">Continuar → Proposta de grup</button>
+      <span class="saved-ok" id="saved-s6i">✓ Respostes guardades</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S6 — GRUP: Proposta final -->
+<div class="screen" id="scr-s6-grup">
+  <div class="page">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 6</span><span>›</span><span class="cur">Proposta final</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div>
+    </div>
+
+    <h2 class="page-h2">La proposta del Consell — cinc elements</h2>
+
+    <div style="display:grid; gap:0.6rem; margin-bottom:1.5rem;">
+      <div class="elem-card"><span class="elem-n">1</span><div><strong>Diagnosi</strong> — Per què hi ha crisi energètica i qui se n'ha beneficiat? <em style="color:var(--text-dim); font-size:0.82rem;">(connecta amb M1)</em></div></div>
+      <div class="elem-card"><span class="elem-n">2</span><div><strong>Decisió energètica</strong> — Quina opció o combinació recomanen i per quins motius? <em style="color:var(--text-dim); font-size:0.82rem;">(connecta amb M2)</em></div></div>
+      <div class="elem-card"><span class="elem-n">3</span><div><strong>Acords internacionals</strong> — Amb qui negociaríeu i en quines condicions? <em style="color:var(--text-dim); font-size:0.82rem;">(connecta amb M3)</em></div></div>
+      <div class="elem-card"><span class="elem-n">4</span><div><strong>Argument de valors</strong> — Per quins motius aquesta proposta és justa i democràtica?</div></div>
+      <div class="elem-card" style="border-color:rgba(245,166,35,0.3); background:rgba(245,166,35,0.03);">
+        <span class="elem-n" style="background:var(--acc); color:#07091a;">5</span>
+        <div><strong>Punt cec honest</strong> — Qui podria sortir perjudicat i per quins motius ho accepten o no. <em style="color:var(--acc); font-size:0.82rem;">⭐ El més important</em></div>
+      </div>
+    </div>
+
+    <div class="qblock">
+      <div class="qnum">Proposta final conjunta del grup</div>
+      <div class="qtxt" style="font-size:0.88rem;">Escriviu els cinc elements. Podeu estructurar-los amb els números si us ajuda.</div>
+      <textarea class="finput" id="s6g-r" placeholder="1. Diagnosi: La crisi ha sorgit de...&#10;2. Decisió: Recomanem...&#10;3. Acords: Negociaríem amb...&#10;4. Valors: Aquesta proposta és justa perquè...&#10;5. Punt cec: Podria sortir perjudicat/da... i és/no és acceptable perquè..." style="min-height:200px;" oninput="chkGrup('s6g-r','btn-s6g-save')"></textarea>
+    </div>
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s6g-save" onclick="saveGrupN('s6g-r','S6','s6g','scr-s6-tanca')" disabled>Guardar proposta</button>
+      <button class="btn-cont" id="btn-s6g-cont" onclick="go('scr-s6-tanca')" disabled style="display:none;">Continuar →</button>
+      <span class="saved-ok" id="saved-s6g">✓ Proposta guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S6 — TANCAMENT -->
+<div class="screen" id="scr-s6-tanca">
+  <div class="page">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 6</span><span>›</span><span class="cur">Tancament</span></div>
+    <div class="badge badge-ver">Sessió 6 completada</div>
+    <h2 class="page-h2">La proposta del vostre grup és a punt.</h2>
+    <div class="card">
+      <div class="card-label">Demà: L'Assemblea del Consell</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Demà veureu les propostes dels altres grups i fareu una assemblea conjunta. No és una competició — és una assemblea que busca punts en comú, com hauria de funcionar una institució democràtica real.</p>
+    </div>
+    <button class="btn-cont" id="btn-s6-fi" onclick="completarSessioN('S6','scr-s7-ob')">Tancar Sessió 6 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     M4 S7 — L'ASSEMBLEA
+══════════════════════════════════════ -->
+<div class="screen" id="scr-s7-ob">
+  <div class="page wide">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 7: Ara, nosaltres</span><span>›</span><span class="cur">L'Assemblea</span></div>
+    <div class="steps">
+      <div class="step-dot current"></div><div class="step-bar current"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <div class="badge badge-ver">🟢 Missió 4 — Sessió 7</div>
+    <h2 class="page-h2">L'Assemblea del Consell Assessor Jove</h2>
+    <p class="page-lead">Avui el Consell es reuneix en sessió plenària. Cada grup presentarà la seva proposta. No és una competició: és una assemblea que busca el consens possible, com hauria de funcionar una democràcia.</p>
+
+    <div class="card" style="margin-bottom:1.25rem;">
+      <div class="card-label">Preguntes que guia el docent a l'assemblea</div>
+      <div style="display:grid; gap:0.6rem; margin-top:0.3rem;">
+        <div style="display:flex; gap:0.7rem; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); flex-shrink:0;">›</span>
+          <span>Quines propostes coincideixen? Podríem construir una posició conjunta del Consell?</span>
+        </div>
+        <div style="display:flex; gap:0.7rem; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); flex-shrink:0;">›</span>
+          <span>On hi ha desacord fonamental? És possible el desacord i alhora el respecte?</span>
+        </div>
+        <div style="display:flex; gap:0.7rem; font-size:0.9rem; line-height:1.6;">
+          <span style="color:var(--acc); flex-shrink:0;">›</span>
+          <span>Hi ha alguna proposta que hagi tingut en compte millor la visió global i els qui no tenien veu?</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">📋 Instrucció</div>
+      <p>«Llegiu breument les propostes dels altres grups mentre el docent les mostra. Escolteu la posada en comú. Després fareu la reflexió final individual.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s7-ind')">Continuar → Reflexió final individual</button>
+  </div>
+</div>
+
+
+<!-- S7 — INDIVIDUAL: Reflexió final -->
+<div class="screen" id="scr-s7-ind">
+  <div class="page">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 7</span><span>›</span><span class="cur">Reflexió final</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">Reflexió final — Comparant amb el punt de partida</h2>
+    <p class="page-lead">Recordes la primera sessió? Ara pots comparar el que pensaves llavors amb el que penses ara.</p>
+
+    <div class="qblock">
+      <div class="qnum">Pregunta 1 de 3</div>
+      <div class="qtxt">Què pensaves al principi sobre la crisi energètica que ara has canviat o matisat? Explica concretament el canvi.</div>
+      <textarea class="finput" id="s7i-r1" placeholder="Abans creia que... Ara penso que... El canvi ha estat perquè..." oninput="chkN('s7i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 2 de 3</div>
+      <div class="qtxt">Quina ha estat la pregunta més difícil de respondre durant tot el projecte? Per quins motius et va costar tant?</div>
+      <textarea class="finput" id="s7i-r2" placeholder="La pregunta més difícil ha estat... perquè..." oninput="chkN('s7i',3)"></textarea>
+    </div>
+    <div class="qblock">
+      <div class="qnum">Pregunta 3 de 3</div>
+      <div class="qtxt">Com a ciutadà o ciutadana, <strong>què pots fer tu</strong> amb tot el que has après? Pensa en accions concretes i realistes, no en grans declaracions.</div>
+      <textarea class="finput" id="s7i-r3" placeholder="Com a ciutadà/ana, puc..." oninput="chkN('s7i',3)"></textarea>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn-ghost" id="btn-s7i-save" onclick="saveIndN('s7i',3,'S7',null)" disabled>Guardar reflexió</button>
+      <button class="btn-cont" id="btn-s7i-cont" onclick="go('scr-s7-fi')" disabled style="display:none;">Continuar → Tancament final</button>
+      <span class="saved-ok" id="saved-s7i">✓ Reflexió guardada</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- S7 — CONTRACTE DE VALORS (info) -->
+<div class="screen" id="scr-s7-fi">
+  <div class="page">
+    <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 7</span><span>›</span><span class="cur">Tancament final</span></div>
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot current"></div><div class="step-bar"></div>
+      <div class="step-dot"></div>
+    </div>
+
+    <h2 class="page-h2">El contracte de valors</h2>
+    <p class="page-lead">L'última tasca és personal i no va a la plataforma. El docent us lliurarà un full en paper.</p>
+
+    <div class="card" style="margin-bottom:1.1rem; border-color:rgba(245,166,35,0.2);">
+      <div class="card-label">Tres compromisos personals — en paper, per a tu</div>
+      <p style="font-size:0.9rem; line-height:1.8;">Escriu tres compromisos concrets i realistes:<br>
+      <span style="color:var(--acc);">①</span> Com a <strong>consumidor/a d'energia</strong><br>
+      <span style="color:var(--acc);">②</span> Com a <strong>ciutadà/ana que s'informa</strong> i detecta el biaix<br>
+      <span style="color:var(--acc);">③</span> Com a <strong>persona</strong> que viu en un món interconnectat amb responsabilitat global</p>
+      <p style="font-size:0.84rem; color:var(--text-dim); margin-top:0.8rem;">No els compartiràs si no vols. Són teus.</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s7-final')">He escrit el contracte. Continuar →</button>
+  </div>
+</div>
+
+
+<!-- S7 — PANTALLA FINAL -->
+<div class="screen" id="scr-s7-final">
+  <div class="page">
+    <div class="steps">
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done"></div><div class="step-bar done"></div>
+      <div class="step-dot done" style="background:var(--green); box-shadow:0 0 0 3px rgba(82,183,136,0.2);"></div>
+    </div>
+
+    <div style="text-align:center; padding: 2.5rem 0;">
+      <div style="font-size:3.5rem; margin-bottom:1rem; filter:drop-shadow(0 0 24px rgba(82,183,136,0.6));">✅</div>
+      <div class="badge badge-ver" style="margin:0 auto 1.25rem; display:inline-flex;">Projecte completat · Crisi Energètica</div>
+      <h2 class="page-h2" style="font-size:2rem; margin-bottom:1.25rem;">El Consell Assessor Jove ha acabat la seva tasca.</h2>
+    </div>
+
+    <div class="card" style="margin-bottom:1.1rem; border-color:rgba(82,183,136,0.25); background:rgba(82,183,136,0.04);">
+      <p style="font-size:0.97rem; line-height:1.8; font-style:italic; color:var(--text);">«Heu fet el que molts adults no fan: heu mirat un problema complex de cara, heu buscat informació fiable, heu qüestionat les fonts, heu negociat i heu pres una decisió argumentant-la amb valors. I heu sigut honestos sobre els seus límits. Això és democràcia. Això és pensament crític.»</p>
+    </div>
+
+    <div class="card">
+      <div class="card-label">El que ha fet el Consell en 7 sessions</div>
+      <div style="display:grid; gap:0.45rem; font-size:0.88rem; line-height:1.6;">
+        <div style="display:flex; gap:0.65rem;"><span style="color:var(--green);">✓</span><span>Analitzar fonts amb biaix i construir una versió independent dels fets</span></div>
+        <div style="display:flex; gap:0.65rem;"><span style="color:var(--green);">✓</span><span>Identificar qui té el poder real i qui hauria de tenir-lo</span></div>
+        <div style="display:flex; gap:0.65rem;"><span style="color:var(--green);">✓</span><span>Prendre una decisió argumentada amb valors, no només amb dades</span></div>
+        <div style="display:flex; gap:0.65rem;"><span style="color:var(--green);">✓</span><span>Negociar entenent l'altre sense renunciar als propis principis</span></div>
+        <div style="display:flex; gap:0.65rem;"><span style="color:var(--green);">✓</span><span>Ser honestos sobre els límits de la pròpia proposta</span></div>
+      </div>
+    </div>
+
+    <button class="btn-cont" id="btn-fi-tot" onclick="completarSessioN('S7','scr-s7-final')" style="margin-top:0.5rem;">Tancar projecte →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────
+//  CAPA D'ABSTRACCIÓ — API
+//  Fase 2: substituir SCRIPT_URL per la URL
+//  real del Apps Script i eliminar el mock.
+// ─────────────────────────────────────────
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeCVZFCfXKGFGUFnDITdcXWM3bs4BvmAJfYVaIBNTp1v_P7p-687ImC8BEOCvU4Y5jRw/exec"; // s'omple a la Fase 2
+
+async function api(action, params = {}) {
+  if (SCRIPT_URL) {
+    const url = new URL(SCRIPT_URL);
+    url.searchParams.set('action', action);
+    for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
+    const res = await fetch(url);
+    return res.json();
+  }
+
+  // ── MOCK (Fase 1) ──────────────────────
+  await delay(380);
+  switch (action) {
+    case 'login': {
+      const db = {
+        'alumne@escola.cat': { nom:'Maria Garcia',  grup:2, posicio:1, ultimaSessio:null },
+        'joan@escola.cat':   { nom:'Joan Puig',     grup:2, posicio:2, ultimaSessio:'S1' },
+        'ana@escola.cat':    { nom:'Ana Martínez',  grup:3, posicio:3, ultimaSessio:null },
+        'pere@escola.cat':   { nom:'Pere Soler',    grup:1, posicio:4, ultimaSessio:'S2' },
+      };
+      const u = db[(params.email||'').toLowerCase().trim()];
+      // En mode demo, si no existeix, assignem grup per defecte
+      return u ? { ok:true, ...u } : { ok:true, nom: params.nom || 'Alumne Demo', grup:1, posicio:1, ultimaSessio:null };
+    }
+    case 'marcador': return { ok:true, valor:0 };
+    case 'save':     return { ok:true };
+    default:         return { ok:false };
+  }
+}
+
+const delay = ms => new Promise(r => setTimeout(r, ms));
+
+// ─────────────────────────────────────────
+//  ESTAT
+// ─────────────────────────────────────────
+let user = null;
+
+const MARC = {
+  0:{ txt:'Crisi màxima',     col:'#9b0000' },
+  1:{ txt:'Situació crítica', col:'#e63946' },
+  2:{ txt:'Situació greu',    col:'#f77f00' },
+  3:{ txt:'Millora moderada', col:'#fcbf49' },
+  4:{ txt:'Bona evolució',    col:'#90be6d' },
+  5:{ txt:'Crisi resolta',    col:'#52b788' },
+};
+
+// ─────────────────────────────────────────
+//  NAVEGACIÓ
+// ─────────────────────────────────────────
+function go(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  const scr = document.getElementById(id);
+  if (!scr) return;
+  scr.classList.add('on');
+  window.scrollTo({ top:0, behavior:'smooth' });
+
+  // Reset animation on .page
+  const pg = scr.querySelector('.page');
+  if (pg) { pg.style.animation='none'; pg.offsetHeight; pg.style.animation=''; }
+
+  // Header
+  document.getElementById('header').classList.toggle('vis', id !== 'scr-login');
+
+  // Render rol cards quan s'arriba a les pantalles de rol
+  if (id === 'scr-s2-rol') renderRolCard();
+  if (id === 'scr-s4-rol') renderS4RolCard();
+  if (id === 'scr-s5-rol') renderS5RolCard();
+}
+
+// ─────────────────────────────────────────
+//  MARCADOR
+// ─────────────────────────────────────────
+function setMarcador(v) {
+  const cfg = MARC[v] || MARC[0];
+  document.getElementById('marc-text').textContent = cfg.txt;
+  document.getElementById('marc-text').style.color  = cfg.col;
+  for (let i = 0; i <= 5; i++) {
+    const seg = document.getElementById('s'+i);
+    seg.className = 'marc-seg';
+    if (i <= v) seg.classList.add('on-'+v);
+  }
+}
+
+// ─────────────────────────────────────────
+//  LOGIN
+// ─────────────────────────────────────────
+async function doLogin() {
+  const nom   = document.getElementById('inp-nom').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+  const btn   = document.getElementById('btn-login');
+  const err   = document.getElementById('login-err');
+  if (!nom || !email) return;
+
+  btn.disabled = true;
+  btn.innerHTML = 'Verificant <span class="dots"><span></span><span></span><span></span></span>';
+  err.style.display = 'none';
+
+  try {
+    const [lr, mr] = await Promise.all([
+      api('login', { nom, email }),
+      api('marcador')
+    ]);
+
+    if (!lr.ok) {
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Accedir al Consell';
+      return;
+    }
+
+    user = { nom: lr.nom || nom, email, grup: lr.grup, posicio: lr.posicio, ultimaSessio: lr.ultimaSessio };
+
+    document.getElementById('h-nom').textContent  = user.nom;
+    document.getElementById('h-grup').textContent = 'Grup ' + user.grup;
+    document.getElementById('benv-grup').textContent = user.grup;
+    setMarcador(mr.valor ?? 0);
+
+    // Routing: primera vegada → benvinguda; sessions anteriors → pantalla corresponent
+    routeAfterLogin();
+
+  } catch(e) {
+    err.textContent = 'Error de connexió. Torna-ho a provar.';
+    err.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = 'Accedir al Consell';
+  }
+}
+
+function doDemo() {
+  user = { nom:'Docent Demo', email:'demo@demo.cat', grup:1, posicio:1, ultimaSessio:null };
+  document.getElementById('h-nom').textContent  = user.nom;
+  document.getElementById('h-grup').textContent = 'Grup ' + user.grup;
+  document.getElementById('benv-grup').textContent = user.grup;
+  setMarcador(0);
+  routeAfterLogin();
+}
+
+// Enter key
+['inp-nom','inp-email'].forEach(id => {
+  document.getElementById(id).addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (id === 'inp-nom') document.getElementById('inp-email').focus();
+      else doLogin();
+    }
+  });
+});
+
+// ─────────────────────────────────────────
+//  INDIVIDUAL S1
+// ─────────────────────────────────────────
+function chkInd() {
+  const ok = document.getElementById('r1').value.trim().length > 4
+          && document.getElementById('r2').value.trim().length > 4;
+  document.getElementById('btn-save').disabled = !ok;
+}
+
+async function saveInd() {
+  const r1    = document.getElementById('r1').value.trim();
+  const r2    = document.getElementById('r2').value.trim();
+  const rBonus= document.getElementById('r-bonus').value.trim();
+  const btn   = document.getElementById('btn-save');
+
+  btn.disabled = true;
+  btn.textContent = 'Guardant...';
+
+  const saves = [
+    api('save', { email:user?.email, missio:'M1', sessio:'S1', tipus:'individual', pregunta:'crisi_que_es',  resposta:r1 }),
+    api('save', { email:user?.email, missio:'M1', sessio:'S1', tipus:'individual', pregunta:'crisi_afecta', resposta:r2 }),
+  ];
+  if (rBonus) saves.push(
+    api('save', { email:user?.email, missio:'M1', sessio:'S1', tipus:'bonus', pregunta:'crisi_culpa', resposta:rBonus })
+  );
+  await Promise.all(saves);
+
+  document.getElementById('saved-ok').classList.add('vis');
+  btn.textContent = '✓ Guardat';
+
+  // Mostrar bonus
+  document.getElementById('bonus-wrap').classList.add('vis');
+
+  // Activar botó de continuar
+  const bc = document.getElementById('btn-cont-ind');
+  bc.style.display = 'inline-block';
+  bc.disabled = false;
+}
+
+// ─────────────────────────────────────────
+//  ROL S2 — dades per posició
+// ─────────────────────────────────────────
+const ROLS_S2 = {
+  1: {
+    sobre: 'A',
+    icon: '🏭',
+    tipus: 'Informe corporatiu',
+    org: 'GasEuropa Consortium',
+    desc: 'Informe de mercat d\'una de les grans empreses de distribució de gas natural a Europa.'
+  },
+  2: {
+    sobre: 'B',
+    icon: '🌿',
+    tipus: 'Article d\'opinió',
+    org: 'Xarxa Europea per la Transició Justa',
+    desc: 'Informe d\'urgència d\'una organització sense ànim de lucre que treballa per accelerar la transició a energies renovables.'
+  },
+  3: {
+    sobre: 'C',
+    icon: '📄',
+    tipus: 'Nota diplomàtica filtrada',
+    org: 'Ambaixada de la Federació Russa a Brussel·les',
+    desc: 'Document d\'ús intern que ha estat filtrat als mitjans europeus. Reflexa la posició oficial russa sobre la crisi.'
+  },
+  4: {
+    sobre: 'D',
+    icon: '🔬',
+    tipus: 'Estudi acadèmic',
+    org: 'Institut Internacional d\'Energia i Recursos',
+    desc: 'Anàlisi tècnica sobre reserves mundials d\'energia, publicada per un think tank amb seu a Ginebra.'
+  }
+};
+
+function renderRolCard() {
+  const pos  = user?.posicio || 1;
+  const rol  = ROLS_S2[pos] || ROLS_S2[1];
+  document.getElementById('rol-card').innerHTML = `
+    <div class="card-label">El teu document — Sobre ${rol.sobre}</div>
+    <div class="rol-icon">${rol.icon}</div>
+    <div style="font-family:'Rajdhani',sans-serif; font-size:0.72rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-dim); margin-bottom:0.3rem;">${rol.tipus}</div>
+    <div style="font-size:1.05rem; font-weight:500; margin-bottom:0.65rem;">${rol.org}</div>
+    <p style="font-size:0.88rem; line-height:1.65; color:var(--text-dim);">${rol.desc}</p>
+    <div class="rol-sobre">📩 Sobre ${rol.sobre} — Demana'l al teu docent</div>
+  `;
+}
+
+// ─────────────────────────────────────────
+//  VALIDACIÓ GRUPS
+// ─────────────────────────────────────────
+function chkGrup(inputId, btnId) {
+  const ok = document.getElementById(inputId).value.trim().length > 15;
+  document.getElementById(btnId).disabled = !ok;
+}
+
+// ─────────────────────────────────────────
+//  GUARDAR RESPOSTA DE GRUP
+// ─────────────────────────────────────────
+async function saveGrup(inputId, sessio, prefix, nextScreen) {
+  const r    = document.getElementById(inputId).value.trim();
+  const btn  = document.getElementById('btn-'+prefix+'-save');
+  btn.disabled = true;
+  btn.textContent = 'Guardant...';
+  await api('save', {
+    email: user?.email, missio: 'M1', sessio,
+    tipus: 'grupal', pregunta: 'resposta_grup', resposta: r
+  });
+  document.getElementById('saved-'+prefix).classList.add('vis');
+  btn.textContent = '✓ Guardat';
+  const cont = document.getElementById('btn-'+prefix+'-cont');
+  cont.style.display = 'inline-block';
+  cont.disabled = false;
+}
+
+// ─────────────────────────────────────────
+//  COMPLETAR SESSIÓ
+// ─────────────────────────────────────────
+async function completarSessio(sessio, nextScreen) {
+  const btn = document.getElementById(
+    sessio === 'S1' ? 'btn-s1-fi' : 'btn-s2-fi'
+  );
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardant...'; }
+  await api('save', {
+    email: user?.email, missio: 'M1', sessio,
+    tipus: 'sistema', pregunta: 'sessio_completada', resposta: 'true'
+  });
+  if (user) user.ultimaSessio = sessio;
+  go(nextScreen);
+  if (btn) { btn.disabled = false; btn.textContent = btn.textContent; }
+}
+
+// ─────────────────────────────────────────
+//  VALIDACIÓ I GUARDAT S2 INDIVIDUAL
+// ─────────────────────────────────────────
+function chkInd2() {
+  const ok = document.getElementById('s2i-r1').value.trim().length > 4
+          && document.getElementById('s2i-r2').value.trim().length > 4;
+  document.getElementById('btn-s2i-save').disabled = !ok;
+}
+
+async function saveInd2() {
+  const r1    = document.getElementById('s2i-r1').value.trim();
+  const r2    = document.getElementById('s2i-r2').value.trim();
+  const bonus = document.getElementById('s2i-bonus').value.trim();
+  const btn   = document.getElementById('btn-s2i-save');
+  btn.disabled = true; btn.textContent = 'Guardant...';
+  const saves = [
+    api('save', { email:user?.email, missio:'M1', sessio:'S2', tipus:'individual', pregunta:'font_interessos', resposta:r1 }),
+    api('save', { email:user?.email, missio:'M1', sessio:'S2', tipus:'individual', pregunta:'font_solidesa',   resposta:r2 }),
+  ];
+  if (bonus) saves.push(
+    api('save', { email:user?.email, missio:'M1', sessio:'S2', tipus:'bonus', pregunta:'font_fiable', resposta:bonus })
+  );
+  await Promise.all(saves);
+  document.getElementById('saved-s2i').classList.add('vis');
+  document.getElementById('bonus2-wrap').classList.add('vis');
+  btn.textContent = '✓ Guardat';
+  const cont = document.getElementById('btn-s2i-cont');
+  cont.style.display = 'inline-block'; cont.disabled = false;
+}
+
+// ─────────────────────────────────────────
+//  FUNCIONS GENÈRIQUES M2/M3/M4
+// ─────────────────────────────────────────
+
+// Validació genèrica per N preguntes (ids: prefix-r1, r2, r3...)
+function chkN(prefix, n) {
+  let ok = true;
+  for (let i = 1; i <= n; i++) {
+    const el = document.getElementById(prefix + '-r' + i);
+    if (!el || el.value.trim().length < 5) { ok = false; break; }
+  }
+  const btn = document.getElementById('btn-' + prefix + '-save');
+  if (btn) btn.disabled = !ok;
+}
+
+// Guardar resposta individual genèrica
+async function saveIndN(prefix, n, sessio, bonusWrapId) {
+  const btn = document.getElementById('btn-' + prefix + '-save');
+  btn.disabled = true; btn.textContent = 'Guardant...';
+
+  const saves = [];
+  for (let i = 1; i <= n; i++) {
+    const val = document.getElementById(prefix + '-r' + i)?.value.trim();
+    if (val) saves.push(api('save', {
+      email: user?.email, missio: sessioToMissio(sessio), sessio,
+      tipus: 'individual', pregunta: prefix + '_r' + i, resposta: val
+    }));
+  }
+  const bonus = document.getElementById(prefix + '-bonus')?.value.trim();
+  if (bonus) saves.push(api('save', {
+    email: user?.email, missio: sessioToMissio(sessio), sessio,
+    tipus: 'bonus', pregunta: prefix + '_bonus', resposta: bonus
+  }));
+  await Promise.all(saves);
+
+  document.getElementById('saved-' + prefix).classList.add('vis');
+  btn.textContent = '✓ Guardat';
+  if (bonusWrapId) document.getElementById(bonusWrapId)?.classList.add('vis');
+  const cont = document.getElementById('btn-' + prefix + '-cont');
+  if (cont) { cont.style.display = 'inline-block'; cont.disabled = false; }
+}
+
+// Guardar resposta de grup genèrica
+async function saveGrupN(inputId, sessio, prefix, nextScreen) {
+  const r   = document.getElementById(inputId).value.trim();
+  const btn = document.getElementById('btn-' + prefix + '-save');
+  btn.disabled = true; btn.textContent = 'Guardant...';
+  await api('save', {
+    email: user?.email, missio: sessioToMissio(sessio), sessio,
+    tipus: 'grupal', pregunta: 'resposta_grup', resposta: r
+  });
+  document.getElementById('saved-' + prefix).classList.add('vis');
+  btn.textContent = '✓ Guardat';
+  const cont = document.getElementById('btn-' + prefix + '-cont');
+  if (cont) { cont.style.display = 'inline-block'; cont.disabled = false; }
+}
+
+// Completar sessió genèrica
+async function completarSessioN(sessio, nextScreen) {
+  const btn = document.getElementById('btn-' +
+    { S1:'s1', S2:'s2', S3:'s3', S4:'s4', S5:'s5', S6:'s6', S7:'fi-tot' }[sessio] + '-fi');
+  if (btn) { btn.disabled = true; btn.textContent = 'Guardant...'; }
+  await api('save', {
+    email: user?.email, missio: sessioToMissio(sessio), sessio,
+    tipus: 'sistema', pregunta: 'sessio_completada', resposta: 'true'
+  });
+  if (user) user.ultimaSessio = sessio;
+  // La pantalla final no redirigeix a cap altra
+  if (sessio !== 'S7') go(nextScreen);
+  if (btn) { btn.disabled = false; btn.textContent = '✓ Completat'; }
+}
+
+function sessioToMissio(s) {
+  return { S1:'M1', S2:'M1', S3:'M2', S4:'M2', S5:'M3', S6:'M4', S7:'M4' }[s] || 'M1';
+}
+
+// ─────────────────────────────────────────
+//  ROLS S4 — Informació asimètrica
+// ─────────────────────────────────────────
+const ROLS_S4 = {
+  1: {
+    icon: '🛢️', lletra: 'A',
+    titol: 'Gas del Golf Pèrsic — Anàlisi detallada',
+    desc: 'La fitxa que has rebut conté dades econòmiques i geopolítiques sobre l\'Opció A: el subministrament de gas des dels països del Golf Pèrsic a través de terminals GNL.',
+    detalls: [
+      'Cost d\'instal·lació de noves terminals GNL a Europa: ~45.000M€ fins al 2030',
+      'Capacitat de substitució del gas rus amb GNL: 60-70% en 5 anys, 90% en 10',
+      'Emprenta de CO₂ del GNL transportat per vaixell: 3x superior al gas per gasoducte',
+      'Qatar, EAU i Aràbia Saudita exigiran acords de no-ingerència i compres garantides a 20 anys'
+    ]
+  },
+  2: {
+    icon: '⚡', lletra: 'B',
+    titol: 'Acceleració de renovables — Anàlisi detallada',
+    desc: 'La fitxa que has rebut conté dades tècniques i econòmiques sobre l\'Opció B: la inversió massiva en energia eòlica, solar i xarxes de distribució europees.',
+    detalls: [
+      'Potencial eòlic i solar europeu no aprofitat: equivalent al 280% del consum actual',
+      'Inversió necessària per assolir independència energètica el 2035: ~2,5 bilions d\'€',
+      'Minerals crítics necessaris: liti, cobalt, neodimi — el 60-85% prové de la Xina',
+      'Llocs de treball nets creats per transició: +2,3M (però -1,1M en sector fòssil)'
+    ]
+  },
+  3: {
+    icon: '🤝', lletra: 'C',
+    titol: 'Acord negociat amb Rússia — Anàlisi detallada',
+    desc: 'La fitxa que has rebut conté dades geopolítiques i econòmiques sobre l\'Opció C: reprendre les negociacions de subministrament de gas rus a través de gasoductes existents.',
+    detalls: [
+      'Infraestructura existent i operativa: reduiria preu a la meitat respecte al GNL',
+      'Condicions russes per reprendre: fi d\'algunes sancions i garanties de neutralitat energètica',
+      'Impacte en la credibilitat europea: considerada una rendició per molts socis de la UE',
+      'Risc de tall unilateral: l\'experiència 2022 demostra que Rússia ho pot fer en 48h'
+    ]
+  },
+  4: {
+    icon: '🔭', lletra: 'D',
+    titol: 'Visió global — Les tres opcions i la possible Opció D',
+    desc: 'Has rebut una fitxa de síntesi que analitza les tres opcions i apunta pistes per a una possible quarta via basada en reducció del consum i diversificació.',
+    detalls: [
+      'L\'eficiència energètica podria reduir el consum europeu un 30-40% sense canviar el model de vida substancialment',
+      'Europa produeix menys del 10% de l\'energia que consumeix: qualsevol opció A/B/C manté una dependència alta',
+      'Una Opció D combinaria: 40% renovables pròpies + 30% eficiència + 20% GNL temporal + 10% nuclear',
+      'Cap govern europeu ha proposat formalment l\'eficiència com a primera mesura — per quins motius?'
+    ]
+  }
+};
+
+function renderS4RolCard() {
+  const pos = user?.posicio || 1;
+  const rol = ROLS_S4[pos] || ROLS_S4[1];
+  document.getElementById('s4-rol-card').innerHTML = `
+    <div class="card-label">El teu document — Sobre ${rol.lletra}</div>
+    <div class="rol-icon">${rol.icon}</div>
+    <div style="font-size:0.97rem; font-weight:500; margin-bottom:0.55rem;">${rol.titol}</div>
+    <p style="font-size:0.87rem; line-height:1.65; color:var(--text-dim); margin-bottom:0.85rem;">${rol.desc}</p>
+    <ul style="list-style:none; display:grid; gap:0.4rem;">
+      ${rol.detalls.map(d => `<li style="font-size:0.83rem; line-height:1.6; color:var(--text-dim); padding-left:1rem; position:relative;"><span style="position:absolute;left:0;color:var(--acc);">›</span>${d}</li>`).join('')}
+    </ul>
+    <div class="rol-sobre">📩 Sobre ${rol.lletra} — Demana'l al teu docent</div>
+  `;
+}
+
+// ─────────────────────────────────────────
+//  ROLS S5 — Negociació
+// ─────────────────────────────────────────
+const ROLS_S5 = {
+  1: {
+    icon: '🇷🇺', sobre: 'R', actor: 'Federació Russa',
+    resum: 'Represents la posició russa a la taula de negociació. El teu sobre conté els arguments principals i les línies vermelles que Rússia no pot acceptar.',
+    clau: 'El teu actor necessita: aixecar sancions, ser reconegut com a soci legítim, i mantenir el gas com a actiu de poder geopolític.'
+  },
+  2: {
+    icon: '🛢️', sobre: 'G', actor: 'Països del Golf Pèrsic',
+    resum: 'Represents la posició dels emirats productors de gas (Qatar, EAU, Aràbia Saudita). El teu sobre conté les exigències i els interessos del Golf en les negociacions amb Europa.',
+    clau: 'El teu actor necessita: contractes a llarg termini, no-ingerència en afers interns, i reconeixement com a soci estratègic — no com a alternativa temporal.'
+  },
+  3: {
+    icon: '🇨🇳', sobre: 'X', actor: 'República Popular de la Xina',
+    resum: 'Represents la posició xinesa, que controla els minerals crítics per a la transició energètica europea. El teu sobre conté les condicions i els advertiments de la Xina.',
+    clau: 'El teu actor necessita: que Europa no l\'aïlli comercialment, accés als mercats europeus per a les seves empreses, i que la transició energètica europea no sigui un instrument de guerra comercial.'
+  },
+  4: {
+    icon: '🇪🇺', sobre: 'E', actor: 'Europa — Consell Assessor (tu)',
+    resum: 'Represents la posició europea i actues de moderador natural de la negociació. El teu sobre conté els límits que Europa no pot creuar i els valors que ha de defensar.',
+    clau: 'El teu actor necessita: un acord que Europa pugui presentar als seus ciutadans com a honest, que no legitimi agressions i que avanci cap a la independència energètica real.',
+    moderador: true
+  }
+};
+
+function renderS5RolCard() {
+  const pos = user?.posicio || 1;
+  const rol = ROLS_S5[pos] || ROLS_S5[1];
+  document.getElementById('s5-rol-card').innerHTML = `
+    <div class="card-label">El teu rol — Sobre ${rol.sobre}</div>
+    <div class="rol-icon">${rol.icon}</div>
+    <div style="font-size:0.97rem; font-weight:500; margin-bottom:0.5rem;">${rol.actor}${rol.moderador ? ' <span style=\'color:var(--acc); font-size:0.8rem; font-family:Rajdhani,sans-serif; letter-spacing:0.08em;\'>· Moderador/a</span>' : ''}</div>
+    <p style="font-size:0.87rem; line-height:1.65; color:var(--text-dim); margin-bottom:0.75rem;">${rol.resum}</p>
+    <div style="background:var(--bg3); border:1px solid var(--border); border-radius:2px; padding:0.7rem 0.9rem; font-size:0.84rem; line-height:1.65; color:var(--text-dim);">
+      <span style="color:var(--acc); font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; display:block; margin-bottom:0.3rem;">Clau del teu actor</span>
+      ${rol.clau}
+    </div>
+    <div class="rol-sobre">📩 Sobre ${rol.sobre} — Demana'l al teu docent</div>
+  `;
+}
+
+// ─────────────────────────────────────────
+//  ROUTING AMPLIAT (S3-S7)
+// ─────────────────────────────────────────
+function routeAfterLogin() {
+  const s = user?.ultimaSessio;
+  if (!s) return go('scr-benv');
+  const next = {
+    S1:'scr-s2-ob', S2:'scr-s3-ob', S3:'scr-s4-ob',
+    S4:'scr-s5-ob', S5:'scr-s6-ob', S6:'scr-s7-ob', S7:'scr-s7-final'
+  };
+  go(next[s] || 'scr-benv');
+}
+
+// ─────────────────────────────────────────
+//  MAPA D3 — Natural Earth projection
+// ─────────────────────────────────────────
+async function renderMap() {
+  const container = document.getElementById('map-d3');
+  const W = container.clientWidth || 740;
+  const H = Math.round(W * 0.48);
+
+  // IDs numèrics ISO dels països de la UE (aproximació per destacar-los)
+  const EU_IDS = new Set([
+    40,56,100,191,196,203,208,233,246,250,276,300,348,372,380,
+    428,440,442,470,528,616,620,642,703,705,724,752,756
+  ]);
+
+  const [d3mod, topo, world] = await Promise.all([
+    import('https://cdn.jsdelivr.net/npm/d3@7/+esm'),
+    import('https://cdn.jsdelivr.net/npm/topojson-client@3/+esm'),
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r => r.json())
+  ]);
+
+  document.getElementById('map-loading').remove();
+
+  const projection = d3mod.geoNaturalEarth1()
+    .scale(W / 6.28)
+    .translate([W / 2, H / 2]);
+
+  const pathGen = d3mod.geoPath().projection(projection);
+  const countries = topo.feature(world, world.objects.countries);
+  const borders   = topo.mesh(world, world.objects.countries, (a,b) => a !== b);
+
+  const svg = d3mod.select('#map-d3')
+    .append('svg')
+    .attr('width', '100%')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .style('display', 'block');
+
+  // Definicions (glow filter + gradient)
+  const defs = svg.append('defs');
+  defs.append('radialGradient').attr('id','hspot-grad')
+    .attr('cx','50%').attr('cy','50%').attr('r','50%')
+    .selectAll('stop').data([
+      { offset:'0%',   color:'#e63946', opacity:0.55 },
+      { offset:'100%', color:'#e63946', opacity:0 }
+    ]).enter().append('stop')
+      .attr('offset', d => d.offset)
+      .attr('stop-color', d => d.color)
+      .attr('stop-opacity', d => d.opacity);
+
+  const glowFilt = defs.append('filter').attr('id','pt-glow');
+  glowFilt.append('feGaussianBlur').attr('stdDeviation','2.5').attr('result','blur');
+  const merge = glowFilt.append('feMerge');
+  merge.append('feMergeNode').attr('in','blur');
+  merge.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Fons oceà
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#0c1525');
+
+  // Graella lat/lon subtil
+  const graticule = d3mod.geoGraticule().step([30, 30]);
+  svg.append('path').datum(graticule())
+    .attr('d', pathGen)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(255,255,255,0.035)')
+    .attr('stroke-width', 0.5);
+
+  // Països
+  svg.selectAll('.country')
+    .data(countries.features)
+    .enter().append('path')
+    .attr('class', 'country')
+    .attr('d', pathGen)
+    .attr('fill', d => EU_IDS.has(+d.id) ? '#1d2d4a' : '#17213a')
+    .attr('stroke', 'rgba(255,255,255,0.06)')
+    .attr('stroke-width', 0.4);
+
+  // Fronteres interiors (més visibles)
+  svg.append('path').datum(borders)
+    .attr('d', pathGen)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(255,255,255,0.09)')
+    .attr('stroke-width', 0.4);
+
+  // ─── PUNTS CALENTS ───
+  const hotspots = [
+    { nom:'ORMUZ',  lon: 56.3, lat: 26.1, delay: 0   },
+    { nom:'RÚSSIA', lon: 37.6, lat: 51.0, delay: 0.7 },
+    { nom:'XINA',   lon:104.2, lat: 35.9, delay: 1.4 },
+  ];
+
+  hotspots.forEach(h => {
+    const [x, y] = projection([h.lon, h.lat]);
+    const g = svg.append('g').attr('transform', `translate(${x},${y})`);
+
+    // Pols animats
+    const pulse = g.append('circle').attr('r', 14).attr('fill', 'url(#hspot-grad)');
+    (function anim() {
+      pulse.attr('r', 10).attr('opacity', 0.7)
+        .transition().delay(h.delay * 1000).duration(1400)
+        .attr('r', 22).attr('opacity', 0.15)
+        .on('end', anim);
+    })();
+
+    g.append('circle').attr('r', 6).attr('fill', '#e63946').attr('filter', 'url(#pt-glow)');
+    g.append('circle').attr('r', 3).attr('fill', '#ff8a93');
+    g.append('text')
+      .attr('y', -11).attr('text-anchor', 'middle')
+      .attr('font-family', 'Rajdhani,sans-serif').attr('font-size', 9)
+      .attr('font-weight', 700).attr('letter-spacing', 1)
+      .attr('fill', 'rgba(255,255,255,0.7)')
+      .text(h.nom);
+  });
+
+  // ─── MARCADOR UE ───
+  const [eux, euy] = projection([10, 51]);
+  const ue = svg.append('g').attr('transform', `translate(${eux},${euy})`);
+  ue.append('circle').attr('r', 5).attr('fill', '#F5A623').attr('opacity', 0.9).attr('filter', 'url(#pt-glow)');
+  ue.append('text').attr('y', -9).attr('text-anchor', 'middle')
+    .attr('font-family', 'Rajdhani,sans-serif').attr('font-size', 8)
+    .attr('font-weight', 700).attr('fill', 'rgba(245,166,35,0.85)')
+    .text('UE');
+}
+
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+setMarcador(0);
+renderMap().catch(() => {
+  const el = document.getElementById('map-loading');
+  if (el) el.textContent = 'Error carregant el mapa. Comprova la connexió.';
+});
+</script>
+
+</body>
+</html>

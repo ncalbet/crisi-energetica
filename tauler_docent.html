@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚡ Tauler Docent — Crisi Energètica</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #07091a;
+      --bg2:      #0c1022;
+      --bg3:      #111827;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #dde1ec;
+      --dim:      #6b7590;
+      --acc:      #F5A623;
+      --acc-glow: rgba(245,166,35,0.15);
+      --red:      #e63946;
+      --green:    #52b788;
+      --blue:     #8ab4f8;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'IBM Plex Sans',sans-serif;
+      background:var(--bg); color:var(--text);
+      min-height:100vh;
+    }
+    body::after {
+      content:''; position:fixed; inset:0;
+      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.02) 2px,rgba(0,0,0,0.02) 4px);
+      pointer-events:none; z-index:9999;
+    }
+
+    /* ── LOGIN ── */
+    #scr-login {
+      min-height:100vh; display:flex;
+      align-items:center; justify-content:center;
+      position:relative;
+    }
+    #scr-login::before {
+      content:''; position:absolute; inset:0;
+      background:radial-gradient(ellipse 55% 45% at 50% 0%, rgba(245,166,35,0.06) 0%, transparent 60%);
+      pointer-events:none;
+    }
+    .login-wrap {
+      position:relative; z-index:1;
+      width:100%; max-width:380px; padding:2rem;
+    }
+    .login-logo { text-align:center; margin-bottom:2rem; }
+    .login-logo-icon { font-size:2.2rem; display:block; margin-bottom:0.5rem; }
+    .login-logo-title {
+      font-family:'Rajdhani',sans-serif; font-size:1.4rem;
+      font-weight:700; letter-spacing:0.18em; text-transform:uppercase;
+    }
+    .login-logo-sub {
+      font-size:0.7rem; color:var(--dim); letter-spacing:0.12em;
+      text-transform:uppercase; margin-top:0.25rem;
+    }
+    .login-card {
+      background:var(--bg2); border:1px solid var(--border);
+      border-top:2px solid var(--acc); border-radius:3px;
+      padding:1.5rem 1.75rem;
+    }
+    .flabel {
+      display:block; font-family:'Rajdhani',sans-serif;
+      font-size:0.68rem; font-weight:700; letter-spacing:0.12em;
+      text-transform:uppercase; color:var(--dim); margin-bottom:0.4rem;
+    }
+    .finput {
+      width:100%; background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.65rem 0.85rem; color:var(--text);
+      font-family:'IBM Plex Mono',monospace; font-size:0.88rem;
+      outline:none; transition:border-color 0.2s, box-shadow 0.2s;
+      margin-bottom:1rem;
+    }
+    .finput:focus { border-color:var(--acc); box-shadow:0 0 0 3px var(--acc-glow); }
+    .finput::placeholder { color:var(--dim); opacity:0.4; }
+    .btn-acc {
+      width:100%; background:var(--acc); color:#07091a;
+      border:none; border-radius:2px; padding:0.75rem;
+      font-family:'Rajdhani',sans-serif; font-size:0.92rem;
+      font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+      cursor:pointer; transition:background 0.2s, box-shadow 0.2s;
+    }
+    .btn-acc:hover { background:#ffc147; box-shadow:0 4px 22px rgba(245,166,35,0.3); }
+    .btn-acc:disabled { opacity:0.4; cursor:not-allowed; }
+    .login-err {
+      background:rgba(230,57,70,0.09); border:1px solid rgba(230,57,70,0.25);
+      color:#f0a8ac; border-radius:2px; padding:0.6rem 0.9rem;
+      font-size:0.82rem; margin-top:0.85rem; display:none;
+    }
+    .demo-note {
+      text-align:center; margin-top:1.25rem; font-size:0.7rem; color:var(--dim);
+    }
+    .demo-note button {
+      background:none; border:none; color:var(--acc); cursor:pointer;
+      font-size:0.7rem; text-decoration:underline; padding:0;
+    }
+
+    /* ── APP SHELL ── */
+    #app { display:none; min-height:100vh; flex-direction:column; }
+    #app.on { display:flex; }
+
+    /* Top bar */
+    .topbar {
+      height:56px; background:rgba(7,9,26,0.97);
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(12px);
+      display:flex; align-items:center;
+      padding:0 1.5rem; gap:1.5rem;
+      position:sticky; top:0; z-index:100;
+    }
+    .topbar-brand {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:0.82rem; letter-spacing:0.15em; text-transform:uppercase;
+      color:var(--acc); white-space:nowrap;
+    }
+    .topbar-brand em { color:var(--dim); font-style:normal; font-weight:500; }
+    .topbar-sep { flex:1; }
+    .sess-sel {
+      background:var(--bg3); border:1px solid var(--border);
+      color:var(--text); border-radius:2px; padding:5px 10px;
+      font-family:'Rajdhani',sans-serif; font-size:0.8rem;
+      font-weight:600; letter-spacing:0.06em; cursor:pointer; outline:none;
+    }
+    .btn-refresh {
+      background:transparent; border:1px solid var(--border);
+      color:var(--dim); border-radius:2px; padding:5px 12px;
+      font-family:'Rajdhani',sans-serif; font-size:0.75rem;
+      font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+      cursor:pointer; transition:color 0.2s, border-color 0.2s;
+    }
+    .btn-refresh:hover { color:var(--text); border-color:rgba(255,255,255,0.2); }
+    .topbar-docent { font-size:0.78rem; color:var(--dim); white-space:nowrap; }
+
+    /* Layout */
+    .layout {
+      display:grid;
+      grid-template-columns:260px 1fr;
+      grid-template-rows:auto 1fr;
+      gap:0;
+      flex:1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      grid-row:1/-1;
+      background:var(--bg2);
+      border-right:1px solid var(--border);
+      padding:1.25rem 0;
+      overflow-y:auto;
+    }
+    .sb-section {
+      font-family:'Rajdhani',sans-serif; font-size:0.63rem;
+      font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--dim); padding:0 1.25rem; margin-bottom:0.5rem;
+      margin-top:1.25rem;
+    }
+    .sb-section:first-child { margin-top:0; }
+    .sb-btn {
+      display:flex; align-items:center; gap:0.65rem;
+      width:100%; background:none; border:none;
+      padding:0.6rem 1.25rem; text-align:left;
+      font-family:'IBM Plex Sans',sans-serif; font-size:0.87rem;
+      color:var(--dim); cursor:pointer;
+      transition:background 0.15s, color 0.15s;
+      border-left:3px solid transparent;
+    }
+    .sb-btn:hover { background:rgba(255,255,255,0.03); color:var(--text); }
+    .sb-btn.on {
+      background:rgba(245,166,35,0.07); color:var(--acc);
+      border-left-color:var(--acc);
+    }
+    .sb-icon { font-size:1rem; width:18px; text-align:center; flex-shrink:0; }
+
+    /* Main content */
+    .main {
+      padding:1.5rem;
+      overflow-y:auto;
+      display:flex; flex-direction:column; gap:1.25rem;
+    }
+
+    /* Panels */
+    .panel {
+      background:var(--bg2); border:1px solid var(--border);
+      border-radius:2px; overflow:hidden;
+    }
+    .panel-head {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0.75rem 1.1rem; border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,0.015);
+    }
+    .panel-title {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:0.82rem; letter-spacing:0.1em; text-transform:uppercase;
+    }
+    .panel-body { padding:1.1rem; }
+
+    /* ── MARCADOR PANEL ── */
+    .marc-display {
+      display:flex; align-items:center; gap:1.5rem;
+      margin-bottom:1.1rem;
+    }
+    .marc-valor {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:3.5rem; line-height:1;
+      transition:color 0.5s;
+    }
+    .marc-info { flex:1; }
+    .marc-estat {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:1.1rem; margin-bottom:0.2rem;
+      transition:color 0.5s;
+    }
+    .marc-desc { font-size:0.82rem; color:var(--dim); line-height:1.5; }
+    .marc-segs {
+      display:flex; gap:4px; margin-bottom:1rem;
+    }
+    .marc-seg {
+      flex:1; height:10px; border-radius:2px;
+      background:rgba(255,255,255,0.05);
+      transition:background 0.5s, box-shadow 0.5s;
+    }
+    .marc-seg.on-0 { background:#9b0000; box-shadow:0 0 8px #9b0000; }
+    .marc-seg.on-1 { background:#e63946; box-shadow:0 0 8px #e63946; }
+    .marc-seg.on-2 { background:#f77f00; box-shadow:0 0 8px #f77f00; }
+    .marc-seg.on-3 { background:#fcbf49; box-shadow:0 0 8px #fcbf49; }
+    .marc-seg.on-4 { background:#90be6d; box-shadow:0 0 8px #90be6d; }
+    .marc-seg.on-5 { background:#52b788; box-shadow:0 0 8px #52b788; }
+    .marc-btns {
+      display:flex; gap:0.65rem;
+    }
+    .btn-marc {
+      flex:1; border:none; border-radius:2px; padding:0.65rem;
+      font-family:'Rajdhani',sans-serif; font-size:1rem; font-weight:700;
+      cursor:pointer; transition:background 0.2s, transform 0.1s;
+    }
+    .btn-marc:active { transform:scale(0.97); }
+    .btn-marc:disabled { opacity:0.3; cursor:not-allowed; }
+    .btn-baixar { background:rgba(230,57,70,0.15); color:var(--red); border:1px solid rgba(230,57,70,0.25); }
+    .btn-baixar:hover:not(:disabled) { background:rgba(230,57,70,0.25); }
+    .btn-pujar  { background:rgba(82,183,136,0.15); color:var(--green); border:1px solid rgba(82,183,136,0.25); }
+    .btn-pujar:hover:not(:disabled)  { background:rgba(82,183,136,0.25); }
+    .marc-saved { font-size:0.75rem; color:var(--green); text-align:center; height:18px; margin-top:0.4rem; font-family:'Rajdhani',sans-serif; letter-spacing:0.08em; }
+
+    /* ── ESTAT GRUPS ── */
+    .grups-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(180px,1fr));
+      gap:0.65rem;
+    }
+    .grup-card {
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.85rem;
+      display:flex; flex-direction:column; gap:0.5rem;
+    }
+    .grup-head {
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .grup-nom {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:0.88rem; letter-spacing:0.08em;
+    }
+    .grup-badge {
+      font-family:'Rajdhani',sans-serif; font-size:0.65rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:2px 7px; border-radius:2px;
+    }
+    .gb-ok { background:rgba(82,183,136,0.12); color:var(--green); border:1px solid rgba(82,183,136,0.2); }
+    .gb-pendent { background:rgba(107,117,144,0.1); color:var(--dim); border:1px solid rgba(107,117,144,0.15); }
+    .gb-parcial { background:rgba(252,191,73,0.1); color:#fcbf49; border:1px solid rgba(252,191,73,0.2); }
+    .grup-bar-wrap {
+      background:rgba(255,255,255,0.05); border-radius:2px; height:5px; overflow:hidden;
+    }
+    .grup-bar {
+      height:100%; border-radius:2px;
+      background:var(--green); transition:width 0.6s ease;
+    }
+    .grup-pct { font-size:0.75rem; color:var(--dim); }
+
+    /* ── RESPOSTES ── */
+    .filtre-row {
+      display:flex; gap:0.65rem; margin-bottom:1rem; flex-wrap:wrap;
+    }
+    .sel {
+      background:var(--bg3); border:1px solid var(--border);
+      color:var(--text); border-radius:2px; padding:5px 10px;
+      font-family:'Rajdhani',sans-serif; font-size:0.8rem;
+      font-weight:600; letter-spacing:0.06em; cursor:pointer; outline:none;
+      flex:1; min-width:120px;
+    }
+    .btn-load {
+      background:var(--acc); color:#07091a; border:none;
+      border-radius:2px; padding:5px 18px;
+      font-family:'Rajdhani',sans-serif; font-size:0.82rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      cursor:pointer; transition:background 0.2s;
+      white-space:nowrap;
+    }
+    .btn-load:hover { background:#ffc147; }
+
+    .resp-list { display:grid; gap:0.65rem; }
+    .resp-card {
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.9rem 1rem;
+    }
+    .resp-meta {
+      display:flex; gap:0.6rem; align-items:center;
+      flex-wrap:wrap; margin-bottom:0.55rem;
+    }
+    .resp-tag {
+      font-family:'Rajdhani',sans-serif; font-size:0.63rem;
+      font-weight:700; letter-spacing:0.12em; text-transform:uppercase;
+      padding:2px 7px; border-radius:2px; background:var(--bg2);
+      border:1px solid var(--border);
+    }
+    .rt-grup { color:var(--acc); border-color:rgba(245,166,35,0.2); background:rgba(245,166,35,0.06); }
+    .rt-ind  { color:var(--blue); border-color:rgba(138,180,248,0.2); background:rgba(138,180,248,0.06); }
+    .rt-bon  { color:#fcbf49; border-color:rgba(252,191,73,0.2); background:rgba(252,191,73,0.06); }
+    .resp-nom { font-size:0.82rem; color:var(--dim); }
+    .resp-q {
+      font-family:'Rajdhani',sans-serif; font-size:0.68rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      color:var(--dim); margin-bottom:0.3rem;
+    }
+    .resp-r {
+      font-size:0.9rem; line-height:1.7; color:var(--text);
+      white-space:pre-wrap;
+    }
+    .resp-empty {
+      text-align:center; padding:2.5rem;
+      color:var(--dim); font-size:0.88rem;
+    }
+    .resp-loading {
+      text-align:center; padding:2rem;
+      color:var(--dim); font-size:0.82rem;
+      font-family:'Rajdhani',sans-serif; letter-spacing:0.1em; text-transform:uppercase;
+    }
+
+    /* ── TOTES RESPOSTES ── */
+    .grup-block { margin-bottom:1.5rem; }
+    .grup-block-head {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase;
+      color:var(--acc); padding:0.4rem 0; margin-bottom:0.5rem;
+      border-bottom:1px solid var(--border);
+    }
+
+    /* ── TABS ── */
+    .tab-row {
+      display:flex; gap:0; border-bottom:1px solid var(--border);
+      background:rgba(255,255,255,0.01);
+    }
+    .tab-btn {
+      background:none; border:none; border-bottom:2px solid transparent;
+      padding:0.7rem 1.2rem; color:var(--dim); cursor:pointer;
+      font-family:'Rajdhani',sans-serif; font-size:0.8rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      transition:color 0.2s, border-color 0.2s; margin-bottom:-1px;
+    }
+    .tab-btn:hover { color:var(--text); }
+    .tab-btn.on { color:var(--acc); border-bottom-color:var(--acc); }
+    .tab-panel { display:none; }
+    .tab-panel.on { display:block; }
+
+    /* ── VIEW TOGGLES ── */
+    .view-none { display:none; }
+    .view-block { display:block; }
+
+    /* Dots loading */
+    .dots { display:inline-flex; gap:3px; }
+    .dots span {
+      width:4px; height:4px; border-radius:50%;
+      background:currentColor;
+      animation:db 0.8s ease-in-out infinite;
+    }
+    .dots span:nth-child(2){ animation-delay:0.15s; }
+    .dots span:nth-child(3){ animation-delay:0.3s; }
+    @keyframes db { 0%,80%,100%{ transform:scale(0.7); opacity:0.4; } 40%{ transform:scale(1.2); opacity:1; } }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:5px; height:5px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.1); border-radius:2px; }
+
+    @media(max-width:700px) {
+      .layout { grid-template-columns:1fr; }
+      .sidebar { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     LOGIN
+══════════════════════════════════════ -->
+<div id="scr-login">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <span class="login-logo-icon">🎛️</span>
+      <div class="login-logo-title">Tauler Docent</div>
+      <div class="login-logo-sub">Crisi Energètica · Institut de Matadepera</div>
+    </div>
+    <div class="login-card">
+      <label class="flabel" for="inp-clau">Contrasenya del docent</label>
+      <input class="finput" id="inp-clau" type="password" placeholder="••••••••••••" autocomplete="current-password">
+      <button class="btn-acc" id="btn-entrar" onclick="doLogin()">Accedir al tauler</button>
+      <div class="login-err" id="login-err">Contrasenya incorrecta.</div>
+    </div>
+    <div class="demo-note">
+      Mode demo: <button onclick="doDemo()">entrar sense contrasenya</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     APP
+══════════════════════════════════════ -->
+<div id="app">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">⚡ <em>Tauler</em> — Crisi Energètica</div>
+    <select class="sess-sel" id="sess-sel" onchange="onSessioChange()">
+      <option value="S1">S1 — El món s'apaga</option>
+      <option value="S2">S2 — A qui creure?</option>
+      <option value="S3">S3 — Qui decideix?</option>
+      <option value="S4">S4 — El mapa del poder</option>
+      <option value="S5">S5 — Negociar o trencar</option>
+      <option value="S6">S6 — La nostra proposta</option>
+      <option value="S7">S7 — Ara, nosaltres</option>
+    </select>
+    <button class="btn-refresh" onclick="refresca()">↻ Refrescar</button>
+    <div class="topbar-sep"></div>
+    <div class="topbar-docent" id="topbar-docent">Docent</div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Sidebar nav -->
+    <nav class="sidebar">
+      <div class="sb-section">Control</div>
+      <button class="sb-btn on" id="nav-marcador" onclick="showPanel('marcador')">
+        <span class="sb-icon">⚡</span> Marcador d'alerta
+      </button>
+      <button class="sb-btn" id="nav-grups" onclick="showPanel('grups')">
+        <span class="sb-icon">👥</span> Estat dels grups
+      </button>
+
+      <div class="sb-section">Respostes</div>
+      <button class="sb-btn" id="nav-grup-resp" onclick="showPanel('grup-resp')">
+        <span class="sb-icon">💬</span> Per grup
+      </button>
+      <button class="sb-btn" id="nav-totes" onclick="showPanel('totes')">
+        <span class="sb-icon">📋</span> Totes (per grup)
+      </button>
+    </nav>
+
+    <!-- Main -->
+    <main class="main" id="main-content">
+
+      <!-- ── PANEL: MARCADOR ── -->
+      <div class="panel" id="panel-marcador">
+        <div class="panel-head">
+          <div class="panel-title">⚡ Marcador d'alerta energètica</div>
+        </div>
+        <div class="panel-body">
+          <div class="marc-display">
+            <div class="marc-valor" id="marc-valor">0</div>
+            <div class="marc-info">
+              <div class="marc-estat" id="marc-estat">Crisi màxima</div>
+              <div class="marc-desc" id="marc-desc">El Consell comença a treballar. La crisi no s'ha resolt.</div>
+            </div>
+          </div>
+          <div class="marc-segs" id="marc-segs">
+            <div class="marc-seg" id="ms0"></div>
+            <div class="marc-seg" id="ms1"></div>
+            <div class="marc-seg" id="ms2"></div>
+            <div class="marc-seg" id="ms3"></div>
+            <div class="marc-seg" id="ms4"></div>
+            <div class="marc-seg" id="ms5"></div>
+          </div>
+          <div class="marc-btns">
+            <button class="btn-marc btn-baixar" id="btn-baixar" onclick="canviaMarcador(-1)">▼ Baixar un nivell</button>
+            <button class="btn-marc btn-pujar"  id="btn-pujar"  onclick="canviaMarcador(+1)">▲ Pujar un nivell</button>
+          </div>
+          <div class="marc-saved" id="marc-saved"></div>
+
+          <div style="margin-top:1.5rem; border-top:1px solid var(--border); padding-top:1.1rem;">
+            <div style="font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--dim); margin-bottom:0.75rem;">Referència de nivells</div>
+            <div style="display:grid; gap:0.4rem;">
+              <div class="nivel-row" data-v="0" style="--lc:#9b0000;"><span class="niv-dot" style="background:#9b0000;"></span><span class="niv-val">0</span><span class="niv-txt">Crisi màxima</span></div>
+              <div class="nivel-row" data-v="1" style="--lc:#e63946;"><span class="niv-dot" style="background:#e63946;"></span><span class="niv-val">1</span><span class="niv-txt">Situació crítica</span></div>
+              <div class="nivel-row" data-v="2" style="--lc:#f77f00;"><span class="niv-dot" style="background:#f77f00;"></span><span class="niv-val">2</span><span class="niv-txt">Situació greu</span></div>
+              <div class="nivel-row" data-v="3" style="--lc:#fcbf49;"><span class="niv-dot" style="background:#fcbf49;"></span><span class="niv-val">3</span><span class="niv-txt">Millora moderada</span></div>
+              <div class="nivel-row" data-v="4" style="--lc:#90be6d;"><span class="niv-dot" style="background:#90be6d;"></span><span class="niv-val">4</span><span class="niv-txt">Bona evolució</span></div>
+              <div class="nivel-row" data-v="5" style="--lc:#52b788;"><span class="niv-dot" style="background:#52b788;"></span><span class="niv-val">5</span><span class="niv-txt">Crisi resolta</span></div>
+            </div>
+            <div style="margin-top:0.85rem; font-size:0.8rem; line-height:1.65; color:var(--dim);">
+              <strong style="color:var(--text);">Criteri pedagògic:</strong> puja quan els grups argumenten amb <em style="color:var(--acc);">valors</em> (justícia, democràcia, responsabilitat global), no només amb dades econòmiques o interessos pràctics. Reacciona al tancament de cada missió completada.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: ESTAT GRUPS ── -->
+      <div class="panel view-none" id="panel-grups">
+        <div class="panel-head">
+          <div class="panel-title">👥 Estat dels grups — <span id="grups-sess-label">S1</span></div>
+          <div style="font-size:0.75rem; color:var(--dim);" id="grups-ts"></div>
+        </div>
+        <div class="panel-body">
+          <div id="grups-body">
+            <div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: RESPOSTES PER GRUP ── -->
+      <div class="panel view-none" id="panel-grup-resp">
+        <div class="panel-head">
+          <div class="panel-title">💬 Respostes per grup</div>
+        </div>
+        <div class="panel-body">
+          <div class="filtre-row">
+            <select class="sel" id="sel-grup">
+              <option value="">Tots els grups</option>
+              <option value="1">Grup 1</option>
+              <option value="2">Grup 2</option>
+              <option value="3">Grup 3</option>
+              <option value="4">Grup 4</option>
+              <option value="5">Grup 5</option>
+              <option value="6">Grup 6</option>
+            </select>
+            <select class="sel" id="sel-tipus">
+              <option value="">Tots els tipus</option>
+              <option value="grupal">Grup</option>
+              <option value="individual">Individual</option>
+              <option value="bonus">Bonus</option>
+            </select>
+            <button class="btn-load" onclick="carregaRespostesGrup()">Carregar</button>
+          </div>
+          <div id="resp-grup-body">
+            <div class="resp-empty">Selecciona grup i sessió i prem «Carregar».</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: TOTES ── -->
+      <div class="panel view-none" id="panel-totes">
+        <div class="panel-head">
+          <div class="panel-title">📋 Totes les respostes — <span id="totes-sess-label">S1</span></div>
+        </div>
+        <div class="panel-body">
+          <div class="filtre-row" style="margin-bottom:1rem;">
+            <select class="sel" id="sel-tipus-totes" style="max-width:200px;">
+              <option value="">Tots els tipus</option>
+              <option value="grupal">Grup</option>
+              <option value="individual">Individual</option>
+              <option value="bonus">Bonus</option>
+            </select>
+            <button class="btn-load" onclick="carregaTotes()">Carregar</button>
+          </div>
+          <div id="totes-body">
+            <div class="resp-empty">Prem «Carregar» per veure totes les respostes de la sessió.</div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+
+<style>
+  .nivel-row {
+    display:flex; align-items:center; gap:0.65rem;
+    padding:0.35rem 0.6rem; border-radius:2px;
+    font-size:0.84rem; transition:background 0.3s;
+  }
+  .nivel-row.current { background:rgba(255,255,255,0.04); }
+  .niv-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .niv-val { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.88rem; width:18px; color:var(--dim); }
+  .niv-txt { color:var(--text); }
+</style>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════════════════
+const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbxeCVZFCfXKGFGUFnDITdcXWM3bs4BvmAJfYVaIBNTp1v_P7p-687ImC8BEOCvU4Y5jRw/exec";       // ← Fase 4: URL del Apps Script desplegat
+const CLAU_DOCENT = "matadepera2025"; // ha de coincidir amb el .gs
+
+// ══════════════════════════════════════════════════════════════════
+//  API
+// ══════════════════════════════════════════════════════════════════
+async function api(action, params = {}) {
+  if (SCRIPT_URL) {
+    const url = new URL(SCRIPT_URL);
+    url.searchParams.set('action', action);
+    for (const [k, v] of Object.entries(params)) url.searchParams.set(k, String(v));
+    const res = await fetch(url);
+    return res.json();
+  }
+
+  // ── MOCK ────────────────────────────────
+  await new Promise(r => setTimeout(r, 450));
+  switch (action) {
+    case 'autenticarDocent': return { ok: true };
+    case 'marcador': return { ok: true, valor: marcadorActual };
+    case 'setMarcador': {
+      marcadorActual = parseInt(params.valor);
+      return { ok: true, valor: marcadorActual };
+    }
+    case 'estatGrups': return { ok: true, grups: mockEstatGrups(params.sessio) };
+    case 'respostesGrup': return { ok: true, respostes: mockRespostes(params.grup, params.sessio) };
+    default: return { ok: false };
+  }
+}
+
+// ── MOCK DATA ────────────────────────────
+let marcadorActual = 0;
+
+const PREGUNTES_LABEL = {
+  crisi_que_es: 'Crisi energètica — Què és?',
+  crisi_afecta: 'Et afecta? Com?',
+  crisi_culpa:  'Qui té la culpa? (bonus)',
+  font_interessos: 'Interessos de la font',
+  font_solidesa:   'Parts sòlides i dubtes',
+  font_fiable:     'Criteris de fiabilitat (bonus)',
+  s3i_r1: 'Qui té més poder real?',
+  s3i_r2: 'Qui hauria de tenir-ne més?',
+  s3i_r3: 'A qui escoltaria el Consell?',
+  s3i_bonus: 'Diferència poder real/legítim (bonus)',
+  s4i_r1: 'Riscos de l\'opció analitzada',
+  s4i_r2: 'Quina descartes i per quins motius',
+  s4i_bonus: 'L\'Opció D (bonus)',
+  s5i_r1: 'Interessos reals del teu actor',
+  s5i_r2: 'Què pot oferir Europa (no energia)',
+  s5i_bonus: 'Terreny compartit (bonus)',
+  s6i_r1: 'Idea que més t\'ha fet pensar',
+  s6i_r2: 'Decisió que hauria de prendre Europa',
+  s6i_r3: 'Qui pot sortir perjudicat?',
+  s7i_r1: 'Canvi de perspectiva',
+  s7i_r2: 'Pregunta més difícil',
+  s7i_r3: 'Què pots fer com a ciutadà/ana',
+  resposta_grup: 'Resposta conjunta del grup',
+};
+
+function mockEstatGrups(sessio) {
+  const data = {
+    S1:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:3},{grup:3,total:4,completats:4},{grup:4,total:4,completats:1},{grup:5,total:4,completats:0}],
+    S2:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:2},{grup:3,total:4,completats:3},{grup:4,total:4,completats:0},{grup:5,total:4,completats:0}],
+    S3:[{grup:1,total:4,completats:2},{grup:2,total:4,completats:1},{grup:3,total:4,completats:0},{grup:4,total:4,completats:0},{grup:5,total:4,completats:0}],
+  };
+  return (data[sessio] || [{grup:1,total:4,completats:0},{grup:2,total:4,completats:0},{grup:3,total:4,completats:0}]).map(g => ({...g, pct: Math.round(g.completats/g.total*100)}));
+}
+
+function mockRespostes(grup, sessio) {
+  const base = [
+    {email:'alumne@escola.cat',nom:'Maria Garcia',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_que_es',resposta:'Crec que la crisi energètica és quan els països no tenen prou energia per funcionar amb normalitat. Pot ser per guerres, per falta de recursos o perquè els països que produeixen energia decideixen no vendre-la.'},
+    {email:'joan@escola.cat',  nom:'Joan Puig',   grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_que_es',resposta:'Quan sento "crisi energètica" penso en la pujada de la llum i en els cotxes de gasolina. No sabia que tenia a veure amb guerres i política internacional.'},
+    {email:'ana@escola.cat',   nom:'Ana Martínez',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_afecta',resposta:'Sí que em afecta perquè a casa la factura de la llum ha pujat molt. Però no entenia per quin motiu fins ara.'},
+    {email:'pere@escola.cat',  nom:'Pere Soler',  grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_afecta',resposta:'Suposo que ens afecta però no se nota gaire. Potser als adults sí amb els preus del gas i la gasolina.'},
+    {email:'grup2@escola.cat', nom:'Grup 2',      grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'grupal',pregunta:'resposta_grup',resposta:'Com a grup creiem que el conflicte que ens afecta més directament és el de l\'estret d\'Ormuz perquè el petroli és el que fa pujar els preus de tot. Però l\'agreujant és que Rússia i la Xina hi afegeixen pressió al mateix temps, cosa que deixa Europa sense alternatives fàcils.'},
+  ];
+  return base;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  ESTAT
+// ══════════════════════════════════════════════════════════════════
+let sessionActual = 'S1';
+let clauDocent = '';
+
+const MARC_INFO = {
+  0:{ txt:'Crisi màxima',     col:'#9b0000', desc:'El Consell comença. La crisi no s\'ha resolt.' },
+  1:{ txt:'Situació crítica', col:'#e63946', desc:'La crisi és present i pressiona. El Consell treballa.' },
+  2:{ txt:'Situació greu',    col:'#f77f00', desc:'Hi ha progrés però la situació continua sent greu.' },
+  3:{ txt:'Millora moderada', col:'#fcbf49', desc:'El Consell ha pres decisions ben argumentades.' },
+  4:{ txt:'Bona evolució',    col:'#90be6d', desc:'La proposta del Consell és sòlida i amb valors.' },
+  5:{ txt:'Crisi resolta',    col:'#52b788', desc:'El Consell ha demostrat pensament crític i responsabilitat.' },
+};
+
+// ══════════════════════════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════════════════════════
+document.getElementById('inp-clau').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+async function doLogin() {
+  const clau = document.getElementById('inp-clau').value.trim();
+  const btn  = document.getElementById('btn-entrar');
+  const err  = document.getElementById('login-err');
+  if (!clau) return;
+  btn.disabled = true;
+  btn.innerHTML = 'Verificant <span class="dots"><span></span><span></span><span></span></span>';
+  err.style.display = 'none';
+
+  // Validació local primer (evita crida innecessària en mode real)
+  if (SCRIPT_URL && clau !== CLAU_DOCENT) {
+    const r = await api('autenticarDocent', { clau });
+    if (!r.ok) {
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Accedir al tauler';
+      return;
+    }
+  } else if (!SCRIPT_URL && clau !== CLAU_DOCENT) {
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Accedir al tauler';
+    return;
+  }
+
+  clauDocent = clau;
+  entrarApp();
+}
+
+function doDemo() {
+  clauDocent = CLAU_DOCENT;
+  entrarApp();
+}
+
+async function entrarApp() {
+  document.getElementById('scr-login').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  document.getElementById('topbar-docent').textContent = 'Docent · ' + new Date().toLocaleTimeString('ca');
+  await carregaMarcador();
+  await carregaEstatGrups();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  NAVEGACIÓ PANELS
+// ══════════════════════════════════════════════════════════════════
+function showPanel(id) {
+  ['marcador','grups','grup-resp','totes'].forEach(p => {
+    document.getElementById('panel-'+p).className =
+      p === id ? 'panel' : 'panel view-none';
+    document.getElementById('nav-'+p).classList.toggle('on', p === id);
+  });
+  if (id === 'grups') carregaEstatGrups();
+  if (id === 'totes') document.getElementById('totes-sess-label').textContent = sessionActual;
+}
+
+function onSessioChange() {
+  sessionActual = document.getElementById('sess-sel').value;
+  document.getElementById('grups-sess-label').textContent = sessionActual;
+  document.getElementById('totes-sess-label').textContent = sessionActual;
+  // Refresca el panel visible
+  const actiu = ['marcador','grups','grup-resp','totes'].find(p =>
+    !document.getElementById('panel-'+p).classList.contains('view-none')
+  );
+  if (actiu === 'grups')  carregaEstatGrups();
+}
+
+function refresca() {
+  const actiu = ['marcador','grups','grup-resp','totes'].find(p =>
+    !document.getElementById('panel-'+p).classList.contains('view-none')
+  );
+  if (actiu === 'marcador')   carregaMarcador();
+  if (actiu === 'grups')      carregaEstatGrups();
+  if (actiu === 'grup-resp')  carregaRespostesGrup();
+  if (actiu === 'totes')      carregaTotes();
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  MARCADOR
+// ══════════════════════════════════════════════════════════════════
+async function carregaMarcador() {
+  const r = await api('marcador');
+  if (r.ok) renderMarcador(r.valor);
+}
+
+function renderMarcador(v) {
+  const info = MARC_INFO[v] || MARC_INFO[0];
+  document.getElementById('marc-valor').textContent = v;
+  document.getElementById('marc-valor').style.color = info.col;
+  document.getElementById('marc-estat').textContent = info.txt;
+  document.getElementById('marc-estat').style.color = info.col;
+  document.getElementById('marc-desc').textContent  = info.desc;
+
+  for (let i = 0; i <= 5; i++) {
+    const seg = document.getElementById('ms'+i);
+    seg.className = 'marc-seg' + (i <= v ? ' on-'+v : '');
+  }
+
+  // Highlight nivell actual a la taula
+  document.querySelectorAll('.nivel-row').forEach(row => {
+    row.classList.toggle('current', parseInt(row.dataset.v) === v);
+  });
+
+  document.getElementById('btn-baixar').disabled = v <= 0;
+  document.getElementById('btn-pujar').disabled  = v >= 5;
+
+  marcadorActual = v;
+}
+
+async function canviaMarcador(delta) {
+  const nou = Math.max(0, Math.min(5, marcadorActual + delta));
+  const btn = delta > 0
+    ? document.getElementById('btn-pujar')
+    : document.getElementById('btn-baixar');
+  btn.disabled = true;
+
+  const r = await api('setMarcador', { valor: nou, clau: clauDocent });
+  if (r.ok) {
+    renderMarcador(r.valor);
+    const saved = document.getElementById('marc-saved');
+    saved.textContent = `✓ Marcador actualitzat a ${r.valor} — ${MARC_INFO[r.valor].txt}`;
+    setTimeout(() => { saved.textContent = ''; }, 3500);
+  }
+  btn.disabled = (nou <= 0 && delta < 0) || (nou >= 5 && delta > 0);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  ESTAT GRUPS
+// ══════════════════════════════════════════════════════════════════
+async function carregaEstatGrups() {
+  const body = document.getElementById('grups-body');
+  body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
+  document.getElementById('grups-ts').textContent = '';
+
+  const r = await api('estatGrups', { sessio: sessionActual, clau: clauDocent });
+  if (!r.ok || !r.grups?.length) {
+    body.innerHTML = '<div class="resp-empty">No hi ha dades per a aquesta sessió.</div>';
+    return;
+  }
+
+  document.getElementById('grups-ts').textContent = 'Actualitzat: ' + new Date().toLocaleTimeString('ca');
+
+  const completats = r.grups.filter(g => g.pct === 100).length;
+  const total      = r.grups.length;
+
+  body.innerHTML = `
+    <div style="display:flex; gap:1.5rem; margin-bottom:1rem; flex-wrap:wrap;">
+      <div style="font-family:'Rajdhani',sans-serif; font-size:0.78rem; color:var(--dim);">
+        <span style="font-size:1.5rem; font-weight:700; color:var(--green);">${completats}</span>
+        <span> / ${total} grups completats</span>
+      </div>
+    </div>
+    <div class="grups-grid">
+      ${r.grups.map(g => {
+        const cls = g.pct === 100 ? 'gb-ok' : g.pct > 0 ? 'gb-parcial' : 'gb-pendent';
+        const badge = g.pct === 100 ? '✓ Completat' : g.pct > 0 ? `${g.completats}/${g.total}` : '⏳ Pendent';
+        return `
+          <div class="grup-card">
+            <div class="grup-head">
+              <div class="grup-nom">Grup ${g.grup}</div>
+              <div class="grup-badge ${cls}">${badge}</div>
+            </div>
+            <div class="grup-bar-wrap">
+              <div class="grup-bar" style="width:${g.pct}%; background:${g.pct===100?'var(--green)':g.pct>0?'#fcbf49':'rgba(255,255,255,0.1)'}"></div>
+            </div>
+            <div class="grup-pct">${g.pct}% completat</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RESPOSTES PER GRUP
+// ══════════════════════════════════════════════════════════════════
+async function carregaRespostesGrup() {
+  const grup  = document.getElementById('sel-grup').value;
+  const tipus = document.getElementById('sel-tipus').value;
+  const body  = document.getElementById('resp-grup-body');
+
+  body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
+
+  const r = await api('respostesGrup', {
+    grup: grup || '', sessio: sessionActual, clau: clauDocent
+  });
+
+  if (!r.ok) { body.innerHTML = '<div class="resp-empty">Error carregant respostes.</div>'; return; }
+
+  let respostes = r.respostes || [];
+  if (tipus) respostes = respostes.filter(rr => rr.tipus === tipus);
+  respostes = respostes.filter(rr => rr.tipus !== 'sistema');
+
+  if (!respostes.length) {
+    body.innerHTML = '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
+    return;
+  }
+
+  body.innerHTML = `<div class="resp-list">${respostes.map(rr => renderRespCard(rr)).join('')}</div>`;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  TOTES LES RESPOSTES (per grup)
+// ══════════════════════════════════════════════════════════════════
+async function carregaTotes() {
+  const tipus = document.getElementById('sel-tipus-totes').value;
+  const body  = document.getElementById('totes-body');
+
+  body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
+
+  // Carregar tots els grups
+  const promeses = [1,2,3,4,5,6].map(g =>
+    api('respostesGrup', { grup: g, sessio: sessionActual, clau: clauDocent })
+  );
+  const resultats = await Promise.all(promeses);
+
+  let html = '';
+  resultats.forEach((r, idx) => {
+    if (!r.ok) return;
+    let respostes = (r.respostes || []).filter(rr => rr.tipus !== 'sistema');
+    if (tipus) respostes = respostes.filter(rr => rr.tipus === tipus);
+    if (!respostes.length) return;
+
+    html += `
+      <div class="grup-block">
+        <div class="grup-block-head">Grup ${idx+1}</div>
+        <div class="resp-list">${respostes.map(rr => renderRespCard(rr)).join('')}</div>
+      </div>
+    `;
+  });
+
+  body.innerHTML = html || '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════════
+function renderRespCard(rr) {
+  const tagCls  = { grupal:'rt-grup', individual:'rt-ind', bonus:'rt-bon' }[rr.tipus] || '';
+  const tagLabel = { grupal:'Grup', individual:'Individual', bonus:'Bonus' }[rr.tipus] || rr.tipus;
+  const qLabel  = PREGUNTES_LABEL[rr.pregunta] || rr.pregunta;
+  const ts = rr.timestamp ? new Date(rr.timestamp).toLocaleTimeString('ca', {hour:'2-digit',minute:'2-digit'}) : '';
+
+  return `
+    <div class="resp-card">
+      <div class="resp-meta">
+        <div class="resp-tag ${tagCls}">${tagLabel}</div>
+        <div class="resp-nom">${rr.nom || rr.email}${ts ? ' · ' + ts : ''}</div>
+      </div>
+      <div class="resp-q">${qLabel}</div>
+      <div class="resp-r">${escHtml(rr.resposta || '')}</div>
+    </div>
+  `;
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+
+</body>
+</html>
