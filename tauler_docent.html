@@ -379,6 +379,70 @@
     .dots span:nth-child(3){ animation-delay:0.3s; }
     @keyframes db { 0%,80%,100%{ transform:scale(0.7); opacity:0.4; } 40%{ transform:scale(1.2); opacity:1; } }
 
+    /* Sessions panel */
+    .sess-grid { display:grid; gap:0.65rem; }
+    .sess-row {
+      display:flex; align-items:center; gap:1rem;
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.85rem 1rem;
+      flex-wrap:wrap;
+    }
+    .sess-nom {
+      font-family:'Rajdhani',sans-serif; font-weight:700;
+      font-size:0.88rem; letter-spacing:0.06em; flex:1; min-width:120px;
+    }
+    .sess-nom-sub { font-size:0.75rem; color:var(--dim); font-weight:400; }
+    .sess-estat {
+      font-family:'Rajdhani',sans-serif; font-size:0.72rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      padding:3px 10px; border-radius:2px; white-space:nowrap;
+    }
+    .se-oberta  { background:rgba(82,183,136,0.12); color:var(--green); border:1px solid rgba(82,183,136,0.25); }
+    .se-tancada { background:rgba(107,117,144,0.1); color:var(--dim); border:1px solid rgba(107,117,144,0.15); }
+    .btn-obrir {
+      background:var(--acc); color:#07091a; border:none;
+      border-radius:2px; padding:5px 14px;
+      font-family:'Rajdhani',sans-serif; font-size:0.78rem;
+      font-weight:700; letter-spacing:0.1em; text-transform:uppercase;
+      cursor:pointer; transition:background 0.2s; white-space:nowrap;
+    }
+    .btn-obrir:hover { background:#ffc147; }
+    .btn-obrir:disabled { opacity:0.35; cursor:not-allowed; }
+    .btn-tancar {
+      background:transparent; color:var(--dim);
+      border:1px solid var(--border); border-radius:2px;
+      padding:5px 14px; font-family:'Rajdhani',sans-serif;
+      font-size:0.78rem; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase; cursor:pointer; transition:all 0.2s;
+      white-space:nowrap;
+    }
+    .btn-tancar:hover { color:var(--red); border-color:rgba(230,57,70,0.3); }
+
+    /* Reset panel */
+    .flabel-t {
+      display:block; font-family:'Rajdhani',sans-serif;
+      font-size:0.68rem; font-weight:700; letter-spacing:0.12em;
+      text-transform:uppercase; color:var(--dim); margin-bottom:0.4rem;
+    }
+    .finput-t {
+      width:100%; max-width:320px;
+      background:var(--bg3); border:1px solid var(--border);
+      border-radius:2px; padding:0.6rem 0.85rem;
+      color:var(--text); font-family:'IBM Plex Mono',monospace;
+      font-size:0.88rem; outline:none; margin-bottom:0.9rem;
+      transition:border-color 0.2s;
+    }
+    .finput-t:focus { border-color:var(--red); }
+    .btn-reset {
+      background:rgba(230,57,70,0.12); color:var(--red);
+      border:1px solid rgba(230,57,70,0.3); border-radius:2px;
+      padding:0.65rem 1.4rem; font-family:'Rajdhani',sans-serif;
+      font-size:0.88rem; font-weight:700; letter-spacing:0.1em;
+      text-transform:uppercase; cursor:pointer; transition:background 0.2s;
+    }
+    .btn-reset:hover:not(:disabled) { background:rgba(230,57,70,0.22); }
+    .btn-reset:disabled { opacity:0.35; cursor:not-allowed; }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width:5px; height:5px; }
     ::-webkit-scrollbar-track { background:transparent; }
@@ -423,6 +487,11 @@
   <!-- Top bar -->
   <div class="topbar">
     <div class="topbar-brand">⚡ <em>Tauler</em> — Crisi Energètica</div>
+    <select class="sess-sel" id="curs-sel" onchange="onCursChange()" style="max-width:100px;">
+      <option value="3rA">3r A</option>
+      <option value="3rC">3r C</option>
+      <option value="3rE">3r E</option>
+    </select>
     <select class="sess-sel" id="sess-sel" onchange="onSessioChange()">
       <option value="S1">S1 — El món s'apaga</option>
       <option value="S2">S2 — A qui creure?</option>
@@ -445,6 +514,9 @@
       <button class="sb-btn on" id="nav-marcador" onclick="showPanel('marcador')">
         <span class="sb-icon">⚡</span> Marcador d'alerta
       </button>
+      <button class="sb-btn" id="nav-sessions" onclick="showPanel('sessions')">
+        <span class="sb-icon">🔓</span> Gestió de sessions
+      </button>
       <button class="sb-btn" id="nav-grups" onclick="showPanel('grups')">
         <span class="sb-icon">👥</span> Estat dels grups
       </button>
@@ -455,6 +527,11 @@
       </button>
       <button class="sb-btn" id="nav-totes" onclick="showPanel('totes')">
         <span class="sb-icon">📋</span> Totes (per grup)
+      </button>
+
+      <div class="sb-section">Manteniment</div>
+      <button class="sb-btn" id="nav-reset" onclick="showPanel('reset')">
+        <span class="sb-icon">🗑️</span> Reiniciar curs
       </button>
     </nav>
 
@@ -569,6 +646,46 @@
         </div>
       </div>
 
+      <!-- ── PANEL: GESTIÓ DE SESSIONS ── -->
+      <div class="panel view-none" id="panel-sessions">
+        <div class="panel-head">
+          <div class="panel-title">🔓 Gestió de sessions — <span id="sessions-curs-label">3r A</span></div>
+        </div>
+        <div class="panel-body">
+          <p style="font-size:0.88rem; color:var(--dim); margin-bottom:1.25rem; line-height:1.6;">
+            Obre la sessió quan l'alumnat hagi d'accedir-hi. Els alumnes veuen una pantalla d'espera fins que obris la sessió corresponent. <strong style="color:var(--text);">Obrir una sessió no tanca les anteriors</strong> — l'alumnat que va enrere pot continuar.
+          </p>
+          <div id="sessions-body">
+            <div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PANEL: RESET ── -->
+      <div class="panel view-none" id="panel-reset">
+        <div class="panel-head">
+          <div class="panel-title">🗑️ Reiniciar curs — <span id="reset-curs-label">3r A</span></div>
+        </div>
+        <div class="panel-body">
+          <div style="background:rgba(230,57,70,0.07); border:1px solid rgba(230,57,70,0.2); border-left:4px solid var(--red); border-radius:2px; padding:1rem 1.2rem; margin-bottom:1.5rem;">
+            <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--red); margin-bottom:0.5rem;">⚠ Acció irreversible</div>
+            <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">Aquesta acció esborra <strong>totes les respostes, el progrés i les sessions obertes</strong> del curs seleccionat. No afecta els altres cursos. Les dades del full «Grups» no s'esborren.</p>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <label class="flabel-t" for="reset-confirm-inp">Escriu <strong style="color:var(--red);">REINICIAR</strong> per confirmar</label>
+            <input class="finput-t" id="reset-confirm-inp" type="text" placeholder="REINICIAR" oninput="chkReset()">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label class="flabel-t" for="reset-clau-inp">Contrasenya del docent</label>
+            <input class="finput-t" id="reset-clau-inp" type="password" placeholder="••••••••" oninput="chkReset()">
+          </div>
+
+          <button class="btn-reset" id="btn-reset" onclick="doReset()" disabled>🗑️ Reiniciar dades del curs</button>
+          <div id="reset-msg" style="margin-top:0.85rem; font-size:0.82rem; display:none;"></div>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
@@ -590,8 +707,22 @@
 // ══════════════════════════════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════════════════════════════
-const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbxeCVZFCfXKGFGUFnDITdcXWM3bs4BvmAJfYVaIBNTp1v_P7p-687ImC8BEOCvU4Y5jRw/exec";       // ← Fase 4: URL del Apps Script desplegat
-const CLAU_DOCENT = "matadepera2025"; // ha de coincidir amb el .gs
+const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbxeCVZFCfXKGFGUFnDITdcXWM3bs4BvmAJfYVaIBNTp1v_P7p-687ImC8BEOCvU4Y5jRw/exec";
+const CLAU_DOCENT = "matadepera2025";
+
+const SESSIONS = [
+  { id:'S1', nom:'S1 — El món s\'apaga' },
+  { id:'S2', nom:'S2 — A qui creure?' },
+  { id:'S3', nom:'S3 — Qui decideix?' },
+  { id:'S4', nom:'S4 — El mapa del poder' },
+  { id:'S5', nom:'S5 — Negociar o trencar' },
+  { id:'S6', nom:'S6 — La nostra proposta' },
+  { id:'S7', nom:'S7 — Ara, nosaltres' },
+];
+
+// Poblar selector de sessions
+document.getElementById('sess-sel').innerHTML =
+  SESSIONS.map(s => `<option value="${s.id}">${s.nom}</option>`).join('');
 
 // ══════════════════════════════════════════════════════════════════
 //  API
@@ -605,83 +736,78 @@ async function api(action, params = {}) {
     return res.json();
   }
 
-  // ── MOCK ────────────────────────────────
   await new Promise(r => setTimeout(r, 450));
   switch (action) {
     case 'autenticarDocent': return { ok: true };
-    case 'marcador': return { ok: true, valor: marcadorActual };
+    case 'marcador':         return { ok: true, valor: marcadorActual };
     case 'setMarcador': {
       marcadorActual = parseInt(params.valor);
       return { ok: true, valor: marcadorActual };
     }
-    case 'estatGrups': return { ok: true, grups: mockEstatGrups(params.sessio) };
+    case 'sessioActiva': {
+      const s = sessionsObertes[params.curs] || 'S1';
+      return { ok: true, sessio: s };
+    }
+    case 'setSessioActiva': {
+      sessionsObertes[params.curs] = params.sessio;
+      return { ok: true, sessio: params.sessio };
+    }
+    case 'estatGrups':    return { ok: true, grups: mockEstatGrups(params.sessio) };
     case 'respostesGrup': return { ok: true, respostes: mockRespostes(params.grup, params.sessio) };
-    default: return { ok: false };
+    case 'resetCurs':     return { ok: true };
+    default:              return { ok: false };
   }
 }
 
 // ── MOCK DATA ────────────────────────────
 let marcadorActual = 0;
+let sessionsObertes = { '3rA': 'S1', '3rC': 'S1', '3rE': 'S1' };
 
 const PREGUNTES_LABEL = {
-  crisi_que_es: 'Crisi energètica — Què és?',
-  crisi_afecta: 'Et afecta? Com?',
-  crisi_culpa:  'Qui té la culpa? (bonus)',
-  font_interessos: 'Interessos de la font',
-  font_solidesa:   'Parts sòlides i dubtes',
-  font_fiable:     'Criteris de fiabilitat (bonus)',
-  s3i_r1: 'Qui té més poder real?',
-  s3i_r2: 'Qui hauria de tenir-ne més?',
-  s3i_r3: 'A qui escoltaria el Consell?',
-  s3i_bonus: 'Diferència poder real/legítim (bonus)',
-  s4i_r1: 'Riscos de l\'opció analitzada',
-  s4i_r2: 'Quina descartes i per quins motius',
-  s4i_bonus: 'L\'Opció D (bonus)',
-  s5i_r1: 'Interessos reals del teu actor',
-  s5i_r2: 'Què pot oferir Europa (no energia)',
-  s5i_bonus: 'Terreny compartit (bonus)',
-  s6i_r1: 'Idea que més t\'ha fet pensar',
-  s6i_r2: 'Decisió que hauria de prendre Europa',
-  s6i_r3: 'Qui pot sortir perjudicat?',
-  s7i_r1: 'Canvi de perspectiva',
-  s7i_r2: 'Pregunta més difícil',
-  s7i_r3: 'Què pots fer com a ciutadà/ana',
-  resposta_grup: 'Resposta conjunta del grup',
+  crisi_que_es:'Crisi energètica — Què és?', crisi_afecta:'Et afecta? Com?',
+  crisi_culpa:'Qui té la culpa? (bonus)', font_interessos:'Interessos de la font',
+  font_solidesa:'Parts sòlides i dubtes', font_fiable:'Criteris de fiabilitat (bonus)',
+  s3i_r1:'Qui té més poder real?', s3i_r2:'Qui hauria de tenir-ne més?',
+  s3i_r3:'A qui escoltaria el Consell?', s4i_r1:'Riscos de l\'opció analitzada',
+  s4i_r2:'Quina descartaria', s5i_r1:'Interessos reals del teu actor',
+  s5i_r2:'Què pot oferir Europa', s6i_r1:'Idea que més t\'ha fet pensar',
+  s6i_r2:'Decisió que hauria de prendre Europa', s6i_r3:'Qui pot sortir perjudicat?',
+  s7i_r1:'Canvi de perspectiva', s7i_r2:'Pregunta més difícil',
+  s7i_r3:'Què pots fer com a ciutadà/ana', resposta_grup:'Resposta conjunta del grup',
 };
 
 function mockEstatGrups(sessio) {
   const data = {
-    S1:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:3},{grup:3,total:4,completats:4},{grup:4,total:4,completats:1},{grup:5,total:4,completats:0}],
-    S2:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:2},{grup:3,total:4,completats:3},{grup:4,total:4,completats:0},{grup:5,total:4,completats:0}],
-    S3:[{grup:1,total:4,completats:2},{grup:2,total:4,completats:1},{grup:3,total:4,completats:0},{grup:4,total:4,completats:0},{grup:5,total:4,completats:0}],
+    S1:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:3},{grup:3,total:3,completats:3},{grup:4,total:5,completats:2},{grup:5,total:4,completats:0}],
+    S2:[{grup:1,total:4,completats:4},{grup:2,total:4,completats:2},{grup:3,total:3,completats:2},{grup:4,total:5,completats:0}],
+    S3:[{grup:1,total:4,completats:1},{grup:2,total:4,completats:0},{grup:3,total:3,completats:0}],
   };
-  return (data[sessio] || [{grup:1,total:4,completats:0},{grup:2,total:4,completats:0},{grup:3,total:4,completats:0}]).map(g => ({...g, pct: Math.round(g.completats/g.total*100)}));
+  return (data[sessio]||[{grup:1,total:4,completats:0},{grup:2,total:4,completats:0}])
+    .map(g=>({...g, pct:Math.round(g.completats/g.total*100)}));
 }
 
 function mockRespostes(grup, sessio) {
-  const base = [
-    {email:'alumne@escola.cat',nom:'Maria Garcia',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_que_es',resposta:'Crec que la crisi energètica és quan els països no tenen prou energia per funcionar amb normalitat. Pot ser per guerres, per falta de recursos o perquè els països que produeixen energia decideixen no vendre-la.'},
-    {email:'joan@escola.cat',  nom:'Joan Puig',   grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_que_es',resposta:'Quan sento "crisi energètica" penso en la pujada de la llum i en els cotxes de gasolina. No sabia que tenia a veure amb guerres i política internacional.'},
-    {email:'ana@escola.cat',   nom:'Ana Martínez',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_afecta',resposta:'Sí que em afecta perquè a casa la factura de la llum ha pujat molt. Però no entenia per quin motiu fins ara.'},
-    {email:'pere@escola.cat',  nom:'Pere Soler',  grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_afecta',resposta:'Suposo que ens afecta però no se nota gaire. Potser als adults sí amb els preus del gas i la gasolina.'},
-    {email:'grup2@escola.cat', nom:'Grup 2',      grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'grupal',pregunta:'resposta_grup',resposta:'Com a grup creiem que el conflicte que ens afecta més directament és el de l\'estret d\'Ormuz perquè el petroli és el que fa pujar els preus de tot. Però l\'agreujant és que Rússia i la Xina hi afegeixen pressió al mateix temps, cosa que deixa Europa sense alternatives fàcils.'},
+  return [
+    {email:'m@e.cat',nom:'Maria G.',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_que_es',resposta:'Crec que la crisi energètica és quan els països no tenen prou energia per funcionar amb normalitat.'},
+    {email:'j@e.cat',nom:'Joan P.',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'individual',pregunta:'crisi_afecta',resposta:'Sí que em afecta perquè a casa la factura de la llum ha pujat molt.'},
+    {email:'g@e.cat',nom:'Grup 2',grup:grup||2,missio:'M1',sessio:sessio||'S1',tipus:'grupal',pregunta:'resposta_grup',resposta:'Com a grup creiem que el conflicte que ens afecta més directament és el de l\'estret d\'Ormuz perquè el petroli és el que fa pujar els preus de tot.'},
   ];
-  return base;
 }
 
 // ══════════════════════════════════════════════════════════════════
 //  ESTAT
 // ══════════════════════════════════════════════════════════════════
 let sessionActual = 'S1';
-let clauDocent = '';
+let cursActual    = '3rA';
+let clauDocent    = '';
 
 const MARC_INFO = {
-  0:{ txt:'Crisi màxima',     col:'#9b0000', desc:'El Consell comença. La crisi no s\'ha resolt.' },
-  1:{ txt:'Situació crítica', col:'#e63946', desc:'La crisi és present i pressiona. El Consell treballa.' },
-  2:{ txt:'Situació greu',    col:'#f77f00', desc:'Hi ha progrés però la situació continua sent greu.' },
-  3:{ txt:'Millora moderada', col:'#fcbf49', desc:'El Consell ha pres decisions ben argumentades.' },
-  4:{ txt:'Bona evolució',    col:'#90be6d', desc:'La proposta del Consell és sòlida i amb valors.' },
-  5:{ txt:'Crisi resolta',    col:'#52b788', desc:'El Consell ha demostrat pensament crític i responsabilitat.' },
+  0:{txt:'Crisi màxima',col:'#9b0000',desc:'El Consell comença. La crisi no s\'ha resolt.'},
+  1:{txt:'Situació crítica',col:'#e63946',desc:'La crisi és present i pressiona.'},
+  2:{txt:'Situació greu',col:'#f77f00',desc:'Hi ha progrés però la situació continua sent greu.'},
+  3:{txt:'Millora moderada',col:'#fcbf49',desc:'El Consell ha pres decisions ben argumentades.'},
+  4:{txt:'Bona evolució',col:'#90be6d',desc:'La proposta del Consell és sòlida i amb valors.'},
+  5:{txt:'Crisi resolta',col:'#52b788',desc:'El Consell ha demostrat pensament crític i responsabilitat.'},
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -700,76 +826,75 @@ async function doLogin() {
   btn.innerHTML = 'Verificant <span class="dots"><span></span><span></span><span></span></span>';
   err.style.display = 'none';
 
-  // Validació local primer (evita crida innecessària en mode real)
   if (SCRIPT_URL && clau !== CLAU_DOCENT) {
     const r = await api('autenticarDocent', { clau });
-    if (!r.ok) {
-      err.style.display = 'block';
-      btn.disabled = false; btn.textContent = 'Accedir al tauler';
-      return;
-    }
+    if (!r.ok) { showErr(); return; }
   } else if (!SCRIPT_URL && clau !== CLAU_DOCENT) {
+    showErr(); return;
+  }
+
+  function showErr() {
     err.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Accedir al tauler';
-    return;
   }
 
   clauDocent = clau;
   entrarApp();
 }
 
-function doDemo() {
-  clauDocent = CLAU_DOCENT;
-  entrarApp();
-}
+function doDemo() { clauDocent = CLAU_DOCENT; entrarApp(); }
 
 async function entrarApp() {
   document.getElementById('scr-login').style.display = 'none';
   document.getElementById('app').classList.add('on');
-  document.getElementById('topbar-docent').textContent = 'Docent · ' + new Date().toLocaleTimeString('ca');
-  await carregaMarcador();
-  await carregaEstatGrups();
+  document.getElementById('topbar-docent').textContent = cursActual + ' · ' + new Date().toLocaleTimeString('ca');
+  await Promise.all([carregaMarcador(), carregaSessions()]);
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  NAVEGACIÓ PANELS
+//  NAVEGACIÓ
 // ══════════════════════════════════════════════════════════════════
+const PANELS = ['marcador','sessions','grups','grup-resp','totes','reset'];
+
 function showPanel(id) {
-  ['marcador','grups','grup-resp','totes'].forEach(p => {
-    document.getElementById('panel-'+p).className =
-      p === id ? 'panel' : 'panel view-none';
-    document.getElementById('nav-'+p).classList.toggle('on', p === id);
+  PANELS.forEach(p => {
+    document.getElementById('panel-'+p).className = p===id ? 'panel' : 'panel view-none';
+    document.getElementById('nav-'+p)?.classList.toggle('on', p===id);
   });
-  if (id === 'grups') carregaEstatGrups();
-  if (id === 'totes') document.getElementById('totes-sess-label').textContent = sessionActual;
+  if (id==='sessions') carregaSessions();
+  if (id==='grups')    carregaEstatGrups();
+  if (id==='totes')    document.getElementById('totes-sess-label').textContent = sessionActual;
+}
+
+function onCursChange() {
+  cursActual = document.getElementById('curs-sel').value;
+  document.querySelectorAll('[id$="-curs-label"]').forEach(el => el.textContent = cursActual);
+  document.getElementById('topbar-docent').textContent = cursActual + ' · ' + new Date().toLocaleTimeString('ca');
+  refresca();
 }
 
 function onSessioChange() {
   sessionActual = document.getElementById('sess-sel').value;
   document.getElementById('grups-sess-label').textContent = sessionActual;
   document.getElementById('totes-sess-label').textContent = sessionActual;
-  // Refresca el panel visible
-  const actiu = ['marcador','grups','grup-resp','totes'].find(p =>
-    !document.getElementById('panel-'+p).classList.contains('view-none')
-  );
-  if (actiu === 'grups')  carregaEstatGrups();
+  const actiu = PANELS.find(p => !document.getElementById('panel-'+p).classList.contains('view-none'));
+  if (actiu==='grups') carregaEstatGrups();
 }
 
 function refresca() {
-  const actiu = ['marcador','grups','grup-resp','totes'].find(p =>
-    !document.getElementById('panel-'+p).classList.contains('view-none')
-  );
-  if (actiu === 'marcador')   carregaMarcador();
-  if (actiu === 'grups')      carregaEstatGrups();
-  if (actiu === 'grup-resp')  carregaRespostesGrup();
-  if (actiu === 'totes')      carregaTotes();
+  const actiu = PANELS.find(p => !document.getElementById('panel-'+p).classList.contains('view-none'));
+  if (actiu==='marcador')  carregaMarcador();
+  if (actiu==='sessions')  carregaSessions();
+  if (actiu==='grups')     carregaEstatGrups();
+  if (actiu==='grup-resp') carregaRespostesGrup();
+  if (actiu==='totes')     carregaTotes();
 }
 
 // ══════════════════════════════════════════════════════════════════
 //  MARCADOR
 // ══════════════════════════════════════════════════════════════════
 async function carregaMarcador() {
-  const r = await api('marcador');
+  const r = await api('marcador', { curs: cursActual });
   if (r.ok) renderMarcador(r.valor);
 }
 
@@ -780,38 +905,82 @@ function renderMarcador(v) {
   document.getElementById('marc-estat').textContent = info.txt;
   document.getElementById('marc-estat').style.color = info.col;
   document.getElementById('marc-desc').textContent  = info.desc;
-
-  for (let i = 0; i <= 5; i++) {
+  for (let i=0;i<=5;i++) {
     const seg = document.getElementById('ms'+i);
-    seg.className = 'marc-seg' + (i <= v ? ' on-'+v : '');
+    seg.className = 'marc-seg'+(i<=v?' on-'+v:'');
   }
-
-  // Highlight nivell actual a la taula
   document.querySelectorAll('.nivel-row').forEach(row => {
-    row.classList.toggle('current', parseInt(row.dataset.v) === v);
+    row.classList.toggle('current', parseInt(row.dataset.v)===v);
   });
-
-  document.getElementById('btn-baixar').disabled = v <= 0;
-  document.getElementById('btn-pujar').disabled  = v >= 5;
-
+  document.getElementById('btn-baixar').disabled = v<=0;
+  document.getElementById('btn-pujar').disabled  = v>=5;
   marcadorActual = v;
 }
 
 async function canviaMarcador(delta) {
-  const nou = Math.max(0, Math.min(5, marcadorActual + delta));
-  const btn = delta > 0
-    ? document.getElementById('btn-pujar')
-    : document.getElementById('btn-baixar');
+  const nou = Math.max(0,Math.min(5,marcadorActual+delta));
+  const btn = delta>0 ? document.getElementById('btn-pujar') : document.getElementById('btn-baixar');
   btn.disabled = true;
-
-  const r = await api('setMarcador', { valor: nou, clau: clauDocent });
+  const r = await api('setMarcador', { valor:nou, clau:clauDocent, curs:cursActual });
   if (r.ok) {
     renderMarcador(r.valor);
     const saved = document.getElementById('marc-saved');
     saved.textContent = `✓ Marcador actualitzat a ${r.valor} — ${MARC_INFO[r.valor].txt}`;
-    setTimeout(() => { saved.textContent = ''; }, 3500);
+    setTimeout(()=>{ saved.textContent=''; },3500);
   }
-  btn.disabled = (nou <= 0 && delta < 0) || (nou >= 5 && delta > 0);
+  btn.disabled = (nou<=0&&delta<0)||(nou>=5&&delta>0);
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  GESTIÓ DE SESSIONS
+// ══════════════════════════════════════════════════════════════════
+let sessioObertaActual = 'S1';
+
+async function carregaSessions() {
+  const body = document.getElementById('sessions-body');
+  body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
+  const r = await api('sessioActiva', { curs: cursActual, clau: clauDocent });
+  if (r.ok) sessioObertaActual = r.sessio || 'S1';
+  renderSessions();
+}
+
+function renderSessions() {
+  const oIdx = SESSIONS.findIndex(s => s.id === sessioObertaActual);
+  const body  = document.getElementById('sessions-body');
+
+  body.innerHTML = `
+    <div style="background:rgba(82,183,136,0.06); border:1px solid rgba(82,183,136,0.2); border-radius:2px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.87rem; color:var(--text);">
+      Sessió oberta ara: <strong style="color:var(--green);">${sessioObertaActual} — ${SESSIONS.find(s=>s.id===sessioObertaActual)?.nom.split('—')[1]?.trim()||''}</strong>
+    </div>
+    <div class="sess-grid">
+      ${SESSIONS.map((s, i) => {
+        const oberta = i <= oIdx;
+        const actual = s.id === sessioObertaActual;
+        return `
+          <div class="sess-row">
+            <div class="sess-nom">
+              ${s.nom}
+              ${actual ? '<div class="sess-nom-sub">← Sessió activa ara</div>' : ''}
+            </div>
+            <span class="sess-estat ${oberta?'se-oberta':'se-tancada'}">${oberta?'✓ Oberta':'Tancada'}</span>
+            ${!actual && !oberta ? `<button class="btn-obrir" onclick="obrirSessio('${s.id}')">Obrir</button>` : ''}
+            ${actual && i > 0 ? `<button class="btn-tancar" onclick="tancarSessio('${SESSIONS[i-1].id}')">← Tancar</button>` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <p style="font-size:0.78rem; color:var(--dim); margin-top:1rem; line-height:1.55;">Obrir una sessió permet als alumnes accedir-hi. Les sessions anteriors queden automàticament accessibles. Tancar torna a la sessió anterior.</p>
+  `;
+}
+
+async function obrirSessio(sessio) {
+  const r = await api('setSessioActiva', { curs:cursActual, sessio, clau:clauDocent });
+  if (r.ok) { sessioObertaActual = sessio; renderSessions(); }
+}
+
+async function tancarSessio(sessioAnterior) {
+  const r = await api('setSessioActiva', { curs:cursActual, sessio:sessioAnterior, clau:clauDocent });
+  if (r.ok) { sessioObertaActual = sessioAnterior; renderSessions(); }
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -821,44 +990,29 @@ async function carregaEstatGrups() {
   const body = document.getElementById('grups-body');
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
   document.getElementById('grups-ts').textContent = '';
-
-  const r = await api('estatGrups', { sessio: sessionActual, clau: clauDocent });
+  const r = await api('estatGrups', { sessio:sessionActual, curs:cursActual, clau:clauDocent });
   if (!r.ok || !r.grups?.length) {
-    body.innerHTML = '<div class="resp-empty">No hi ha dades per a aquesta sessió.</div>';
-    return;
+    body.innerHTML = '<div class="resp-empty">No hi ha dades per a aquesta sessió.</div>'; return;
   }
-
   document.getElementById('grups-ts').textContent = 'Actualitzat: ' + new Date().toLocaleTimeString('ca');
-
-  const completats = r.grups.filter(g => g.pct === 100).length;
-  const total      = r.grups.length;
-
+  const completats = r.grups.filter(g=>g.pct===100).length;
   body.innerHTML = `
-    <div style="display:flex; gap:1.5rem; margin-bottom:1rem; flex-wrap:wrap;">
-      <div style="font-family:'Rajdhani',sans-serif; font-size:0.78rem; color:var(--dim);">
-        <span style="font-size:1.5rem; font-weight:700; color:var(--green);">${completats}</span>
-        <span> / ${total} grups completats</span>
-      </div>
+    <div style="margin-bottom:1rem; font-family:'Rajdhani',sans-serif; font-size:0.78rem; color:var(--dim);">
+      <span style="font-size:1.5rem; font-weight:700; color:var(--green);">${completats}</span> / ${r.grups.length} grups completats
     </div>
     <div class="grups-grid">
       ${r.grups.map(g => {
-        const cls = g.pct === 100 ? 'gb-ok' : g.pct > 0 ? 'gb-parcial' : 'gb-pendent';
-        const badge = g.pct === 100 ? '✓ Completat' : g.pct > 0 ? `${g.completats}/${g.total}` : '⏳ Pendent';
-        return `
-          <div class="grup-card">
-            <div class="grup-head">
-              <div class="grup-nom">Grup ${g.grup}</div>
-              <div class="grup-badge ${cls}">${badge}</div>
-            </div>
-            <div class="grup-bar-wrap">
-              <div class="grup-bar" style="width:${g.pct}%; background:${g.pct===100?'var(--green)':g.pct>0?'#fcbf49':'rgba(255,255,255,0.1)'}"></div>
-            </div>
-            <div class="grup-pct">${g.pct}% completat</div>
-          </div>
-        `;
+        const cls = g.pct===100?'gb-ok':g.pct>0?'gb-parcial':'gb-pendent';
+        const badge = g.pct===100?'✓ Completat':g.pct>0?`${g.completats}/${g.total}`:'⏳ Pendent';
+        const barCol = g.pct===100?'var(--green)':g.pct>0?'#fcbf49':'rgba(255,255,255,0.1)';
+        return `<div class="grup-card">
+          <div class="grup-head"><div class="grup-nom">Grup ${g.grup}<span style="font-size:0.72rem; color:var(--dim); font-weight:400;"> · ${g.total} membres</span></div>
+          <div class="grup-badge ${cls}">${badge}</div></div>
+          <div class="grup-bar-wrap"><div class="grup-bar" style="width:${g.pct}%;background:${barCol}"></div></div>
+          <div class="grup-pct">${g.pct}% completat</div>
+        </div>`;
       }).join('')}
-    </div>
-  `;
+    </div>`;
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -868,79 +1022,84 @@ async function carregaRespostesGrup() {
   const grup  = document.getElementById('sel-grup').value;
   const tipus = document.getElementById('sel-tipus').value;
   const body  = document.getElementById('resp-grup-body');
-
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
-
-  const r = await api('respostesGrup', {
-    grup: grup || '', sessio: sessionActual, clau: clauDocent
-  });
-
-  if (!r.ok) { body.innerHTML = '<div class="resp-empty">Error carregant respostes.</div>'; return; }
-
-  let respostes = r.respostes || [];
-  if (tipus) respostes = respostes.filter(rr => rr.tipus === tipus);
-  respostes = respostes.filter(rr => rr.tipus !== 'sistema');
-
-  if (!respostes.length) {
-    body.innerHTML = '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
-    return;
-  }
-
-  body.innerHTML = `<div class="resp-list">${respostes.map(rr => renderRespCard(rr)).join('')}</div>`;
+  const r = await api('respostesGrup', { grup:grup||'', sessio:sessionActual, curs:cursActual, clau:clauDocent });
+  if (!r.ok) { body.innerHTML='<div class="resp-empty">Error carregant respostes.</div>'; return; }
+  let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
+  if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
+  body.innerHTML = respostes.length
+    ? `<div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div>`
+    : '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  TOTES LES RESPOSTES (per grup)
+//  TOTES LES RESPOSTES
 // ══════════════════════════════════════════════════════════════════
 async function carregaTotes() {
   const tipus = document.getElementById('sel-tipus-totes').value;
   const body  = document.getElementById('totes-body');
-
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
-
-  // Carregar tots els grups
-  const promeses = [1,2,3,4,5,6].map(g =>
-    api('respostesGrup', { grup: g, sessio: sessionActual, clau: clauDocent })
+  const resultats = await Promise.all(
+    [1,2,3,4,5,6].map(g => api('respostesGrup', { grup:g, sessio:sessionActual, curs:cursActual, clau:clauDocent }))
   );
-  const resultats = await Promise.all(promeses);
-
   let html = '';
-  resultats.forEach((r, idx) => {
+  resultats.forEach((r,idx)=>{
     if (!r.ok) return;
-    let respostes = (r.respostes || []).filter(rr => rr.tipus !== 'sistema');
-    if (tipus) respostes = respostes.filter(rr => rr.tipus === tipus);
+    let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
+    if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
     if (!respostes.length) return;
-
-    html += `
-      <div class="grup-block">
-        <div class="grup-block-head">Grup ${idx+1}</div>
-        <div class="resp-list">${respostes.map(rr => renderRespCard(rr)).join('')}</div>
-      </div>
-    `;
+    html += `<div class="grup-block"><div class="grup-block-head">Grup ${idx+1}</div><div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div></div>`;
   });
-
   body.innerHTML = html || '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════════════════════════════
+function chkReset() {
+  const confirmOk = document.getElementById('reset-confirm-inp').value === 'REINICIAR';
+  const clauOk    = document.getElementById('reset-clau-inp').value.trim().length > 0;
+  document.getElementById('btn-reset').disabled = !(confirmOk && clauOk);
+}
+
+async function doReset() {
+  const clau = document.getElementById('reset-clau-inp').value.trim();
+  const btn  = document.getElementById('btn-reset');
+  const msg  = document.getElementById('reset-msg');
+  btn.disabled = true;
+  btn.textContent = 'Reiniciant...';
+  const r = await api('resetCurs', { curs:cursActual, clau });
+  msg.style.display = 'block';
+  if (r.ok) {
+    msg.style.color = 'var(--green)';
+    msg.textContent = `✓ Dades del curs ${cursActual} esborrades correctament. La sessió activa torna a S1.`;
+    sessioObertaActual = 'S1';
+    document.getElementById('reset-confirm-inp').value = '';
+    document.getElementById('reset-clau-inp').value = '';
+  } else {
+    msg.style.color = 'var(--red)';
+    msg.textContent = '✗ Error: ' + (r.error || 'Contrasenya incorrecta o error del servidor.');
+  }
+  btn.textContent = '🗑️ Reiniciar dades del curs';
+  btn.disabled = true;
 }
 
 // ══════════════════════════════════════════════════════════════════
 //  HELPERS
 // ══════════════════════════════════════════════════════════════════
 function renderRespCard(rr) {
-  const tagCls  = { grupal:'rt-grup', individual:'rt-ind', bonus:'rt-bon' }[rr.tipus] || '';
-  const tagLabel = { grupal:'Grup', individual:'Individual', bonus:'Bonus' }[rr.tipus] || rr.tipus;
-  const qLabel  = PREGUNTES_LABEL[rr.pregunta] || rr.pregunta;
-  const ts = rr.timestamp ? new Date(rr.timestamp).toLocaleTimeString('ca', {hour:'2-digit',minute:'2-digit'}) : '';
-
-  return `
-    <div class="resp-card">
-      <div class="resp-meta">
-        <div class="resp-tag ${tagCls}">${tagLabel}</div>
-        <div class="resp-nom">${rr.nom || rr.email}${ts ? ' · ' + ts : ''}</div>
-      </div>
-      <div class="resp-q">${qLabel}</div>
-      <div class="resp-r">${escHtml(rr.resposta || '')}</div>
+  const tagCls   = {grupal:'rt-grup',individual:'rt-ind',bonus:'rt-bon'}[rr.tipus]||'';
+  const tagLabel = {grupal:'Grup',individual:'Individual',bonus:'Bonus'}[rr.tipus]||rr.tipus;
+  const qLabel   = PREGUNTES_LABEL[rr.pregunta]||rr.pregunta;
+  const ts = rr.timestamp ? new Date(rr.timestamp).toLocaleTimeString('ca',{hour:'2-digit',minute:'2-digit'}) : '';
+  return `<div class="resp-card">
+    <div class="resp-meta">
+      <div class="resp-tag ${tagCls}">${tagLabel}</div>
+      <div class="resp-nom">${rr.nom||rr.email}${ts?' · '+ts:''}</div>
     </div>
-  `;
+    <div class="resp-q">${qLabel}</div>
+    <div class="resp-r">${escHtml(rr.resposta||'')}</div>
+  </div>`;
 }
 
 function escHtml(str) {

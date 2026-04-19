@@ -754,6 +754,65 @@
       border-radius:50%; flex-shrink:0; color:var(--text-dim);
     }
 
+    /* Paper vs web markers */
+    .act-label {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'Rajdhani', sans-serif; font-size: 0.65rem;
+      font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 2px 9px; border-radius: 2px; margin-bottom: 0.55rem;
+    }
+    .act-web {
+      background: rgba(138,180,248,0.1); color: #8ab4f8;
+      border: 1px solid rgba(138,180,248,0.22);
+    }
+    .act-paper {
+      background: rgba(252,191,73,0.08); color: #d4a017;
+      border: 1px solid rgba(252,191,73,0.22);
+    }
+
+    /* Paper dossier question block */
+    .qblock-paper {
+      background: rgba(252,191,73,0.03);
+      border: 1px solid rgba(252,191,73,0.14);
+      border-left: 3px solid #d4a017;
+      border-radius: 2px;
+      padding: 1rem 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .qblock-paper .qnum { color: #d4a017; }
+    .qblock-paper .qtxt { margin-bottom: 0; }
+    .paper-note {
+      background: rgba(252,191,73,0.06);
+      border: 1px solid rgba(252,191,73,0.18);
+      border-radius: 2px; padding: 0.8rem 1.1rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem; font-size: 0.88rem; color: var(--text-dim);
+    }
+    .paper-note-icon { font-size: 1.4rem; flex-shrink: 0; }
+
+    /* Waiting screen */
+    .espera-wrap {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 4rem 2rem;
+      min-height: 60vh; gap: 1.25rem;
+    }
+    .espera-icon {
+      font-size: 3rem;
+      animation: float 3s ease-in-out infinite;
+    }
+    .espera-pulse {
+      display: flex; gap: 5px; justify-content: center;
+      margin-top: 0.5rem;
+    }
+    .espera-pulse span {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--acc); opacity: 0.5;
+      animation: db 1.2s ease-in-out infinite;
+    }
+    .espera-pulse span:nth-child(2){ animation-delay:0.2s; }
+    .espera-pulse span:nth-child(3){ animation-delay:0.4s; }
+
     /* Demo ribbon */
     .demo-ribbon {
       position:fixed; bottom:1rem; right:1rem;
@@ -853,9 +912,6 @@
       </button>
       <div class="login-err" id="login-err">
         No hem trobat aquest correu al registre del Consell. Comprova que l'has escrit bé o parla amb el teu docent.
-      </div>
-      <div style="margin-top:1rem; text-align:center;">
-        <button class="btn-demo" onclick="doDemo()">▶ Entrar en mode demo</button>
       </div>
     </div>
     <div class="login-foot">Institut de Matadepera · Curs 2025-26</div>
@@ -997,20 +1053,22 @@
     <p class="page-lead" style="margin-bottom:1.5rem;">Respon individualment. Les teves respostes es guardaran i les podràs comparar amb el que penses al final del projecte.</p>
 
     <div class="qblock">
-      <div class="qnum">Pregunta 1 de 2</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quan sents «crisi energètica», de què creus que parla?</div>
       <textarea class="finput" id="r1" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
     <div class="qblock">
-      <div class="qnum">Pregunta 2 de 2</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Creus que t'afecta? Com?</div>
       <textarea class="finput" id="r2" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
     <!-- Bonus — apareix després de guardar -->
     <div class="bonus-wrap" id="bonus-wrap">
-      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
+      <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
       <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Qui creus que té la culpa? (intuïció, no cal justificar)</div>
       <textarea class="finput" id="r-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
     </div>
@@ -1067,7 +1125,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Resposta conjunta del grup</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Resposta conjunta del grup</div>
       <div class="qtxt" style="font-size:0.88rem;">Poseu-vos d'acord i escriviu la posició del vostre grup. Heu d'identificar quin conflicte prioritzeu i justificar-ho amb almenys dos arguments.</div>
       <textarea class="finput" id="s1g-r" placeholder="La nostra posició com a grup és..." oninput="chkGrup('s1g-r','btn-s1g-save')"></textarea>
     </div>
@@ -1216,30 +1275,31 @@
     </div>
 
     <h2 class="page-h2">Analitza la teva font</h2>
-    <p class="page-lead">Has llegit el document del teu sobre. Ara analitza'l individualment, <em>sense parlar-ne amb el grup encara</em>.</p>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 2</div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong>. Quan hagis acabat, fes clic a «Continuar».</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Qui ha escrit aquest document i per quins motius? Quins interessos pot tenir l'organització o la persona que l'ha redactat?</div>
-      <textarea class="finput" id="s2i-r1" placeholder="L'ha escrit..." oninput="chkInd2()"></textarea>
     </div>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 2</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Hi ha alguna dada o argument al document que et sembla sòlid i ben fonamentat? I algun que et genera dubtes o que podria estar esbiaixat? Explica el per quès.</div>
-      <textarea class="finput" id="s2i-r2" placeholder="Sòlid: ... / Em genera dubtes: ..." oninput="chkInd2()"></textarea>
     </div>
 
-    <div class="bonus-wrap" id="bonus2-wrap">
-      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
-      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Quina part creus que és fiable i per quins criteris ho decideixes? Pots imaginar un lector que s'ho cregués tot sense qüestionar-ho? Qui seria?</div>
-      <textarea class="finput" id="s2i-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+    <div class="bonus-wrap vis" id="bonus2-wrap">
+      <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
+      <div class="qtxt" style="margin-bottom:0; font-size:0.93rem;">Quina part creus que és fiable i per quins criteris ho decideixes? Pots imaginar un lector que s'ho cregués tot sense qüestionar-ho? Qui seria?</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s2i-save" onclick="saveInd2()" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-s2i-cont" onclick="go('scr-s2-grup')" disabled style="display:none;">Continuar → Tasca de grup</button>
-      <span class="saved-ok" id="saved-s2i">✓ Respostes guardades</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s2-grup')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -1271,7 +1331,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Resposta conjunta del grup</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Resposta conjunta del grup</div>
       <div class="qtxt" style="font-size:0.88rem;">La vostra conclusió ha de tenir tres elements: (1) les causes de la crisi que considereu ben documentades, (2) els interessos dels actors implicats que heu detectat, i (3) una cosa que encara no podeu saber amb les fonts que teniu.</div>
       <textarea class="finput" id="s2g-r" placeholder="Causes documentades: ...&#10;Interessos detectats: ...&#10;Allò que encara no sabem: ..." style="min-height:130px;" oninput="chkGrup('s2g-r','btn-s2g-save')"></textarea>
     </div>
@@ -1395,34 +1456,35 @@
     </div>
 
     <h2 class="page-h2">Poder real vs. poder legítim</h2>
-    <p class="page-lead">Respon individualment, tenint en compte les cinc pistes que acabes de llegir.</p>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 3</div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong>, tenint en compte les cinc pistes que acabes de llegir.</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
       <div class="qtxt">Qui creus que té <strong>més poder real</strong> en la decisió energètica europea? Per quins motius concrets?</div>
-      <textarea class="finput" id="s3i-r1" placeholder="L'actor amb més poder real és... perquè..." oninput="chkN('s3i',3)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 3</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
       <div class="qtxt">Qui creus que <strong>hauria de tenir</strong> més poder per decidir sobre l'energia? Per quins motius?</div>
-      <textarea class="finput" id="s3i-r2" placeholder="Hauria de tenir més poder... perquè..." oninput="chkN('s3i',3)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 3 de 3</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 3 de 3</div>
       <div class="qtxt">Com a Consell Assessor, <strong>a qui escoltaríeu</strong> per elaborar la vostra proposta? Podeu donar veu a uns i no als altres?</div>
-      <textarea class="finput" id="s3i-r3" placeholder="Com a Consell, escoltaríem..." oninput="chkN('s3i',3)"></textarea>
     </div>
 
-    <div class="bonus-wrap" id="bonus3-wrap">
-      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
-      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha diferència entre les teves dues primeres respostes? Si és que sí, què ens diu això sobre com funciona la democràcia real?</div>
-      <textarea class="finput" id="s3i-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+    <div class="bonus-wrap vis">
+      <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
+      <div class="qtxt" style="margin-bottom:0; font-size:0.93rem;">Hi ha diferència entre les teves dues primeres respostes? Si és que sí, què ens diu això sobre com funciona la democràcia real?</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s3i-save" onclick="saveIndN('s3i',3,'S3','bonus3-wrap')" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-s3i-cont" onclick="go('scr-s3-grup')" disabled style="display:none;">Continuar → Tasca de grup</button>
-      <span class="saved-ok" id="saved-s3i">✓ Respostes guardades</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s3-grup')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -1448,7 +1510,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Posició conjunta del grup</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Posició conjunta del grup</div>
       <div class="qtxt" style="font-size:0.88rem;">Descriviu (1) a qui escoltaríeu i per quins criteris, i (2) si considereu que hi ha diferència entre qui té poder real i qui hauria de tenir-lo.</div>
       <textarea class="finput" id="s3g-r" placeholder="Com a Consell, escoltaríem... perquè els nostres criteris són..." oninput="chkGrup('s3g-r','btn-s3g-save')"></textarea>
     </div>
@@ -1610,27 +1673,29 @@
 
     <h2 class="page-h2">Analitza la teva opció</h2>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 2</div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong> a partir de la fitxa que t'ha donat el docent.</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quins riscos veus en l'opció que has analitzat? Hi ha riscos que no apareixen explícitament a la fitxa però que intuïtes?</div>
-      <textarea class="finput" id="s4i-r1" placeholder="Els riscos que veig són..." oninput="chkN('s4i',2)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 2</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Si haguessis de descartar una de les tres opcions, quina seria i per quins motius? Pots descartar-ne la teva pròpia si creus que té massa riscos.</div>
-      <textarea class="finput" id="s4i-r2" placeholder="Descartaria l'opció... perquè..." oninput="chkN('s4i',2)"></textarea>
     </div>
 
-    <div class="bonus-wrap" id="bonus4-wrap">
-      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
-      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha una Opció D que no surt al mapa? Basant-te en les pistes de l'obertura, formula-la i argumenta per quins motius no s'ha considerat fins ara.</div>
-      <textarea class="finput" id="s4i-bonus" placeholder="L'Opció D podria ser... No s'ha considerat perquè..." style="min-height:80px;"></textarea>
+    <div class="bonus-wrap vis">
+      <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
+      <div class="qtxt" style="margin-bottom:0; font-size:0.93rem;">Hi ha una Opció D que no surt al mapa? Basant-te en les pistes de l'obertura, formula-la i argumenta per quins motius no s'ha considerat fins ara.</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s4i-save" onclick="saveIndN('s4i',2,'S4','bonus4-wrap')" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-s4i-cont" onclick="go('scr-s4-grup')" disabled style="display:none;">Continuar → Primera decisió del Consell</button>
-      <span class="saved-ok" id="saved-s4i">✓ Respostes guardades</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s4-grup')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -1661,7 +1726,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Recomanació conjunta — Primera posició formal del Consell</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Recomanació conjunta — Primera posició formal del Consell</div>
       <div class="qtxt" style="font-size:0.88rem;">Escriviu la recomanació completa: quina opció o combinació, per quins motius argumentats amb valors, i quines limitacions reconeixeu en la vostra pròpia recomanació.</div>
       <textarea class="finput" id="s4g-r" placeholder="Recomanem... perquè creiem que una democràcia ha de prioritzar...&#10;Reconeixem que la nostra recomanació té el límit de..." style="min-height:130px;" oninput="chkGrup('s4g-r','btn-s4g-save')"></textarea>
     </div>
@@ -1785,29 +1851,30 @@
     </div>
 
     <h2 class="page-h2">Prepara la negociació</h2>
-    <p class="page-lead">Abans de negociar, analitza el teu actor i els altres. La negociació comença aquí.</p>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 2</div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong> a partir del document del teu sobre. Abans de negociar, analitza el teu actor i els altres.</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quins interessos té el teu actor? Què vol <strong>realment</strong> més enllà de l'energia — poder, reconeixement, seguretat, diners, prestigi?</div>
-      <textarea class="finput" id="s5i-r1" placeholder="El meu actor vol realment..." oninput="chkN('s5i',2)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 2</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Què podria oferir Europa al teu actor que <strong>no sigui energia ni diners</strong> directament? Pensa en garanties, reconeixements, acords comercials, estatus internacional...</div>
-      <textarea class="finput" id="s5i-r2" placeholder="Europa podria oferir..." oninput="chkN('s5i',2)"></textarea>
     </div>
 
-    <div class="bonus-wrap" id="bonus5-wrap">
-      <div class="bonus-tag">⭐ Fast finisher — opcional</div>
-      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Hi ha alguna cosa que Europa i el teu actor tinguin en comú? Quin podria ser el terreny compartit — un interès o un valor que tots dos comparteixen — sobre el qual construir l'acord?</div>
-      <textarea class="finput" id="s5i-bonus" placeholder="El terreny compartit podria ser..." style="min-height:72px;"></textarea>
+    <div class="bonus-wrap vis">
+      <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
+      <div class="qtxt" style="margin-bottom:0; font-size:0.93rem;">Hi ha alguna cosa que Europa i el teu actor tinguin en comú? Quin podria ser el terreny compartit sobre el qual construir l'acord?</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s5i-save" onclick="saveIndN('s5i',2,'S5','bonus5-wrap')" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-s5i-cont" onclick="go('scr-s5-grup')" disabled style="display:none;">Continuar → La negociació</button>
-      <span class="saved-ok" id="saved-s5i">✓ Respostes guardades</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s5-grup')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -1836,7 +1903,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Resultat de la negociació</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Resultat de la negociació</div>
       <div class="qtxt" style="font-size:0.88rem;">Descriviu si heu arribat a un acord o no. Si hi ha acord: amb qui, en quines condicions i amb quins límits. Si no hi ha acord: quina línia vermella no s'ha pogut creuar i per quin motiu.</div>
       <textarea class="finput" id="s5g-r" placeholder="Hem / No hem arribat a un acord perquè...&#10;Les condicions de l'acord / la línia vermella és..." style="min-height:120px;" oninput="chkGrup('s5g-r','btn-s5g-save')"></textarea>
     </div>
@@ -1928,26 +1996,29 @@
 
     <h2 class="page-h2">La teva visió personal</h2>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 3</div>
-      <div class="qtxt">Quina ha estat la idea, pregunta o descoberta que més t'ha fet pensar durant tot el projecte? Per quins motius?</div>
-      <textarea class="finput" id="s6i-r1" placeholder="El que més m'ha fet pensar és..." oninput="chkN('s6i',3)"></textarea>
-    </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 3</div>
-      <div class="qtxt">Quina decisió creus que Europa hauria de prendre sobre l'energia? Per quins motius, i quins valors guien la teva resposta?</div>
-      <textarea class="finput" id="s6i-r2" placeholder="Crec que Europa hauria de... perquè els valors que em guien són..." oninput="chkN('s6i',3)"></textarea>
-    </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 3 de 3 — <span style="color:var(--acc);">Obligatòria</span></div>
-      <div class="qtxt">Qui podria sortir perjudicat per la decisió que defenses? Treballadors d'indústries fòssils, països productors, comunitats mineres, generacions futures... És acceptable aquest cost? Per quins motius?</div>
-      <textarea class="finput" id="s6i-r3" placeholder="Podria sortir perjudicat/da... Crec que és/no és acceptable perquè..." oninput="chkN('s6i',3)"></textarea>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong>. La pregunta 3 és obligatòria per a tothom.</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s6i-save" onclick="saveIndN('s6i',3,'S6',null)" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-s6i-cont" onclick="go('scr-s6-grup')" disabled style="display:none;">Continuar → Proposta de grup</button>
-      <span class="saved-ok" id="saved-s6i">✓ Respostes guardades</span>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
+      <div class="qtxt">Quina ha estat la idea, pregunta o descoberta que més t'ha fet pensar durant tot el projecte? Per quins motius?</div>
+    </div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
+      <div class="qtxt">Quina decisió creus que Europa hauria de prendre sobre l'energia? Per quins motius, i quins valors guien la teva resposta?</div>
+    </div>
+    <div class="qblock-paper" style="border-left-color:var(--acc); border-color:rgba(245,166,35,0.25);">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span> <span style="color:var(--acc); font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-left:0.4rem;">· Obligatòria</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 3 de 3</div>
+      <div class="qtxt">Qui podria sortir perjudicat per la decisió que defenses? Treballadors d'indústries fòssils, països productors, comunitats mineres, generacions futures... És acceptable aquest cost? Per quins motius?</div>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s6-grup')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -1978,7 +2049,8 @@
     </div>
 
     <div class="qblock">
-      <div class="qnum">Proposta final conjunta del grup</div>
+      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Proposta final conjunta del grup</div>
       <div class="qtxt" style="font-size:0.88rem;">Escriviu els cinc elements. Podeu estructurar-los amb els números si us ajuda.</div>
       <textarea class="finput" id="s6g-r" placeholder="1. Diagnosi: La crisi ha sorgit de...&#10;2. Decisió: Recomanem...&#10;3. Acords: Negociaríem amb...&#10;4. Valors: Aquesta proposta és justa perquè...&#10;5. Punt cec: Podria sortir perjudicat/da... i és/no és acceptable perquè..." style="min-height:200px;" oninput="chkGrup('s6g-r','btn-s6g-save')"></textarea>
     </div>
@@ -2063,28 +2135,30 @@
     </div>
 
     <h2 class="page-h2">Reflexió final — Comparant amb el punt de partida</h2>
-    <p class="page-lead">Recordes la primera sessió? Ara pots comparar el que pensaves llavors amb el que penses ara.</p>
 
-    <div class="qblock">
-      <div class="qnum">Pregunta 1 de 3</div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Recupera la fitxa de diagnosi inicial de la Sessió 1 i respon al teu <strong>dossier personal en paper</strong>. Compara el que pensaves llavors amb el que penses ara.</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
       <div class="qtxt">Què pensaves al principi sobre la crisi energètica que ara has canviat o matisat? Explica concretament el canvi.</div>
-      <textarea class="finput" id="s7i-r1" placeholder="Abans creia que... Ara penso que... El canvi ha estat perquè..." oninput="chkN('s7i',3)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 2 de 3</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
       <div class="qtxt">Quina ha estat la pregunta més difícil de respondre durant tot el projecte? Per quins motius et va costar tant?</div>
-      <textarea class="finput" id="s7i-r2" placeholder="La pregunta més difícil ha estat... perquè..." oninput="chkN('s7i',3)"></textarea>
     </div>
-    <div class="qblock">
-      <div class="qnum">Pregunta 3 de 3</div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
+      <div class="qnum" style="margin-top:0.2rem;">Pregunta 3 de 3</div>
       <div class="qtxt">Com a ciutadà o ciutadana, <strong>què pots fer tu</strong> amb tot el que has après? Pensa en accions concretes i realistes, no en grans declaracions.</div>
-      <textarea class="finput" id="s7i-r3" placeholder="Com a ciutadà/ana, puc..." oninput="chkN('s7i',3)"></textarea>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-s7i-save" onclick="saveIndN('s7i',3,'S7',null)" disabled>Guardar reflexió</button>
-      <button class="btn-cont" id="btn-s7i-cont" onclick="go('scr-s7-fi')" disabled style="display:none;">Continuar → Tancament final</button>
-      <span class="saved-ok" id="saved-s7i">✓ Reflexió guardada</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s7-fi')">He respost al dossier → Continuar</button>
     </div>
   </div>
 </div>
@@ -2155,6 +2229,25 @@
 
 
 <!-- ══════════════════════════════════════
+     PANTALLA D'ESPERA (sessió no oberta)
+══════════════════════════════════════ -->
+<div class="screen" id="scr-espera">
+  <div class="page">
+    <div class="espera-wrap">
+      <div class="espera-icon">⏳</div>
+      <div class="badge badge-red">Sessió no disponible</div>
+      <h2 class="page-h2" style="text-align:center;" id="espera-titol">Esperant el docent</h2>
+      <p style="color:var(--text-dim); max-width:440px; line-height:1.7; font-size:0.93rem;" id="espera-desc">
+        El docent encara no ha obert aquesta sessió. Quan ho faci, la pàgina s'actualitzarà automàticament.
+      </p>
+      <div class="espera-pulse"><span></span><span></span><span></span></div>
+      <p style="font-size:0.75rem; color:var(--text-dim); margin-top:0.5rem;">Comprovant cada 30 segons…</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
      JAVASCRIPT
 ══════════════════════════════════════ -->
 <script>
@@ -2174,23 +2267,23 @@ async function api(action, params = {}) {
     return res.json();
   }
 
-  // ── MOCK (Fase 1) ──────────────────────
+  // ── MOCK (mode prova) ──────────────────────
   await delay(380);
   switch (action) {
     case 'login': {
       const db = {
-        'alumne@escola.cat': { nom:'Maria Garcia',  grup:2, posicio:1, ultimaSessio:null },
-        'joan@escola.cat':   { nom:'Joan Puig',     grup:2, posicio:2, ultimaSessio:'S1' },
-        'ana@escola.cat':    { nom:'Ana Martínez',  grup:3, posicio:3, ultimaSessio:null },
-        'pere@escola.cat':   { nom:'Pere Soler',    grup:1, posicio:4, ultimaSessio:'S2' },
+        'alumne@escola.cat': { nom:'Maria Garcia',  grup:2, posicio:1, ultimaSessio:null, curs:'3rA' },
+        'joan@escola.cat':   { nom:'Joan Puig',     grup:2, posicio:2, ultimaSessio:'S1', curs:'3rA' },
+        'ana@escola.cat':    { nom:'Ana Martínez',  grup:3, posicio:3, ultimaSessio:null, curs:'3rC' },
+        'pere@escola.cat':   { nom:'Pere Soler',    grup:1, posicio:4, ultimaSessio:'S2', curs:'3rE' },
       };
       const u = db[(params.email||'').toLowerCase().trim()];
-      // En mode demo, si no existeix, assignem grup per defecte
-      return u ? { ok:true, ...u } : { ok:true, nom: params.nom || 'Alumne Demo', grup:1, posicio:1, ultimaSessio:null };
+      return u ? { ok:true, ...u } : { ok:true, nom: params.nom||'Alumne', grup:1, posicio:1, ultimaSessio:null, curs:'3rA' };
     }
-    case 'marcador': return { ok:true, valor:0 };
-    case 'save':     return { ok:true };
-    default:         return { ok:false };
+    case 'sessioActiva': return { ok:true, sessio:'S1' }; // docent té S1 oberta
+    case 'marcador':     return { ok:true, valor:0 };
+    case 'save':         return { ok:true };
+    default:             return { ok:false };
   }
 }
 
@@ -2229,8 +2322,8 @@ function go(id) {
 
   // Render rol cards quan s'arriba a les pantalles de rol
   if (id === 'scr-s2-rol') renderRolCard();
-  if (id === 'scr-s4-rol') renderS4RolCard();
-  if (id === 'scr-s5-rol') renderS5RolCard();
+  if (id === 'scr-s4-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS4RolCard(); }
+  if (id === 'scr-s5-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS5RolCard(); }
 }
 
 // ─────────────────────────────────────────
@@ -2274,14 +2367,21 @@ async function doLogin() {
       return;
     }
 
-    user = { nom: lr.nom || nom, email, grup: lr.grup, posicio: lr.posicio, ultimaSessio: lr.ultimaSessio };
+    user = { nom: lr.nom || nom, email, grup: lr.grup, posicio: lr.posicio,
+             ultimaSessio: lr.ultimaSessio, curs: lr.curs || '3rA' };
+
+    // Calcular posició efectiva per mòdul (grups de 3 o 5)
+    user.posicioEfectiva = calcPosicioEfectiva(user.posicio);
 
     document.getElementById('h-nom').textContent  = user.nom;
     document.getElementById('h-grup').textContent = 'Grup ' + user.grup;
     document.getElementById('benv-grup').textContent = user.grup;
     setMarcador(mr.valor ?? 0);
 
-    // Routing: primera vegada → benvinguda; sessions anteriors → pantalla corresponent
+    // Comprovar quina sessió ha obert el docent
+    const sr = await api('sessioActiva', { curs: user.curs });
+    sessioOberta = sr.sessio || 'S1';
+
     routeAfterLogin();
 
   } catch(e) {
@@ -2290,15 +2390,6 @@ async function doLogin() {
     btn.disabled = false;
     btn.textContent = 'Accedir al Consell';
   }
-}
-
-function doDemo() {
-  user = { nom:'Docent Demo', email:'demo@demo.cat', grup:1, posicio:1, ultimaSessio:null };
-  document.getElementById('h-nom').textContent  = user.nom;
-  document.getElementById('h-grup').textContent = 'Grup ' + user.grup;
-  document.getElementById('benv-grup').textContent = user.grup;
-  setMarcador(0);
-  routeAfterLogin();
 }
 
 // Enter key
@@ -2658,6 +2749,53 @@ function renderS5RolCard() {
 // ─────────────────────────────────────────
 //  ROUTING AMPLIAT (S3-S7)
 // ─────────────────────────────────────────
+
+// ─────────────────────────────────────────
+//  ESTAT SESSIÓ OBERTA
+// ─────────────────────────────────────────
+let sessioOberta = 'S1';
+let esperaTimer  = null;
+
+const SESSIO_ORDRE = { S1:1, S2:2, S3:3, S4:4, S5:5, S6:6, S7:7 };
+const SESSIO_NOM   = {
+  S1:'El món s\'apaga', S2:'A qui creure?', S3:'Qui decideix?',
+  S4:'El mapa del poder', S5:'Negociar o trencar',
+  S6:'La nostra proposta', S7:'Ara, nosaltres'
+};
+
+function sessioPermesa(sessio) {
+  return SESSIO_ORDRE[sessio] <= SESSIO_ORDRE[sessioOberta];
+}
+
+function mostrarEspera(sessioBloquejada) {
+  const nom = SESSIO_NOM[sessioBloquejada] || sessioBloquejada;
+  document.getElementById('espera-titol').textContent = 'Sessió ' + sessioBloquejada + ' — ' + nom;
+  document.getElementById('espera-desc').textContent  =
+    'El docent encara no ha obert la Sessió ' + sessioBloquejada +
+    '. Quan ho faci, la pàgina s\'actualitzarà automàticament.';
+  go('scr-espera');
+  if (esperaTimer) clearInterval(esperaTimer);
+  esperaTimer = setInterval(async () => {
+    const sr = await api('sessioActiva', { curs: user?.curs });
+    if (sr.ok) sessioOberta = sr.sessio || sessioOberta;
+    if (sessioPermesa(sessioBloquejada)) {
+      clearInterval(esperaTimer);
+      routeAfterLogin();
+    }
+  }, 30000);
+}
+
+// ─────────────────────────────────────────
+//  POSICIÓ EFECTIVA (grups de 3 o 5)
+// ─────────────────────────────────────────
+function calcPosicioEfectiva(posicio) {
+  const p = parseInt(posicio) || 1;
+  return ((p - 1) % 4) + 1;
+}
+
+// ─────────────────────────────────────────
+//  ROUTING APRÈS LOGIN
+// ─────────────────────────────────────────
 function routeAfterLogin() {
   const s = user?.ultimaSessio;
   if (!s) return go('scr-benv');
@@ -2665,7 +2803,12 @@ function routeAfterLogin() {
     S1:'scr-s2-ob', S2:'scr-s3-ob', S3:'scr-s4-ob',
     S4:'scr-s5-ob', S5:'scr-s6-ob', S6:'scr-s7-ob', S7:'scr-s7-final'
   };
-  go(next[s] || 'scr-benv');
+  const propera = { S1:'S2', S2:'S3', S3:'S4', S4:'S5', S5:'S6', S6:'S7' }[s];
+  if (propera && !sessioPermesa(propera)) {
+    mostrarEspera(propera);
+  } else {
+    go(next[s] || 'scr-benv');
+  }
 }
 
 // ─────────────────────────────────────────
