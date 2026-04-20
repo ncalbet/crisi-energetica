@@ -473,7 +473,8 @@
       <div class="login-err" id="login-err">Contrasenya incorrecta.</div>
     </div>
     <div class="demo-note">
-      Mode demo: <button onclick="doDemo()">entrar sense contrasenya</button>
+      Sense SCRIPT_URL real: <button onclick="doDemo()">entrar en mode prova</button><br>
+      <span style="font-size:0.65rem; opacity:0.6;">(contrasenya de prova: <code>matadepera2025</code>)</span>
     </div>
   </div>
 </div>
@@ -669,20 +670,16 @@
         <div class="panel-body">
           <div style="background:rgba(230,57,70,0.07); border:1px solid rgba(230,57,70,0.2); border-left:4px solid var(--red); border-radius:2px; padding:1rem 1.2rem; margin-bottom:1.5rem;">
             <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.8rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--red); margin-bottom:0.5rem;">⚠ Acció irreversible</div>
-            <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">Aquesta acció esborra <strong>totes les respostes, el progrés i les sessions obertes</strong> del curs seleccionat. No afecta els altres cursos. Les dades del full «Grups» no s'esborren.</p>
+            <p style="font-size:0.88rem; line-height:1.65; color:var(--text);">Aquesta acció esborra <strong>totes les respostes, el progrés i les sessions obertes</strong> del curs seleccionat (<strong id="reset-curs-nom">3r A</strong>). No afecta els altres cursos ni el full «Grups».</p>
           </div>
 
-          <div style="margin-bottom:1rem;">
-            <label class="flabel-t" for="reset-confirm-inp">Escriu <strong style="color:var(--red);">REINICIAR</strong> per confirmar</label>
-            <input class="finput-t" id="reset-confirm-inp" type="text" placeholder="REINICIAR" oninput="chkReset()">
-          </div>
-          <div style="margin-bottom:1rem;">
-            <label class="flabel-t" for="reset-clau-inp">Contrasenya del docent</label>
+          <div style="margin-bottom:1.25rem;">
+            <label class="flabel-t" for="reset-clau-inp">Confirma amb la contrasenya del docent</label>
             <input class="finput-t" id="reset-clau-inp" type="password" placeholder="••••••••" oninput="chkReset()">
           </div>
 
-          <button class="btn-reset" id="btn-reset" onclick="doReset()" disabled>🗑️ Reiniciar dades del curs</button>
-          <div id="reset-msg" style="margin-top:0.85rem; font-size:0.82rem; display:none;"></div>
+          <button class="btn-reset" id="btn-reset" onclick="doReset()" disabled>🗑️ Reiniciar dades de <span id="btn-reset-curs">3r A</span></button>
+          <div id="reset-msg" style="margin-top:0.85rem; font-size:0.85rem; display:none; padding:0.6rem 0.9rem; border-radius:2px;"></div>
         </div>
       </div>
 
@@ -869,6 +866,14 @@ function showPanel(id) {
 function onCursChange() {
   cursActual = document.getElementById('curs-sel').value;
   document.querySelectorAll('[id$="-curs-label"]').forEach(el => el.textContent = cursActual);
+  // Actualitzar etiquetes del panel reset
+  const resetNom = document.getElementById('reset-curs-nom');
+  const btnNom   = document.getElementById('btn-reset-curs');
+  if (resetNom) resetNom.textContent = cursActual;
+  if (btnNom)   btnNom.textContent   = cursActual;
+  // Netejar camp password del reset
+  const ri = document.getElementById('reset-clau-inp');
+  if (ri) { ri.value = ''; chkReset(); }
   document.getElementById('topbar-docent').textContent = cursActual + ' · ' + new Date().toLocaleTimeString('ca');
   refresca();
 }
@@ -939,8 +944,13 @@ let sessioObertaActual = 'S1';
 async function carregaSessions() {
   const body = document.getElementById('sessions-body');
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
-  const r = await api('sessioActiva', { curs: cursActual, clau: clauDocent });
-  if (r.ok) sessioObertaActual = r.sessio || 'S1';
+  try {
+    const r = await api('sessioActiva', { curs: cursActual, clau: clauDocent });
+    if (r.ok) sessioObertaActual = r.sessio || 'S1';
+    else sessioObertaActual = 'S1';
+  } catch(e) {
+    sessioObertaActual = 'S1';
+  }
   renderSessions();
 }
 
@@ -950,37 +960,78 @@ function renderSessions() {
 
   body.innerHTML = `
     <div style="background:rgba(82,183,136,0.06); border:1px solid rgba(82,183,136,0.2); border-radius:2px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.87rem; color:var(--text);">
-      Sessió oberta ara: <strong style="color:var(--green);">${sessioObertaActual} — ${SESSIONS.find(s=>s.id===sessioObertaActual)?.nom.split('—')[1]?.trim()||''}</strong>
+      Sessió oberta ara: <strong style="color:var(--green);">${sessioObertaActual} — ${SESSIONS.find(s=>s.id===sessioObertaActual)?.nom.replace(/^S\d+ — /,'') || ''}</strong>
     </div>
+    <div id="sess-feedback" style="display:none; margin-bottom:0.75rem; padding:0.6rem 0.9rem; border-radius:2px; font-size:0.84rem;"></div>
     <div class="sess-grid">
       ${SESSIONS.map((s, i) => {
         const oberta = i <= oIdx;
         const actual = s.id === sessioObertaActual;
+        const esSegüent = i === oIdx + 1;
         return `
-          <div class="sess-row">
+          <div class="sess-row" id="sess-row-${s.id}">
             <div class="sess-nom">
               ${s.nom}
               ${actual ? '<div class="sess-nom-sub">← Sessió activa ara</div>' : ''}
             </div>
             <span class="sess-estat ${oberta?'se-oberta':'se-tancada'}">${oberta?'✓ Oberta':'Tancada'}</span>
-            ${!actual && !oberta ? `<button class="btn-obrir" onclick="obrirSessio('${s.id}')">Obrir</button>` : ''}
-            ${actual && i > 0 ? `<button class="btn-tancar" onclick="tancarSessio('${SESSIONS[i-1].id}')">← Tancar</button>` : ''}
+            ${esSegüent ? `<button class="btn-obrir" id="btn-obrir-${s.id}" onclick="obrirSessio('${s.id}')">Obrir →</button>` : ''}
+            ${actual && i > 0 ? `<button class="btn-tancar" id="btn-tancar-${s.id}" onclick="tancarSessio('${SESSIONS[i-1].id}')">← Tancar</button>` : ''}
           </div>
         `;
       }).join('')}
     </div>
-    <p style="font-size:0.78rem; color:var(--dim); margin-top:1rem; line-height:1.55;">Obrir una sessió permet als alumnes accedir-hi. Les sessions anteriors queden automàticament accessibles. Tancar torna a la sessió anterior.</p>
+    <p style="font-size:0.78rem; color:var(--dim); margin-top:1rem; line-height:1.55;">Només es pot obrir la sessió immediatament següent a l'actual. Tancar torna a la sessió anterior.</p>
   `;
 }
 
 async function obrirSessio(sessio) {
-  const r = await api('setSessioActiva', { curs:cursActual, sessio, clau:clauDocent });
-  if (r.ok) { sessioObertaActual = sessio; renderSessions(); }
+  const btn = document.getElementById('btn-obrir-'+sessio);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    const r = await api('setSessioActiva', { curs:cursActual, sessio, clau:clauDocent });
+    if (r.ok) {
+      sessioObertaActual = r.sessio || sessio;
+      renderSessions();
+      mostrarFeedbackSessio(`✓ Sessió ${sessio} oberta. Els alumnes de ${cursActual} ja hi poden accedir.`, true);
+    } else {
+      mostrarFeedbackSessio('✗ Error: ' + (r.error || 'No s\'ha pogut obrir la sessió.'), false);
+      if (btn) { btn.disabled = false; btn.textContent = 'Obrir →'; }
+    }
+  } catch(e) {
+    mostrarFeedbackSessio('✗ Error de connexió. Comprova el SCRIPT_URL.', false);
+    if (btn) { btn.disabled = false; btn.textContent = 'Obrir →'; }
+  }
 }
 
 async function tancarSessio(sessioAnterior) {
-  const r = await api('setSessioActiva', { curs:cursActual, sessio:sessioAnterior, clau:clauDocent });
-  if (r.ok) { sessioObertaActual = sessioAnterior; renderSessions(); }
+  const btn = document.getElementById('btn-tancar-'+sessioObertaActual);
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  try {
+    const r = await api('setSessioActiva', { curs:cursActual, sessio:sessioAnterior, clau:clauDocent });
+    if (r.ok) {
+      sessioObertaActual = r.sessio || sessioAnterior;
+      renderSessions();
+      mostrarFeedbackSessio(`✓ Tornat a ${sessioAnterior}. Els alumnes veuran la pantalla d'espera per a les sessions posteriors.`, true);
+    } else {
+      mostrarFeedbackSessio('✗ Error: ' + (r.error || 'No s\'ha pogut tancar la sessió.'), false);
+      if (btn) { btn.disabled = false; btn.textContent = '← Tancar'; }
+    }
+  } catch(e) {
+    mostrarFeedbackSessio('✗ Error de connexió.', false);
+    if (btn) { btn.disabled = false; btn.textContent = '← Tancar'; }
+  }
+}
+
+function mostrarFeedbackSessio(msg, ok) {
+  const el = document.getElementById('sess-feedback');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
+  el.style.background = ok ? 'rgba(82,183,136,0.1)' : 'rgba(230,57,70,0.1)';
+  el.style.border = ok ? '1px solid rgba(82,183,136,0.25)' : '1px solid rgba(230,57,70,0.25)';
+  el.style.color = ok ? 'var(--green)' : 'var(--red)';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1057,30 +1108,45 @@ async function carregaTotes() {
 //  RESET
 // ══════════════════════════════════════════════════════════════════
 function chkReset() {
-  const confirmOk = document.getElementById('reset-confirm-inp').value === 'REINICIAR';
-  const clauOk    = document.getElementById('reset-clau-inp').value.trim().length > 0;
-  document.getElementById('btn-reset').disabled = !(confirmOk && clauOk);
+  const clauOk = document.getElementById('reset-clau-inp').value.trim().length > 0;
+  document.getElementById('btn-reset').disabled = !clauOk;
 }
 
 async function doReset() {
   const clau = document.getElementById('reset-clau-inp').value.trim();
   const btn  = document.getElementById('btn-reset');
   const msg  = document.getElementById('reset-msg');
+
+  if (!confirm(`Segur que vols esborrar totes les dades de ${cursActual}? Aquesta acció no es pot desfer.`)) return;
+
   btn.disabled = true;
   btn.textContent = 'Reiniciant...';
-  const r = await api('resetCurs', { curs:cursActual, clau });
-  msg.style.display = 'block';
-  if (r.ok) {
-    msg.style.color = 'var(--green)';
-    msg.textContent = `✓ Dades del curs ${cursActual} esborrades correctament. La sessió activa torna a S1.`;
-    sessioObertaActual = 'S1';
-    document.getElementById('reset-confirm-inp').value = '';
-    document.getElementById('reset-clau-inp').value = '';
-  } else {
+  msg.style.display = 'none';
+
+  try {
+    const r = await api('resetCurs', { curs:cursActual, clau });
+    msg.style.display = 'block';
+    if (r.ok) {
+      msg.style.background = 'rgba(82,183,136,0.1)';
+      msg.style.border = '1px solid rgba(82,183,136,0.25)';
+      msg.style.color = 'var(--green)';
+      msg.textContent = `✓ Dades de ${cursActual} esborrades. La sessió activa torna a S1.`;
+      sessioObertaActual = 'S1';
+      document.getElementById('reset-clau-inp').value = '';
+      chkReset();
+    } else {
+      msg.style.background = 'rgba(230,57,70,0.1)';
+      msg.style.border = '1px solid rgba(230,57,70,0.25)';
+      msg.style.color = 'var(--red)';
+      msg.textContent = '✗ ' + (r.error || 'Contrasenya incorrecta o error del servidor.');
+    }
+  } catch(e) {
+    msg.style.display = 'block';
     msg.style.color = 'var(--red)';
-    msg.textContent = '✗ Error: ' + (r.error || 'Contrasenya incorrecta o error del servidor.');
+    msg.textContent = '✗ Error de connexió. Comprova el SCRIPT_URL.';
   }
-  btn.textContent = '🗑️ Reiniciar dades del curs';
+
+  btn.textContent = '🗑️ Reiniciar dades de ' + cursActual;
   btn.disabled = true;
 }
 
