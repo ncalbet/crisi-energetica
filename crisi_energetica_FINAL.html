@@ -854,6 +854,206 @@
     }
     .placeholder-ctr .icon { font-size:3rem; }
     .placeholder-ctr p { color:var(--text-dim); max-width:480px; line-height:1.7; font-size:0.92rem; }
+
+    /* ══════════════════════════════════════
+       SCAFFOLDING
+    ══════════════════════════════════════ */
+    .scaffold-box {
+      margin-top: 0.75rem;
+      background: rgba(245,166,35,0.04);
+      border: 1px dashed rgba(245,166,35,0.22);
+      border-radius: 5px;
+      padding: 0.7rem 0.9rem;
+    }
+    .scaffold-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--acc);
+      opacity: 0.75;
+      margin-bottom: 0.5rem;
+    }
+    .scaffold-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.38rem;
+      font-size: 0.82rem;
+    }
+    .scaffold-row:last-child { margin-bottom: 0; }
+    .scaffold-label {
+      flex-shrink: 0;
+      color: var(--acc);
+      font-weight: 500;
+      font-size: 0.81rem;
+      min-width: 140px;
+    }
+    .scaffold-dots {
+      flex: 1;
+      border-bottom: 1px dotted rgba(255,255,255,0.1);
+      min-width: 30px;
+    }
+
+    /* ══════════════════════════════════════
+       EXEMPLES
+    ══════════════════════════════════════ */
+    .exemple-toggle-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-family: 'IBM Plex Sans', sans-serif;
+      cursor: pointer;
+      padding: 0.4rem 0 0;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: color 0.15s;
+    }
+    .exemple-toggle-btn:hover { color: var(--text); }
+    .exemple-toggle-btn .arr { display:inline-block; transition: transform 0.2s; font-style:normal; }
+    .exemple-toggle-btn.open .arr { transform: rotate(90deg); }
+    .exemple-body {
+      display: none;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .exemple-body.vis { display: block; }
+    .exemple-item {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.81rem;
+      line-height: 1.65;
+    }
+    .exemple-bad  { background:rgba(230,57,70,0.07); border-left:3px solid rgba(230,57,70,0.4); margin-bottom:0.3rem; }
+    .exemple-good { background:rgba(82,183,136,0.08); border-left:3px solid rgba(82,183,136,0.4); }
+    .exemple-tag  {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.69rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .exemple-bad  .exemple-tag { color: #ff8a93; }
+    .exemple-good .exemple-tag { color: var(--green); }
+
+    /* ══════════════════════════════════════
+       IDEES CLAU (micro-tancaments)
+    ══════════════════════════════════════ */
+    .idees-clau {
+      background: rgba(245,166,35,0.04);
+      border: 1px solid rgba(245,166,35,0.18);
+      border-radius: 6px;
+      padding: 0.95rem 1.1rem;
+      margin-bottom: 1.1rem;
+    }
+    .idees-clau-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.73rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--acc);
+      margin-bottom: 0.55rem;
+    }
+    .idees-clau-item {
+      display: flex;
+      gap: 0.6rem;
+      font-size: 0.86rem;
+      line-height: 1.6;
+      padding: 0.28rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .idees-clau-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .idees-clau-bullet { color: var(--acc); flex-shrink: 0; }
+
+    /* ══════════════════════════════════════
+       NOTÍCIA-CONSEQÜÈNCIA
+    ══════════════════════════════════════ */
+    .noticia-card {
+      background: rgba(230,57,70,0.04);
+      border: 1px solid rgba(230,57,70,0.2);
+      border-radius: 6px;
+      padding: 0.95rem 1.1rem;
+      margin-bottom: 1.25rem;
+    }
+    .noticia-head {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 0.45rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .noticia-txt {
+      font-size: 0.87rem;
+      line-height: 1.72;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    /* ══════════════════════════════════════
+       MARCADOR — CRITERIS
+    ══════════════════════════════════════ */
+    .marc-info-wrap {
+      position: relative;
+    }
+    .marc-info-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-family: 'IBM Plex Sans', sans-serif;
+      cursor: pointer;
+      padding: 0;
+      margin-top: 0.1rem;
+      display: block;
+      transition: color 0.15s;
+    }
+    .marc-info-btn:hover { color: var(--acc); }
+    .marc-criteris-box {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.4rem);
+      right: 0;
+      z-index: 300;
+      background: var(--bg2);
+      border: 1px solid var(--border-acc);
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      min-width: 240px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .marc-criteris-box.vis { display: block; }
+    .marc-criteris-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--acc);
+      margin-bottom: 0.5rem;
+    }
+    .marc-criteris-item {
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: var(--text);
+      padding: 0.18rem 0;
+      display: flex;
+      gap: 0.5rem;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .marc-criteris-item:last-child { border-bottom: none; }
+    .marc-crit-plus { color: var(--green); font-weight: 700; flex-shrink:0; }
   </style>
 </head>
 <body>
@@ -875,7 +1075,18 @@
       <div class="marc-seg" id="s4"></div>
       <div class="marc-seg" id="s5"></div>
     </div>
-    <span class="marc-text" id="marc-text"></span>
+    <div class="marc-info-wrap">
+      <span class="marc-text" id="marc-text"></span>
+      <button class="marc-info-btn" onclick="toggleCriteris(event)">▸ Com puja el marcador?</button>
+      <div class="marc-criteris-box" id="marc-criteris">
+        <div class="marc-criteris-title">Criteris del marcador</div>
+        <div class="marc-criteris-item"><span class="marc-crit-plus">+1</span>El grup argumenta amb evidències de les fonts</div>
+        <div class="marc-criteris-item"><span class="marc-crit-plus">+1</span>El grup considera les conseqüències de la decisió</div>
+        <div class="marc-criteris-item"><span class="marc-crit-plus">+1</span>El grup incorpora valors, no només dades econòmiques</div>
+        <div class="marc-criteris-item"><span class="marc-crit-plus">+1</span>El grup identifica qui surt perjudicat (punt cec honest)</div>
+        <div class="marc-criteris-item" style="color:var(--text-dim); font-style:italic; margin-top:0.3rem; border:none;">El docent actualitza el marcador en funció de la qualitat argumentativa del grup.</div>
+      </div>
+    </div>
   </div>
 
   <div class="h-user">
@@ -1060,6 +1271,12 @@
       <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quan sents «crisi energètica», de què creus que parla?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Crec que tracta de…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Un exemple que conec:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Una cosa que em genera dubtes:</span><span class="scaffold-dots"></span></div>
+      </div>
       <textarea class="finput" id="r1" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
@@ -1067,6 +1284,12 @@
       <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Creus que t'afecta? Com?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Sí / No, perquè…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Un exemple concret:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Algú que crec que s'afecta més:</span><span class="scaffold-dots"></span></div>
+      </div>
       <textarea class="finput" id="r2" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
@@ -1163,6 +1386,13 @@
     <div class="card">
       <div class="card-label">El docent tanca la sessió</div>
       <p>El vostre docent recollirà ara les posicions dels grups i farà una posada en comú. Escolteu amb atenció: les perspectives dels altres grups us ajudaran a la propera sessió.</p>
+    </div>
+
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Sessió 1</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>La crisi energètica no és un accident: és el resultat de decisions polítiques i dependències estructurals construïdes durant dècades.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Descriure un problema és diferent de comprendre'l. La propera sessió us ensenyarà que fins i tot la descripció pot estar esbiaixada.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Matadepera i Europa comparteixen el mateix sistema energètic: el que decideix Brussel·les afecta les factures, la mobilitat i el futur de tothom.</div>
     </div>
 
     <div class="briefing">
@@ -1289,12 +1519,24 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Qui ha escrit aquest document i per quins motius? Quins interessos pot tenir l'organització o la persona que l'ha redactat?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Autor/organització:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Motiu probable:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Indici que m'ho fa pensar:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
 
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Hi ha alguna dada o argument al document que et sembla sòlid i ben fonamentat? I algun que et genera dubtes o que podria estar esbiaixat? Explica el per quès.</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Sòlid perquè…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Dubtós perquè…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Possible biaix detectat:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
 
     <div class="bonus-wrap vis" id="bonus2-wrap">
@@ -1368,6 +1610,13 @@
     <div class="card" style="background:rgba(230,57,70,0.04); border-color:rgba(230,57,70,0.18); margin-bottom:1.1rem;">
       <div class="card-label" style="color:var(--red);">Marcador d'alerta energètica</div>
       <p style="font-size:0.9rem; line-height:1.7;">La crisi s'ha entès però no s'ha resolt. El Consell ha guanyat perspectiva crítica. El marcador no puja encara — la comprensió del problema és el primer pas, no la solució.</p>
+    </div>
+
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Missió 1</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Tota font té interessos. Fins i tot les científiques. La pregunta no és «és fiable?» sinó «quins interessos té i on coincideix amb altres fonts?»</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Detectar un biaix no significa que tota la font sigui falsa. Significa que cal llegir-la sabent d'on ve.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Un Consell independent no s'informa d'una sola font. La vostre feina és construir una versió pròpia a partir de múltiples perspectives.</div>
     </div>
 
     <div class="briefing">
@@ -1470,16 +1719,44 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
       <div class="qtxt">Qui creus que té <strong>més poder real</strong> en la decisió energètica europea? Per quins motius concrets?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">L'actor amb més poder:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Una raó concreta:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Prova o indici:</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s3p1')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s3p1">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Crec que les empreses de gas tenen el poder perquè guanyen molts diners.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Les grans empreses energètiques tenen més poder real que els governs, perquè han invertit 4.200M€ en pressió política a Brussel·les (font B). Això els permet bloquejar regulacions que els perjudicarien. Un indici: la transició a renovables s'ha retardat 10 anys malgrat els plans de 2010.»</div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
       <div class="qtxt">Qui creus que <strong>hauria de tenir</strong> més poder per decidir sobre l'energia? Per quins motius?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Hauria de tenir poder:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Perquè (valor/principi):</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Una objecció possible:</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s3p2')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s3p2">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Hauria de tenir poder el govern perquè és qui mana.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Els ciutadans, a través dels parlaments nacionals, haurien de tenir el poder decisori perquè els que paguen la factura de la llum han de poder triar d'on ve. El problema és que la democràcia representativa és lenta i les empreses fan pressió constantment entre eleccions.»</div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 3 de 3</div>
       <div class="qtxt">Com a Consell Assessor, <strong>a qui escoltaríeu</strong> per elaborar la vostra proposta? Podeu donar veu a uns i no als altres?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Escoltaríem:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">No escoltaríem:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Criteri per decidir-ho:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
 
     <div class="bonus-wrap vis">
@@ -1546,6 +1823,13 @@
       <div class="card-label">El docent tanca la sessió</div>
       <p>El vostre docent recollirà les posicions dels grups i farà una posada en comú. Escolteu com altres grups han resolt la tensió entre poder real i poder legítim.</p>
     </div>
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Sessió 3</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Poder real ≠ poder legítim. Qui decideix sovint no és qui hauria de decidir segons els principis democràtics.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Les decisions energètiques són decisions polítiques. Darrere de cada opcio energètica hi ha grups amb interessos molt concrets.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Escollir a qui escoltes és ja una decisió política. No hi ha neutralitat possible en qui s'invita a la taula.</div>
+    </div>
+
     <div class="briefing">
       <div class="briefing-tag">🔜 La Sessió 4</div>
       <p>«Sabeu qui pressiona. Ara cal veure quines opcions concretes té Europa sobre la taula, i quines conseqüències té cadascuna. Perquè el Consell haurà de triar.»</p>
@@ -1686,11 +1970,28 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quins riscos veus en l'opció que has analitzat? Hi ha riscos que no apareixen explícitament a la fitxa però que intuïtes?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Risc principal (de la fitxa):</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Raó que l'avala:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Risc que no apareix a la fitxa:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Si haguessis de descartar una de les tres opcions, quina seria i per quins motius? Pots descartar-ne la teva pròpia si creus que té massa riscos.</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Descartaria:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Motiu principal:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Reconec que té el valor de:</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s4p2')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s4p2">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Descartaria l'Opció C perquè Rússia és dolenta i no es pot fiar.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Descartaria l'Opció A (gas del Golf) perquè crea una nova dependència geopolítica d'alta vulnerabilitat, com ja hem vist amb Rússia. El motiu principal és que si hi ha inestabilitat al Golf, Europa torna a estar en la mateixa situació. Reconec que té el valor d'assegurar el subministrament a curt termini.»</div>
+      </div>
     </div>
 
     <div class="bonus-wrap vis">
@@ -1756,6 +2057,18 @@
       <div class="card-label">Resum de la Missió 2</div>
       <p style="font-size:0.9rem; line-height:1.72;">Heu vist qui té el poder real i qui el poder legítim. Heu analitzat les tres opcions energètiques i heu pres una recomanació argumentada amb valors. Ara els actors internacionals han reaccionat. No estan d'acord.</p>
     </div>
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Missió 2</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Decidir és prioritzar. Triar una opció energètica significa renunciar a les altres i assumir els seus costos.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>No hi ha opcions sense costos. La pregunta no és «quina opció és perfecta» sinó «quins costos estem disposats a assumir i en nom de quins valors».</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Les dades econòmiques expliquen el preu d'una decisió, però no si és justa. Això requereix valors.</div>
+    </div>
+
+    <div class="noticia-card">
+      <div class="noticia-head">📡 Última hora — Reaccions internacionals a la decisió del Consell</div>
+      <p class="noticia-txt">«Fonts diplomàtiques confirmen que la Federació Russa ha convocat una reunió d'emergència per respondre als plans energètics europeus. El Golf Pèrsic exigeix garanties a llarg termini. La Xina ha emès un comunicat advertint sobre les conseqüències per als minerals crítics. El Consell Assessor Jove ha de preparar ara la seva estratègia de negociació.»</p>
+    </div>
+
     <div class="briefing">
       <div class="briefing-tag">🔜 Missió 3 — Negociar o trencar</div>
       <p>«Heu pres la primera decisió formal com a Consell. Però Rússia amenaça, el Golf exigeix, la Xina adverteix. Ara cal negociar. I negociar significa entendre l'altre, no només defensar els propis interessos.»</p>
@@ -1865,11 +2178,28 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quins interessos té el teu actor? Què vol <strong>realment</strong> més enllà de l'energia — poder, reconeixement, seguretat, diners, prestigi?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Vol explícitament:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Vol realment (motivació fonda):</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Línia vermella (mai acceptarà):</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s5p1')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s5p1">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Rússia vol vendre gas i tenir diners.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Rússia vol explícitament que s'acabin les sancions. Però el que vol realment és recuperar el seu estatus d'actor imprescindible per a Europa, que va perdre el 2022. La seva línia vermella és qualsevol acord que impliqui supervisió internacional dels seus gasoductes, perquè ho interpretaria com una interferència en la seva sobirania.»</div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Què podria oferir Europa al teu actor que <strong>no sigui energia ni diners</strong> directament? Pensa en garanties, reconeixements, acords comercials, estatus internacional...</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Oferta possible 1:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Oferta possible 2 (no és diners):</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Per quins motius li interessaria:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
 
     <div class="bonus-wrap vis">
@@ -1932,6 +2262,18 @@
       <div class="card-label">Resum de la Missió 3</div>
       <p style="font-size:0.9rem; line-height:1.72;">Heu vist que les solucions no són netes ni fàcils. Que entendre l'altre és diferent de cedir-li la raó. Que negociar requereix identificar interessos reals, no només posicions declarades.</p>
     </div>
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Missió 3</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Negociar ≠ cedir. Entendre els interessos de l'altre és una estratègia, no una debilitat.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Interessos ≠ posicions. El que un actor diu que vol és diferent del que vol realment. Identificar-ho és la clau de tota negociació efectiva.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>No tots els acords són bons acords. Un acord que ignora els drets de qui no té veu a la taula no és un acord just.</div>
+    </div>
+
+    <div class="noticia-card">
+      <div class="noticia-head">📡 Última hora — El Parlament Europeu demana la proposta del Consell</div>
+      <p class="noticia-txt">«El Parlament Europeu ha fixat una sessió plenària d'urgència per debatre la crisi energètica. Tots els grups parlamentaris esperen la proposta del Consell Assessor Jove com a document de referència. El Consell té 48 hores per presentar una recomanació completa, honesta sobre els seus límits i defensable davant de la ciutadania europea.»</p>
+    </div>
+
     <div class="briefing">
       <div class="briefing-tag">🔜 Missió 4 — La proposta final</div>
       <p>«Heu negociat. Heu vist que les solucions no són netes ni fàcils. Ara cal convertir tot el que heu après en una proposta real, honesta sobre els seus límits, i defensable davant de la UE.»</p>
@@ -2009,16 +2351,44 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
       <div class="qtxt">Quina ha estat la idea, pregunta o descoberta que més t'ha fet pensar durant tot el projecte? Per quins motius?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">La idea/descoberta és:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">M'ha fet pensar perquè:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Ha canviat la meva visió en:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
       <div class="qtxt">Quina decisió creus que Europa hauria de prendre sobre l'energia? Per quins motius, i quins valors guien la teva resposta?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">La decisió hauria de ser:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">L'argumento amb:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">El valor que guia la resposta:</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s6p2')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s6p2">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Europa hauria de fer servir energies renovables perquè son bones pel medi ambient.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Europa hauria d'accelerar les renovables i negociar accés a minerals crítics amb la Xina en condicions de reciprocitat. Ho argumento perquè és l'única opció que redueix dependència geopolítica a llarg termini i redueix emissions. El valor que guia la meva resposta és la justícia intergeneracional: les decisions d'avui no poden hipotecar les generacions futures.»</div>
+      </div>
     </div>
     <div class="qblock-paper" style="border-left-color:var(--acc); border-color:rgba(245,166,35,0.25);">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span> <span style="color:var(--acc); font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-left:0.4rem;">· Obligatòria</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 3 de 3</div>
       <div class="qtxt">Qui podria sortir perjudicat per la decisió que defenses? Treballadors d'indústries fòssils, països productors, comunitats mineres, generacions futures... És acceptable aquest cost? Per quins motius?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Perjudicats concrets:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Cost que hauran d'assumir:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">És acceptable perquè / malgrat que:</span><span class="scaffold-dots"></span></div>
+      </div>
+      <button class="exemple-toggle-btn" onclick="toggleEx('ex-s6p3')"><span class="arr">›</span> Veure exemple de resposta</button>
+      <div class="exemple-body" id="ex-s6p3">
+        <div class="exemple-item exemple-bad"><span class="exemple-tag">Resposta poc elaborada</span>«Podrien sortir perjudicats els que treballen al petroli, però és acceptable perquè el medi ambient és més important.»</div>
+        <div class="exemple-item exemple-good"><span class="exemple-tag">Resposta ben argumentada</span>«Sortirien perjudicats uns 200.000 treballadors d'indústries fòssils a Polònia, Romania i Alemanya. El cost concret és la pèrdua d'ocupació sense alternativa immediata. Crec que és acceptable a condició que l'acceleració renovable inclogui un pla de transició laboral finançat per la UE — si no hi ha aquest pla, la decisió no és justa.»</div>
+      </div>
     </div>
 
     <div style="margin-top:1.5rem;">
@@ -2073,6 +2443,13 @@
     <div class="bc"><span>Missió 4</span><span>›</span><span>Sessió 6</span><span>›</span><span class="cur">Tancament</span></div>
     <div class="badge badge-ver">Sessió 6 completada</div>
     <h2 class="page-h2">La proposta del vostre grup és a punt.</h2>
+    <div class="idees-clau">
+      <div class="idees-clau-label">💡 Idees clau de la Missió 4</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>No hi ha solucions sense costos. La qualitat d'una proposta es mesura per si reconeix honestament qui paga el preu de la decisió.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Identificar els perjudicats no és un fracàs — és un requisit de la democràcia. Les propostes que els ignoren creen injustícia invisible.</div>
+      <div class="idees-clau-item"><span class="idees-clau-bullet">›</span>Argumentar amb valors no és ser poc rigorós. És ser transparent sobre per quins motius prioritzeu unes coses sobre les altres.</div>
+    </div>
+
     <div class="card">
       <div class="card-label">Demà: L'Assemblea del Consell</div>
       <p style="font-size:0.9rem; line-height:1.72;">Demà veureu les propostes dels altres grups i fareu una assemblea conjunta. No és una competició — és una assemblea que busca punts en comú, com hauria de funcionar una institució democràtica real.</p>
@@ -2149,11 +2526,23 @@
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 3</div>
       <div class="qtxt">Què pensaves al principi sobre la crisi energètica que ara has canviat o matisat? Explica concretament el canvi.</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">Abans pensava que…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Ara penso que…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">El que em va fer canviar va ser:</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 3</div>
       <div class="qtxt">Quina ha estat la pregunta més difícil de respondre durant tot el projecte? Per quins motius et va costar tant?</div>
+      <div class="scaffold-box">
+        <div class="scaffold-title">Estructura de resposta</div>
+        <div class="scaffold-row"><span class="scaffold-label">La pregunta més difícil:</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Em va costar perquè…</span><span class="scaffold-dots"></span></div>
+        <div class="scaffold-row"><span class="scaffold-label">Ara la respondria diferent?</span><span class="scaffold-dots"></span></div>
+      </div>
     </div>
     <div class="qblock-paper">
       <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
@@ -2961,6 +3350,29 @@ setMarcador(0);
 renderMap().catch(() => {
   const el = document.getElementById('map-loading');
   if (el) el.textContent = 'Error carregant el mapa. Comprova la connexió.';
+});
+
+// ─────────────────────────────────────────
+//  EXEMPLES TOGGLE
+// ─────────────────────────────────────────
+function toggleEx(id) {
+  const body = document.getElementById(id);
+  if (!body) return;
+  const btn = body.previousElementSibling;
+  body.classList.toggle('vis');
+  if (btn && btn.classList.contains('exemple-toggle-btn')) btn.classList.toggle('open');
+}
+
+// ─────────────────────────────────────────
+//  MARCADOR CRITERIS TOGGLE
+// ─────────────────────────────────────────
+function toggleCriteris(e) {
+  e.stopPropagation();
+  document.getElementById('marc-criteris').classList.toggle('vis');
+}
+document.addEventListener('click', function() {
+  const box = document.getElementById('marc-criteris');
+  if (box) box.classList.remove('vis');
 });
 </script>
 
