@@ -2349,7 +2349,7 @@ function setMarcador(v) {
 // ─────────────────────────────────────────
 async function doLogin() {
   const nom   = document.getElementById('inp-nom').value.trim();
-  const email = document.getElementById('inp-email').value.trim();
+  const email = document.getElementById('inp-email').value.trim().toLowerCase();
   const btn   = document.getElementById('btn-login');
   const err   = document.getElementById('login-err');
   if (!nom || !email) return;
@@ -2364,6 +2364,7 @@ async function doLogin() {
       api('marcador')
     ]);
 
+    console.log('[login] resposta del script:', lr);
     if (!lr.ok) {
       err.style.display = 'block';
       btn.disabled = false;
