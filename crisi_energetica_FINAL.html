@@ -1054,6 +1054,54 @@
     }
     .marc-criteris-item:last-child { border-bottom: none; }
     .marc-crit-plus { color: var(--green); font-weight: 700; flex-shrink:0; }
+
+    /* ══════════════════════════════════════
+       AVÍS SIMULACIÓ
+    ══════════════════════════════════════ */
+    .sim-avis {
+      display: flex;
+      gap: 0.7rem;
+      align-items: flex-start;
+      background: rgba(245,166,35,0.07);
+      border: 1px solid rgba(245,166,35,0.25);
+      border-radius: 5px;
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.81rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+    .sim-avis-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.05rem; }
+    .sim-avis strong { color: var(--acc); display: block; margin-bottom: 0.12rem; font-size: 0.82rem; }
+    .sim-avis em { color: var(--text-dim); }
+
+    /* ══════════════════════════════════════
+       VÍDEO PLACEHOLDER
+    ══════════════════════════════════════ */
+    .video-wrap {
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+    }
+    .video-wrap iframe { width:100%; aspect-ratio:16/9; display:block; border:none; }
+    .video-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      padding: 2.2rem 1rem;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+    .video-ph-icon {
+      width: 2.8rem; height: 2.8rem; border-radius: 50%;
+      background: rgba(245,166,35,0.1);
+      border: 1px solid rgba(245,166,35,0.3);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--acc); font-size: 1rem; flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1113,6 +1161,13 @@
       <div class="login-alert">
         <strong>⚠ Protocol d'emergència activat</strong>
         El Consell Assessor Jove ha estat convocat d'urgència. Identifica't per accedir a la plataforma segura.
+      </div>
+      <div class="sim-avis">
+        <span class="sim-avis-icon">🎓</span>
+        <div>
+          <strong>Simulació educativa basada en fets reals</strong>
+          Les dades, els documents i les situacions d'aquest projecte estan inspirats en la realitat, però han estat <em>adaptats o simplificats amb fins pedagògics</em>. No tota la informació que apareix és completament exacta. L'objectiu és aprendre a analitzar i argumentar, no memoritzar dades.
+        </div>
       </div>
       <div class="fgroup">
         <label class="flabel" for="inp-nom">Nom complet</label>
@@ -1266,6 +1321,14 @@
 
     <h2 class="page-h2">Diagnosi inicial — La teva visió</h2>
     <p class="page-lead" style="margin-bottom:1.5rem;">Respon individualment. Les teves respostes es guardaran i les podràs comparar amb el que penses al final del projecte.</p>
+
+    <!-- VÍDEO INTRODUCTORI — Substitueix el div placeholder per un <iframe src="URL"> quan tinguis l'enllaç -->
+    <div class="video-wrap" id="video-s1">
+      <div class="video-placeholder">
+        <div class="video-ph-icon">▶</div>
+        <span>Vídeo introductori — pendent d'enllaç</span>
+      </div>
+    </div>
 
     <div class="qblock">
       <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
