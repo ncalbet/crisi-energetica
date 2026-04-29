@@ -813,6 +813,84 @@
     .espera-pulse span:nth-child(2){ animation-delay:0.2s; }
     .espera-pulse span:nth-child(3){ animation-delay:0.4s; }
 
+    /* Historial */
+    .btn-hist {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-dim);
+      border-radius: 2px;
+      padding: 3px 10px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .btn-hist:hover { color: var(--acc); border-color: rgba(245,166,35,0.3); }
+
+    /* Pantalla historial */
+    .hist-grid {
+      display: grid;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .hist-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .hist-card:hover { border-color: rgba(255,255,255,0.15); }
+    .hist-card-head {
+      display: flex; align-items: center;
+      gap: 0.85rem; padding: 0.9rem 1.1rem;
+      cursor: pointer;
+    }
+    .hist-card-head:hover .hist-titol { color: var(--acc); }
+    .hist-missio {
+      font-family: 'Rajdhani', sans-serif; font-weight: 700;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 2px; flex-shrink: 0;
+    }
+    .hist-m1 { background: rgba(230,57,70,0.1); color: #f0a8ac; }
+    .hist-m2 { background: rgba(247,127,0,0.1); color: #f77f00; }
+    .hist-m3 { background: rgba(252,191,73,0.1); color: #fcbf49; }
+    .hist-m4 { background: rgba(82,183,136,0.1); color: var(--green); }
+    .hist-titol {
+      font-size: 0.97rem; font-weight: 500;
+      transition: color 0.2s; flex: 1;
+    }
+    .hist-badge {
+      font-family: 'Rajdhani', sans-serif; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 2px 8px; border-radius: 2px; flex-shrink: 0;
+    }
+    .hist-ok { background: rgba(82,183,136,0.1); color: var(--green); border: 1px solid rgba(82,183,136,0.2); }
+    .hist-pendent { background: rgba(107,117,144,0.08); color: var(--text-dim); border: 1px solid rgba(107,117,144,0.15); }
+    .hist-arrow {
+      font-size: 0.85rem; color: var(--text-dim);
+      transition: transform 0.2s, color 0.2s; flex-shrink: 0;
+    }
+    .hist-card.open .hist-arrow { transform: rotate(90deg); color: var(--acc); }
+    .hist-body {
+      display: none; padding: 0 1.1rem 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .hist-card.open .hist-body { display: block; }
+
+    /* Vista lectura d'una sessió */
+    .lectura-banner {
+      background: rgba(245,166,35,0.07);
+      border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 2px;
+      padding: 0.65rem 1rem;
+      display: flex; align-items: center; gap: 0.65rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.82rem; color: var(--acc);
+    }
+    .lectura-banner strong { font-weight: 600; }
+
     /* Botó tancar sessió */
     .btn-logout {
       background: transparent;
@@ -907,6 +985,7 @@
   <div class="h-user">
     <span id="h-nom">—</span>
     <span class="h-grup" id="h-grup">—</span>
+    <button class="btn-hist" onclick="go('scr-historial')" title="Revisar sessions anteriors">📋 Historial</button>
     <button class="btn-logout" onclick="doLogout()" title="Tancar sessió">↩ Sortir</button>
   </div>
 </header>
@@ -2284,6 +2363,27 @@
 
 
 <!-- ══════════════════════════════════════
+     HISTORIAL — ÍNDEX DE SESSIONS
+══════════════════════════════════════ -->
+<div class="screen" id="scr-historial">
+  <div class="page">
+    <div class="lectura-banner">
+      📋 <span><strong>Mode lectura.</strong> Pots revisar tot el que has fet fins ara. No pots modificar res.</span>
+    </div>
+
+    <h2 class="page-h2">El teu recorregut al Consell</h2>
+    <p class="page-lead" style="margin-bottom:1.5rem;">Clica qualsevol sessió completada per revisar-ne el contingut.</p>
+
+    <div class="hist-grid" id="hist-grid">
+      <!-- S'omple per JS -->
+    </div>
+
+    <button class="btn-cont" id="btn-hist-tornar" onclick="go(histRetorn)">← Tornar</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
      PANTALLA D'ESPERA (sessió no oberta)
 ══════════════════════════════════════ -->
 <div class="screen" id="scr-espera">
@@ -2375,10 +2475,28 @@ function go(id) {
   // Header
   document.getElementById('header').classList.toggle('vis', id !== 'scr-login');
 
+  // Si l'alumne navega normalment (no des de l'historial), surt del mode lectura
+  if (modeLectura && id !== 'scr-historial' && histRetorn !== 'scr-historial') {
+    modeLectura = false;
+  }
+
+  // Banner de mode lectura
+  actualitzarBannerLectura(id);
+
+  // Render historial quan s'obre
+  if (id === 'scr-historial') {
+    histRetorn = ultimaPantallaActiva || 'scr-benv';
+    renderHistorial();
+  }
+
   // Render rol cards quan s'arriba a les pantalles de rol
   if (id === 'scr-s2-rol') renderRolCard();
   if (id === 'scr-s4-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS4RolCard(); }
   if (id === 'scr-s5-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS5RolCard(); }
+
+  // Guardar última pantalla activa (per saber on tornar des de l'historial)
+  if (id !== 'scr-historial') ultimaPantallaActiva = id;
+}
 }
 
 // ─────────────────────────────────────────
@@ -2448,8 +2566,144 @@ async function doLogin() {
 }
 
 // ─────────────────────────────────────────
-//  LOGOUT
+//  HISTORIAL
 // ─────────────────────────────────────────
+let histRetorn = 'scr-benv'; // pantalla a la qual tornar
+
+const HIST_CONFIG = [
+  { id:'S1', missio:'M1', cls:'hist-m1', titol:'Sessió 1 — El món s\'apaga',
+    subs:[
+      { label:'Obertura — La crisi al mapa', screen:'scr-s1-ob' },
+      { label:'Reflexió individual — Diagnosi inicial', screen:'scr-s1-ind' },
+      { label:'Tasca de grup — El conflicte prioritari', screen:'scr-s1-grup' },
+      { label:'Tancament S1', screen:'scr-s1-tanca' },
+    ]
+  },
+  { id:'S2', missio:'M1', cls:'hist-m1', titol:'Sessió 2 — A qui creure?',
+    subs:[
+      { label:'Obertura — Els quatre titulars', screen:'scr-s2-ob' },
+      { label:'El teu sobre', screen:'scr-s2-rol' },
+      { label:'Reflexió individual — Analitza la font', screen:'scr-s2-ind' },
+      { label:'Tasca de grup — Versió independent', screen:'scr-s2-grup' },
+      { label:'Tancament M1', screen:'scr-s2-tanca' },
+    ]
+  },
+  { id:'S3', missio:'M2', cls:'hist-m2', titol:'Sessió 3 — Qui decideix?',
+    subs:[
+      { label:'Obertura — La sala de reunions', screen:'scr-s3-ob' },
+      { label:'Reflexió individual — Poder real vs. legítim', screen:'scr-s3-ind' },
+      { label:'Tasca de grup — La posició del Consell', screen:'scr-s3-grup' },
+      { label:'Tancament S3', screen:'scr-s3-tanca' },
+    ]
+  },
+  { id:'S4', missio:'M2', cls:'hist-m2', titol:'Sessió 4 — El mapa del poder',
+    subs:[
+      { label:'Obertura — Les tres opcions', screen:'scr-s4-ob' },
+      { label:'La teva fitxa d\'anàlisi', screen:'scr-s4-rol' },
+      { label:'Reflexió individual — Analitza la teva opció', screen:'scr-s4-ind' },
+      { label:'Primera decisió formal del Consell', screen:'scr-s4-grup' },
+      { label:'Tancament M2', screen:'scr-s4-tanca' },
+    ]
+  },
+  { id:'S5', missio:'M3', cls:'hist-m3', titol:'Sessió 5 — Negociar o trencar',
+    subs:[
+      { label:'Obertura — Les reaccions internacionals', screen:'scr-s5-ob' },
+      { label:'El teu rol a la negociació', screen:'scr-s5-rol' },
+      { label:'Reflexió individual — Prepara la negociació', screen:'scr-s5-ind' },
+      { label:'La taula de negociació', screen:'scr-s5-grup' },
+      { label:'Tancament M3', screen:'scr-s5-tanca' },
+    ]
+  },
+  { id:'S6', missio:'M4', cls:'hist-m4', titol:'Sessió 6 — La nostra proposta',
+    subs:[
+      { label:'Obertura — El camí recorregut', screen:'scr-s6-ob' },
+      { label:'Reflexió individual — La teva visió personal', screen:'scr-s6-ind' },
+      { label:'Proposta final del Consell', screen:'scr-s6-grup' },
+      { label:'Tancament S6', screen:'scr-s6-tanca' },
+    ]
+  },
+  { id:'S7', missio:'M4', cls:'hist-m4', titol:'Sessió 7 — Ara, nosaltres',
+    subs:[
+      { label:'L\'Assemblea del Consell', screen:'scr-s7-ob' },
+      { label:'Reflexió final — Comparant amb S1', screen:'scr-s7-ind' },
+      { label:'El contracte de valors', screen:'scr-s7-fi' },
+    ]
+  },
+];
+
+function renderHistorial() {
+  const ultimaSessio = user?.ultimaSessio;
+  const ultimaOrdre  = SESSIO_ORDRE[ultimaSessio] || 0;
+  const grid = document.getElementById('hist-grid');
+  if (!grid) return;
+
+  grid.innerHTML = HIST_CONFIG.map(sess => {
+    const completada = SESSIO_ORDRE[sess.id] <= ultimaOrdre;
+    const badgeCls   = completada ? 'hist-ok' : 'hist-pendent';
+    const badgeTxt   = completada ? '✓ Completada' : 'Pendent';
+
+    const subLinks = completada ? sess.subs.map(sub => `
+      <div style="padding:0.5rem 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.65rem; cursor:pointer;"
+           onclick="anarALectura('${sub.screen}','${sess.id}')">
+        <span style="font-size:0.75rem; color:var(--text-dim); flex:1;">${sub.label}</span>
+        <span style="font-family:'Rajdhani',sans-serif; font-size:0.65rem; color:var(--acc); letter-spacing:0.08em; text-transform:uppercase;">Revisar →</span>
+      </div>`).join('') : `
+      <div style="padding:0.65rem 0; font-size:0.82rem; color:var(--text-dim);">
+        Aquesta sessió encara no s'ha completat.
+      </div>`;
+
+    return `
+      <div class="hist-card" id="hc-${sess.id}">
+        <div class="hist-card-head" onclick="toggleHist('${sess.id}')">
+          <span class="hist-missio ${sess.cls}">${sess.missio}</span>
+          <span class="hist-titol">${sess.titol}</span>
+          <span class="hist-badge ${badgeCls}">${badgeTxt}</span>
+          ${completada ? '<span class="hist-arrow">›</span>' : ''}
+        </div>
+        ${completada ? `<div class="hist-body" id="hb-${sess.id}">${subLinks}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function toggleHist(id) {
+  const card = document.getElementById('hc-' + id);
+  if (!card) return;
+  const wasOpen = card.classList.contains('open');
+  // Tanca tots
+  document.querySelectorAll('.hist-card.open').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) card.classList.add('open');
+}
+
+function anarALectura(screen, sessioId) {
+  histRetorn = 'scr-historial';
+  // Activa mode lectura per a la pantalla de destí
+  modeLectura = true;
+  go(screen);
+}
+
+// ─────────────────────────────────────────
+//  MODE LECTURA — banner visible quan és actiu
+// ─────────────────────────────────────────
+let modeLectura = false;
+
+function actualitzarBannerLectura(screenId) {
+  // Mostra el banner de lectura a totes les pantalles
+  // (excepte historial i espera que el tenen integrat)
+  document.querySelectorAll('.lectura-banner-float').forEach(b => b.remove());
+  if (!modeLectura || screenId === 'scr-historial' || screenId === 'scr-login') return;
+
+  const banner = document.createElement('div');
+  banner.className = 'lectura-banner-float';
+  banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:6px 16px;font-family:Rajdhani,sans-serif;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:0.75rem;';
+  banner.innerHTML = `📋 Mode lectura &nbsp;·&nbsp; <button onclick="sortirLectura()" style="background:none;border:1px solid rgba(245,166,35,0.4);color:var(--acc);border-radius:2px;padding:2px 10px;font-family:Rajdhani,sans-serif;font-size:0.72rem;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;">← Tornar a l'historial</button>`;
+  document.body.appendChild(banner);
+}
+
+function sortirLectura() {
+  modeLectura = false;
+  document.querySelectorAll('.lectura-banner-float').forEach(b => b.remove());
+  go('scr-historial');
+}
 function doLogout() {
   if (!confirm('Vols tancar la sessió? El teu progrés s\'ha guardat.')) return;
   user = null;
@@ -2826,6 +3080,7 @@ function renderS5RolCard() {
 // ─────────────────────────────────────────
 let sessioOberta = 'S1';
 let esperaTimer  = null;
+let ultimaPantallaActiva = 'scr-benv';
 
 const SESSIO_ORDRE = { S1:1, S2:2, S3:3, S4:4, S5:5, S6:6, S7:7 };
 const SESSIO_NOM   = {
