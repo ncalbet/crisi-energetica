@@ -829,23 +829,15 @@
     .btn-hist:hover { color: var(--acc); border-color: rgba(245,166,35,0.3); }
 
     /* Pantalla historial */
-    .hist-grid {
-      display: grid;
-      gap: 0.75rem;
-      margin-bottom: 2rem;
-    }
+    .hist-grid { display: grid; gap: 0.75rem; margin-bottom: 2rem; }
     .hist-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-      transition: border-color 0.2s;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 2px; overflow: hidden; transition: border-color 0.2s;
     }
     .hist-card:hover { border-color: rgba(255,255,255,0.15); }
     .hist-card-head {
       display: flex; align-items: center;
-      gap: 0.85rem; padding: 0.9rem 1.1rem;
-      cursor: pointer;
+      gap: 0.85rem; padding: 0.9rem 1.1rem; cursor: pointer;
     }
     .hist-card-head:hover .hist-titol { color: var(--acc); }
     .hist-missio {
@@ -857,10 +849,7 @@
     .hist-m2 { background: rgba(247,127,0,0.1); color: #f77f00; }
     .hist-m3 { background: rgba(252,191,73,0.1); color: #fcbf49; }
     .hist-m4 { background: rgba(82,183,136,0.1); color: var(--green); }
-    .hist-titol {
-      font-size: 0.97rem; font-weight: 500;
-      transition: color 0.2s; flex: 1;
-    }
+    .hist-titol { font-size: 0.97rem; font-weight: 500; transition: color 0.2s; flex: 1; }
     .hist-badge {
       font-family: 'Rajdhani', sans-serif; font-size: 0.68rem;
       font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
@@ -868,26 +857,15 @@
     }
     .hist-ok { background: rgba(82,183,136,0.1); color: var(--green); border: 1px solid rgba(82,183,136,0.2); }
     .hist-pendent { background: rgba(107,117,144,0.08); color: var(--text-dim); border: 1px solid rgba(107,117,144,0.15); }
-    .hist-arrow {
-      font-size: 0.85rem; color: var(--text-dim);
-      transition: transform 0.2s, color 0.2s; flex-shrink: 0;
-    }
+    .hist-arrow { font-size: 0.85rem; color: var(--text-dim); transition: transform 0.2s, color 0.2s; flex-shrink: 0; }
     .hist-card.open .hist-arrow { transform: rotate(90deg); color: var(--acc); }
-    .hist-body {
-      display: none; padding: 0 1.1rem 1rem;
-      border-top: 1px solid var(--border);
-    }
+    .hist-body { display: none; padding: 0 1.1rem 1rem; border-top: 1px solid var(--border); }
     .hist-card.open .hist-body { display: block; }
-
-    /* Vista lectura d'una sessió */
     .lectura-banner {
-      background: rgba(245,166,35,0.07);
-      border: 1px solid rgba(245,166,35,0.2);
-      border-radius: 2px;
-      padding: 0.65rem 1rem;
+      background: rgba(245,166,35,0.07); border: 1px solid rgba(245,166,35,0.2);
+      border-radius: 2px; padding: 0.65rem 1rem;
       display: flex; align-items: center; gap: 0.65rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.82rem; color: var(--acc);
+      margin-bottom: 1.5rem; font-size: 0.82rem; color: var(--acc);
     }
     .lectura-banner strong { font-weight: 600; }
 
@@ -969,8 +947,8 @@
 <header id="header">
   <div class="h-brand">⚡ <em>Consell Assessor Jove</em> — UE</div>
 
-  <div class="marcador">
-    <span class="marc-label">Alerta energètica</span>
+  <div class="marcador" style="position:relative;">
+    <span class="marc-label" style="cursor:help;" title="Clica per veure els criteris" onclick="toggleMarcCriteria()">Alerta energètica ⓘ</span>
     <div class="marc-bar" id="marc-bar">
       <div class="marc-seg" id="s0"></div>
       <div class="marc-seg" id="s1"></div>
@@ -980,6 +958,32 @@
       <div class="marc-seg" id="s5"></div>
     </div>
     <span class="marc-text" id="marc-text"></span>
+
+    <!-- Panel de criteris -->
+    <div id="marc-criteria" style="display:none; position:absolute; top:48px; left:50%; transform:translateX(-50%); width:320px; background:var(--bg2); border:1px solid var(--border); border-top:3px solid var(--acc); border-radius:2px; padding:1rem 1.1rem; z-index:300; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
+      <div style="font-family:'Rajdhani',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--acc); margin-bottom:0.75rem;">Com funciona el marcador</div>
+      <div style="font-size:0.82rem; color:var(--text-dim); line-height:1.65; margin-bottom:0.75rem;">El docent el controla. <strong style="color:var(--text);">Puja quan el Consell:</strong></div>
+      <div style="display:grid; gap:0.4rem; margin-bottom:0.85rem;">
+        <div style="display:flex; gap:0.6rem; font-size:0.82rem; line-height:1.5; align-items:flex-start;">
+          <span style="color:var(--green); flex-shrink:0; font-weight:700;">→</span>
+          <span>Argumenta amb <strong style="color:var(--text);">evidències concretes</strong>, no amb opinions generals</span>
+        </div>
+        <div style="display:flex; gap:0.6rem; font-size:0.82rem; line-height:1.5; align-items:flex-start;">
+          <span style="color:var(--green); flex-shrink:0; font-weight:700;">→</span>
+          <span>Considera les <strong style="color:var(--text);">conseqüències</strong> de les seves decisions per a persones concretes</span>
+        </div>
+        <div style="display:flex; gap:0.6rem; font-size:0.82rem; line-height:1.5; align-items:flex-start;">
+          <span style="color:var(--green); flex-shrink:0; font-weight:700;">→</span>
+          <span>Defensa la seva posició amb <strong style="color:var(--text);">valors explícits</strong> (justícia, democràcia, responsabilitat)</span>
+        </div>
+        <div style="display:flex; gap:0.6rem; font-size:0.82rem; line-height:1.5; align-items:flex-start;">
+          <span style="color:var(--green); flex-shrink:0; font-weight:700;">→</span>
+          <span>És <strong style="color:var(--text);">honest sobre els costos</strong> de la seva proposta — nomena qui en surt perjudicat</span>
+        </div>
+      </div>
+      <div style="font-size:0.78rem; color:var(--text-dim); border-top:1px solid var(--border); padding-top:0.65rem;">No és una competició entre grups. Reflecteix la qualitat del raonament del Consell en conjunt.</div>
+      <button onclick="toggleMarcCriteria()" style="margin-top:0.65rem; background:none; border:none; color:var(--acc); font-family:'Rajdhani',sans-serif; font-size:0.75rem; cursor:pointer; letter-spacing:0.08em; text-transform:uppercase; padding:0;">Tancar ×</button>
+    </div>
   </div>
 
   <div class="h-user">
@@ -1128,7 +1132,7 @@
 
     <div class="video-label">🎬 Vídeo introductori</div>
     <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/WvNunGyrphE" allowfullscreen loading="lazy"></iframe>
+      <iframe src="https://www.youtube.com/embed/zABy17WYOdE" allowfullscreen loading="lazy"></iframe>
     </div>
 
     <div class="briefing">
@@ -1306,11 +1310,6 @@
     <div class="badge badge-red">🔴 Missió 1 — Sessió 2</div>
     <h2 class="page-h2">A qui creure?</h2>
     <p class="page-lead">El Consell necessita fonts fiables per fer una anàlisi sòlida. Però totes les fonts tenen interessos. Llegiu aquests quatre titulars sobre el <em>mateix fet</em>: la crisi energètica europea d'aquesta setmana.</p>
-
-    <div class="video-label">🎬 Vídeo introductori</div>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/njGDq59Erw4" allowfullscreen loading="lazy"></iframe>
-    </div>
 
     <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
 
@@ -1515,11 +1514,6 @@
     <h2 class="page-h2">Qui decideix sobre l'energia d'Europa?</h2>
     <p class="page-lead">El Consell ha après a detectar interessos darrere de les fonts. Ara cal entendre qui té el poder real de decidir. La UE ha de triar d'on compra energia els pròxims 10 anys. <em>Tothom vol influir en la decisió. Però qui pot realment?</em></p>
 
-    <div class="video-label">🎬 Vídeo introductori</div>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/2a-m_iwwVJI" allowfullscreen loading="lazy"></iframe>
-    </div>
-
     <div class="card" style="margin-bottom:1rem;">
       <div class="card-label">La sala de reunions</div>
       <p style="font-size:0.9rem; margin-bottom:1rem;">Cinc actors principals volen influir en la decisió energètica europea. Cadascun té arguments. Però no tots tenen el mateix tipus de poder.</p>
@@ -1692,11 +1686,6 @@
     <div class="badge badge-ora">🟠 Missió 2 — Sessió 4</div>
     <h2 class="page-h2">Les tres opcions energètiques d'Europa</h2>
     <p class="page-lead">Europa té tres camins possibles. Cap és perfecte. Tots tenen costos polítics, econòmics i ètics. El Consell ha d'analitzar-los i prendre la primera decisió formal.</p>
-
-    <div class="video-label">🎬 Vídeo introductori</div>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/D9Ra-bFcarc" allowfullscreen loading="lazy"></iframe>
-    </div>
 
     <div style="display:grid; gap:1rem; margin-bottom:1.75rem;">
       <div class="opcio-card opcio-a">
@@ -1885,7 +1874,49 @@
       <div class="briefing-tag">🔜 Missió 3 — Negociar o trencar</div>
       <p>«Heu pres la primera decisió formal com a Consell. Però Rússia amenaça, el Golf exigeix, la Xina adverteix. Ara cal negociar. I negociar significa entendre l'altre, no només defensar els propis interessos.»</p>
     </div>
-    <button class="btn-cont" id="btn-s4-fi" onclick="completarSessioN('S4','scr-s5-ob')">Tancar Missió 2 →</button>
+    <button class="btn-cont" id="btn-s4-fi" onclick="completarSessioN('S4','scr-noticia-m2')">Tancar Missió 2 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     NOTÍCIA-CONSEQÜÈNCIA M2 → M3
+══════════════════════════════════════ -->
+<div class="screen" id="scr-noticia-m2">
+  <div class="page wide">
+    <div class="badge badge-red">⚡ Notícia d'última hora</div>
+
+    <div class="news-flash" style="margin-bottom:1.25rem;">
+      <div class="news-tag">📡 Reuters · Brussel·les — Fa 2 hores</div>
+      <div class="news-head">«Els actors internacionals reaccionen a les primeres propostes dels consells assessors europeus»</div>
+    </div>
+
+    <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
+      <div class="react-card react-rus">
+        <div class="react-qui">🇷🇺 Portaveu del Kremlin — Moscou</div>
+        <p class="react-txt">«Hem llegit els informes dels consells assessors europeus. Alguns proposen tallar completament el diàleg energètic amb Rússia. Volem recordar-los que la infraestructura de gasoductes tarda 10 anys a construir-se, i el fred arriba cada any. La porta continua oberta. Però no indefinidament.»</p>
+      </div>
+      <div class="react-card react-golf">
+        <div class="react-qui">🛢️ Ministre d'Energia de Qatar — Doha</div>
+        <p class="react-txt">«Si Europa vol el nostre gas, ha d'entendre que nosaltres també tenim opcions. La Xina ha multiplicat per tres les seves compres de GNL en els últims 18 mesos. No esperarem eternament mentre Europa debat. Els contractes a llarg termini necessiten seguretat jurídica i política — no incertesa permanent.»</p>
+      </div>
+      <div class="react-card react-xi">
+        <div class="react-qui">🇨🇳 Ministeri de Comerç de la Xina — Pequín</div>
+        <p class="react-txt">«Hem notat que alguns informes europeus proposen reduir la dependència de minerals xinesos 'sense especificar com'. Les alternatives existents cobreixen el 15% de la demanda prevista. Esperem que les propostes finals siguin més realistes que les actuals.»</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-label">Anàlisi — Què volen realment?</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Tres actors, tres reaccions. Cap diu el que vol directament. Rússia usa la por al fred. Qatar usa la competència amb la Xina. La Xina usa les xifres per fer semblar les alternatives impossibles. La Missió 3 us demanarà que negocieu amb ells. Ara que heu vist com parlen, podeu preparar-vos millor.</p>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">🔜 Missió 3 — Negociar o trencar</div>
+      <p>«Ara coneixeu la seva manera de comunicar-se. Cada declaració amaga quelcom. La vostra tasca és entendre el que volen <em>realment</em> — no el que diuen — i buscar un terreny comú que no traeixi els valors del Consell.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s5-ob')">Continuar → Missió 3</button>
   </div>
 </div>
 
@@ -1906,11 +1937,6 @@
     <div class="badge badge-gro">🟡 Missió 3 — Negociar o trencar</div>
     <h2 class="page-h2">Les reaccions internacionals</h2>
     <p class="page-lead">Les opcions energètiques que el Consell ha analitzat han generat reaccions. Ara cal preparar una estratègia de negociació.</p>
-
-    <div class="video-label">🎬 Vídeo introductori</div>
-    <div class="video-wrap">
-      <iframe src="https://www.youtube.com/embed/QzHweUI-KJo" allowfullscreen loading="lazy"></iframe>
-    </div>
 
     <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
       <div class="react-card react-rus">
@@ -2026,14 +2052,57 @@
     </div>
 
     <h2 class="page-h2">La taula de negociació</h2>
-    <div class="card" style="margin-bottom:1.1rem;">
-      <div class="card-label">Regles de la negociació</div>
-      <p style="font-size:0.9rem; line-height:1.72;">① Cada membre explica oralment la posició del seu actor (mai llegint el document).<br>② El membre de la posició 4 (Europa/Consell) actua de moderador natural.<br>③ Heu d'intentar arribar a un acord que compleixi les tres condicions.<br>④ Si no hi ha acord, heu de justificar quina línia vermella no ha pogut creuar-se.</p>
+
+    <!-- Protocol visible -->
+    <div style="background:var(--bg2); border:1px solid var(--border); border-top:3px solid var(--acc); border-radius:2px; padding:1.1rem 1.3rem; margin-bottom:1.25rem;">
+      <div style="font-family:'Rajdhani',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--acc); margin-bottom:0.85rem;">📋 Protocol de negociació — seguiu aquest ordre</div>
+      <div style="display:grid; gap:0.55rem;">
+        <div style="display:flex; gap:0.85rem; align-items:flex-start;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1rem; color:var(--acc); width:24px; flex-shrink:0; line-height:1.4;">1</div>
+          <div style="font-size:0.88rem; line-height:1.6;"><strong>Cada actor presenta</strong> (1 min cadascun): quin és el seu interès principal i quina és la seva línia vermella. L'actor E (Europa) escolta i pren notes.</div>
+        </div>
+        <div style="display:flex; gap:0.85rem; align-items:flex-start;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1rem; color:var(--acc); width:24px; flex-shrink:0; line-height:1.4;">2</div>
+          <div style="font-size:0.88rem; line-height:1.6;"><strong>Europa fa una proposta inicial</strong> d'acord que intenti tenir en compte el que ha escoltat.</div>
+        </div>
+        <div style="display:flex; gap:0.85rem; align-items:flex-start;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1rem; color:var(--acc); width:24px; flex-shrink:0; line-height:1.4;">3</div>
+          <div style="font-size:0.88rem; line-height:1.6;"><strong>Cada actor respon</strong> (1 per torn): accepta, rebutja, o proposa modificació concreta.</div>
+        </div>
+        <div style="display:flex; gap:0.85rem; align-items:flex-start;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1rem; color:var(--acc); width:24px; flex-shrink:0; line-height:1.4;">4</div>
+          <div style="font-size:0.88rem; line-height:1.6;"><strong>Europa revisa la proposta</strong> incorporant les modificacions acceptables.</div>
+        </div>
+        <div style="display:flex; gap:0.85rem; align-items:flex-start;">
+          <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:1rem; color:var(--acc); width:24px; flex-shrink:0; line-height:1.4;">5</div>
+          <div style="font-size:0.88rem; line-height:1.6;"><strong>Decisió final</strong>: acord o no-acord. Europa l'anuncia i el justifica.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Frases model -->
+    <div style="background:rgba(245,166,35,0.03); border:1px dashed rgba(245,166,35,0.2); border-radius:2px; padding:0.9rem 1.1rem; margin-bottom:1.25rem;">
+      <div style="font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--acc); margin-bottom:0.6rem;">💬 Frases model per si us encalleu</div>
+      <div style="display:grid; gap:0.35rem; font-size:0.83rem;">
+        <div style="color:var(--text-dim);">→ <em style="color:var(--text);">«No podem acceptar [X] perquè la nostra línia vermella és [Y]»</em></div>
+        <div style="color:var(--text-dim);">→ <em style="color:var(--text);">«Podríem cedir en [X] si l'altra part cedeix en [Y]»</em></div>
+        <div style="color:var(--text-dim);">→ <em style="color:var(--text);">«Entenem el vostre interès en [X], però ens demana que creuem una línia que no podem creuar perquè...»</em></div>
+        <div style="color:var(--text-dim);">→ <em style="color:var(--text);">«Proposem [X] com a punt de partida. Estem oberts a modificar [Y] però no [Z]»</em></div>
+      </div>
+    </div>
+
+    <div class="card" style="background:rgba(230,57,70,0.04); border-color:rgba(230,57,70,0.15); margin-bottom:1.25rem;">
+      <div class="card-label" style="color:var(--red);">⚠ Les tres condicions d'un acord acceptable</div>
+      <div style="display:grid; gap:0.4rem; font-size:0.88rem; line-height:1.6;">
+        <div>① L'acord <strong>no és una rendició d'Europa</strong> — respecta els valors i els compromisos previs.</div>
+        <div>② L'acord <strong>no humilia cap de les altres parts</strong> — tothom pot presentar-lo com a acceptable.</div>
+        <div>③ L'acord <strong>respecta els principis bàsics del dret internacional</strong> — no legitima accions que els violen.</div>
+      </div>
     </div>
 
     <div class="briefing" style="margin-bottom:1.4rem;">
-      <div class="briefing-tag">💬 Pregunta de reflexió post-negociació (el docent la farà en veu alta)</div>
-      <p>«L'acord al qual heu arribat, beneficia tothom per igual? Els països productors d'energia en surten guanyant o perdent? Qui no estava a la taula i hauria d'haver-hi estat?»</p>
+      <div class="briefing-tag">💬 Pregunta post-negociació (el docent la farà en veu alta)</div>
+      <p>«L'acord al qual heu arribat, beneficia tothom per igual? Qui no estava a la taula i hauria d'haver-hi estat?»</p>
     </div>
 
     <div class="qblock">
@@ -2066,7 +2135,49 @@
       <div class="briefing-tag">🔜 Missió 4 — La proposta final</div>
       <p>«Heu negociat. Heu vist que les solucions no són netes ni fàcils. Ara cal convertir tot el que heu après en una proposta real, honesta sobre els seus límits, i defensable davant de la UE.»</p>
     </div>
-    <button class="btn-cont" id="btn-s5-fi" onclick="completarSessioN('S5','scr-s6-ob')">Tancar Missió 3 →</button>
+    <button class="btn-cont" id="btn-s5-fi" onclick="completarSessioN('S5','scr-noticia-m3')">Tancar Missió 3 →</button>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     NOTÍCIA-CONSEQÜÈNCIA M3 → M4
+══════════════════════════════════════ -->
+<div class="screen" id="scr-noticia-m3">
+  <div class="page wide">
+    <div class="badge badge-gro">📡 Notícia d'última hora</div>
+
+    <div class="news-flash" style="border-left-color:var(--acc); background:rgba(245,166,35,0.04); margin-bottom:1.25rem;">
+      <div class="news-tag" style="color:var(--acc);">📡 Euronews · Brussel·les — Fa 3 hores</div>
+      <div class="news-head">«Els resultats de les negociacions dels consells assessors filtrats als mitjans: reaccions dividides a Europa i al món»</div>
+    </div>
+
+    <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
+      <div style="background:var(--bg2); border:1px solid var(--border); border-left:4px solid var(--green); border-radius:2px; padding:1rem 1.2rem;">
+        <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--green); margin-bottom:0.4rem;">🇺🇦 Govern d'Ucraïna</div>
+        <p class="react-txt">«Estem molt atents als resultats de les negociacions europees amb Rússia. Qualsevol acord que impliqui ingressos per al govern rus mentre la guerra continua és, des de la nostra perspectiva, una traïció als nostres ciutadans. Europa ha de triar entre els seus valors i la comoditat energètica.»</p>
+      </div>
+      <div style="background:var(--bg2); border:1px solid var(--border); border-left:4px solid #8ab4f8; border-radius:2px; padding:1rem 1.2rem;">
+        <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:#8ab4f8; margin-bottom:0.4rem;">🌍 Xarxa de comunitats mineres del Congo i Xile</div>
+        <p class="react-txt">«Si Europa accelera les renovables, necessitarà molt més liti i cobalt. La major part s'extreu aquí, en condicions que Europa no acceptaria mai per als seus propis treballadors. Demanem que qualsevol proposta energètica europea inclogui condicions laborals i ambientals vinculants per als proveïdors de minerals.»</p>
+      </div>
+      <div style="background:var(--bg2); border:1px solid var(--border); border-left:4px solid var(--acc); border-radius:2px; padding:1rem 1.2rem;">
+        <div style="font-family:'Rajdhani',sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--acc); margin-bottom:0.4rem;">📊 Agència Internacional de l'Energia (AIE)</div>
+        <p class="react-txt">«Els acords de negociació emergents mostren un patró preocupant: les solucions a curt termini tendeixen a bloquejar el camí cap a les solucions a llarg termini. Recomanem que cap acord energètic duri més de 10 anys sense clàusules de revisió. El món d'aquí a 10 anys serà molt diferent de l'actual.»</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-label">Veus que no eren a la taula</div>
+      <p style="font-size:0.9rem; line-height:1.72;">Ucraïna, les comunitats mineres africanes i llatinoamericanes, i les generacions futures: cap d'elles era a la negociació. Però totes en patiran les conseqüències. La Missió 4 us demanarà que en siguis explícitament conscients a la proposta final.</p>
+    </div>
+
+    <div class="briefing">
+      <div class="briefing-tag">🔜 Missió 4 — La proposta final</div>
+      <p>«Ara sabeu qui no era a la taula i qui en paga els costos. La proposta final del Consell ha de ser honesta sobre això. Una proposta que ignora aquests actors no és una proposta independent — és una proposta còmplice.»</p>
+    </div>
+
+    <button class="btn-cont" onclick="go('scr-s6-ob')">Continuar → Missió 4</button>
   </div>
 </div>
 
@@ -2363,27 +2474,6 @@
 
 
 <!-- ══════════════════════════════════════
-     HISTORIAL — ÍNDEX DE SESSIONS
-══════════════════════════════════════ -->
-<div class="screen" id="scr-historial">
-  <div class="page">
-    <div class="lectura-banner">
-      📋 <span><strong>Mode lectura.</strong> Pots revisar tot el que has fet fins ara. No pots modificar res.</span>
-    </div>
-
-    <h2 class="page-h2">El teu recorregut al Consell</h2>
-    <p class="page-lead" style="margin-bottom:1.5rem;">Clica qualsevol sessió completada per revisar-ne el contingut.</p>
-
-    <div class="hist-grid" id="hist-grid">
-      <!-- S'omple per JS -->
-    </div>
-
-    <button class="btn-cont" id="btn-hist-tornar" onclick="go(histRetorn)">← Tornar</button>
-  </div>
-</div>
-
-
-<!-- ══════════════════════════════════════
      PANTALLA D'ESPERA (sessió no oberta)
 ══════════════════════════════════════ -->
 <div class="screen" id="scr-espera">
@@ -2398,6 +2488,24 @@
       <div class="espera-pulse"><span></span><span></span><span></span></div>
       <p style="font-size:0.75rem; color:var(--text-dim); margin-top:0.5rem;">Comprovant cada 30 segons…</p>
     </div>
+  </div>
+</div>
+
+
+
+
+<!-- ══════════════════════════════════════
+     HISTORIAL — ÍNDEX DE SESSIONS
+══════════════════════════════════════ -->
+<div class="screen" id="scr-historial">
+  <div class="page">
+    <div class="lectura-banner">
+      📋 <span><strong>Mode lectura.</strong> Pots revisar tot el que has fet fins ara. No pots modificar res.</span>
+    </div>
+    <h2 class="page-h2">El teu recorregut al Consell</h2>
+    <p class="page-lead" style="margin-bottom:1.5rem;">Clica qualsevol sessió completada per revisar-ne el contingut.</p>
+    <div class="hist-grid" id="hist-grid"><!-- S'omple per JS --></div>
+    <button class="btn-cont" id="btn-hist-tornar" onclick="go(histRetorn)">← Tornar</button>
   </div>
 </div>
 
@@ -2475,28 +2583,23 @@ function go(id) {
   // Header
   document.getElementById('header').classList.toggle('vis', id !== 'scr-login');
 
-  // Si l'alumne navega normalment (no des de l'historial), surt del mode lectura
-  if (modeLectura && id !== 'scr-historial' && histRetorn !== 'scr-historial') {
-    modeLectura = false;
-  }
-
-  // Banner de mode lectura
-  actualitzarBannerLectura(id);
-
-  // Render historial quan s'obre
+  // Historial: guardar pantalla activa i gestionar mode lectura
+  if (id !== 'scr-historial') ultimaPantallaActiva = id;
   if (id === 'scr-historial') {
     histRetorn = ultimaPantallaActiva || 'scr-benv';
     renderHistorial();
   }
+  // Si navega normalment fora de lectura, desactivar mode lectura
+  if (modeLectura && id !== 'scr-historial') {
+    modeLectura = false;
+    document.querySelectorAll('.lectura-banner-float').forEach(b => b.remove());
+  }
+  actualitzarBannerLectura(id);
 
   // Render rol cards quan s'arriba a les pantalles de rol
   if (id === 'scr-s2-rol') renderRolCard();
   if (id === 'scr-s4-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS4RolCard(); }
   if (id === 'scr-s5-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS5RolCard(); }
-
-  // Guardar última pantalla activa (per saber on tornar des de l'historial)
-  if (id !== 'scr-historial') ultimaPantallaActiva = id;
-}
 }
 
 // ─────────────────────────────────────────
@@ -2565,13 +2668,26 @@ async function doLogin() {
   }
 }
 
+function toggleMarcCriteria() {
+  const panel = document.getElementById('marc-criteria');
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+// Tancar el panel si es clica fora
+document.addEventListener('click', e => {
+  const panel = document.getElementById('marc-criteria');
+  if (!panel || panel.style.display === 'none') return;
+  if (!panel.contains(e.target) && !e.target.classList.contains('marc-label')) {
+    panel.style.display = 'none';
+  }
+});
+
+
 // ─────────────────────────────────────────
 //  HISTORIAL
 // ─────────────────────────────────────────
-let histRetorn = 'scr-benv'; // pantalla a la qual tornar
-
 const HIST_CONFIG = [
-  { id:'S1', missio:'M1', cls:'hist-m1', titol:'Sessió 1 — El món s\'apaga',
+  { id:'S1', missio:'M1', cls:'hist-m1', titol:"Sessió 1 — El món s'apaga",
     subs:[
       { label:'Obertura — La crisi al mapa', screen:'scr-s1-ob' },
       { label:'Reflexió individual — Diagnosi inicial', screen:'scr-s1-ind' },
@@ -2579,7 +2695,7 @@ const HIST_CONFIG = [
       { label:'Tancament S1', screen:'scr-s1-tanca' },
     ]
   },
-  { id:'S2', missio:'M1', cls:'hist-m1', titol:'Sessió 2 — A qui creure?',
+  { id:'S2', missio:'M1', cls:'hist-m1', titol:"Sessió 2 — A qui creure?",
     subs:[
       { label:'Obertura — Els quatre titulars', screen:'scr-s2-ob' },
       { label:'El teu sobre', screen:'scr-s2-rol' },
@@ -2588,7 +2704,7 @@ const HIST_CONFIG = [
       { label:'Tancament M1', screen:'scr-s2-tanca' },
     ]
   },
-  { id:'S3', missio:'M2', cls:'hist-m2', titol:'Sessió 3 — Qui decideix?',
+  { id:'S3', missio:'M2', cls:'hist-m2', titol:"Sessió 3 — Qui decideix?",
     subs:[
       { label:'Obertura — La sala de reunions', screen:'scr-s3-ob' },
       { label:'Reflexió individual — Poder real vs. legítim', screen:'scr-s3-ind' },
@@ -2596,16 +2712,16 @@ const HIST_CONFIG = [
       { label:'Tancament S3', screen:'scr-s3-tanca' },
     ]
   },
-  { id:'S4', missio:'M2', cls:'hist-m2', titol:'Sessió 4 — El mapa del poder',
+  { id:'S4', missio:'M2', cls:'hist-m2', titol:"Sessió 4 — El mapa del poder",
     subs:[
       { label:'Obertura — Les tres opcions', screen:'scr-s4-ob' },
-      { label:'La teva fitxa d\'anàlisi', screen:'scr-s4-rol' },
+      { label:"La teva fitxa d'anàlisi", screen:'scr-s4-rol' },
       { label:'Reflexió individual — Analitza la teva opció', screen:'scr-s4-ind' },
       { label:'Primera decisió formal del Consell', screen:'scr-s4-grup' },
       { label:'Tancament M2', screen:'scr-s4-tanca' },
     ]
   },
-  { id:'S5', missio:'M3', cls:'hist-m3', titol:'Sessió 5 — Negociar o trencar',
+  { id:'S5', missio:'M3', cls:'hist-m3', titol:"Sessió 5 — Negociar o trencar",
     subs:[
       { label:'Obertura — Les reaccions internacionals', screen:'scr-s5-ob' },
       { label:'El teu rol a la negociació', screen:'scr-s5-rol' },
@@ -2614,7 +2730,7 @@ const HIST_CONFIG = [
       { label:'Tancament M3', screen:'scr-s5-tanca' },
     ]
   },
-  { id:'S6', missio:'M4', cls:'hist-m4', titol:'Sessió 6 — La nostra proposta',
+  { id:'S6', missio:'M4', cls:'hist-m4', titol:"Sessió 6 — La nostra proposta",
     subs:[
       { label:'Obertura — El camí recorregut', screen:'scr-s6-ob' },
       { label:'Reflexió individual — La teva visió personal', screen:'scr-s6-ind' },
@@ -2622,9 +2738,9 @@ const HIST_CONFIG = [
       { label:'Tancament S6', screen:'scr-s6-tanca' },
     ]
   },
-  { id:'S7', missio:'M4', cls:'hist-m4', titol:'Sessió 7 — Ara, nosaltres',
+  { id:'S7', missio:'M4', cls:'hist-m4', titol:"Sessió 7 — Ara, nosaltres",
     subs:[
-      { label:'L\'Assemblea del Consell', screen:'scr-s7-ob' },
+      { label:"L'Assemblea del Consell", screen:'scr-s7-ob' },
       { label:'Reflexió final — Comparant amb S1', screen:'scr-s7-ind' },
       { label:'El contracte de valors', screen:'scr-s7-fi' },
     ]
@@ -2636,22 +2752,17 @@ function renderHistorial() {
   const ultimaOrdre  = SESSIO_ORDRE[ultimaSessio] || 0;
   const grid = document.getElementById('hist-grid');
   if (!grid) return;
-
   grid.innerHTML = HIST_CONFIG.map(sess => {
     const completada = SESSIO_ORDRE[sess.id] <= ultimaOrdre;
-    const badgeCls   = completada ? 'hist-ok' : 'hist-pendent';
-    const badgeTxt   = completada ? '✓ Completada' : 'Pendent';
-
+    const badgeCls = completada ? 'hist-ok' : 'hist-pendent';
+    const badgeTxt = completada ? '✓ Completada' : 'Pendent';
     const subLinks = completada ? sess.subs.map(sub => `
-      <div style="padding:0.5rem 0; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:0.65rem; cursor:pointer;"
-           onclick="anarALectura('${sub.screen}','${sess.id}')">
-        <span style="font-size:0.75rem; color:var(--text-dim); flex:1;">${sub.label}</span>
-        <span style="font-family:'Rajdhani',sans-serif; font-size:0.65rem; color:var(--acc); letter-spacing:0.08em; text-transform:uppercase;">Revisar →</span>
-      </div>`).join('') : `
-      <div style="padding:0.65rem 0; font-size:0.82rem; color:var(--text-dim);">
-        Aquesta sessió encara no s'ha completat.
-      </div>`;
-
+      <div style="padding:0.5rem 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.65rem;cursor:pointer;"
+           onclick="anarALectura('${sub.screen}')">
+        <span style="font-size:0.75rem;color:var(--text-dim);flex:1;">${sub.label}</span>
+        <span style="font-family:'Rajdhani',sans-serif;font-size:0.65rem;color:var(--acc);letter-spacing:0.08em;text-transform:uppercase;">Revisar →</span>
+      </div>`).join('') :
+      `<div style="padding:0.65rem 0;font-size:0.82rem;color:var(--text-dim);">Aquesta sessió encara no s'ha completat.</div>`;
     return `
       <div class="hist-card" id="hc-${sess.id}">
         <div class="hist-card-head" onclick="toggleHist('${sess.id}')">
@@ -2669,33 +2780,22 @@ function toggleHist(id) {
   const card = document.getElementById('hc-' + id);
   if (!card) return;
   const wasOpen = card.classList.contains('open');
-  // Tanca tots
   document.querySelectorAll('.hist-card.open').forEach(c => c.classList.remove('open'));
   if (!wasOpen) card.classList.add('open');
 }
 
-function anarALectura(screen, sessioId) {
-  histRetorn = 'scr-historial';
-  // Activa mode lectura per a la pantalla de destí
+function anarALectura(screen) {
   modeLectura = true;
   go(screen);
 }
 
-// ─────────────────────────────────────────
-//  MODE LECTURA — banner visible quan és actiu
-// ─────────────────────────────────────────
-let modeLectura = false;
-
 function actualitzarBannerLectura(screenId) {
-  // Mostra el banner de lectura a totes les pantalles
-  // (excepte historial i espera que el tenen integrat)
   document.querySelectorAll('.lectura-banner-float').forEach(b => b.remove());
   if (!modeLectura || screenId === 'scr-historial' || screenId === 'scr-login') return;
-
   const banner = document.createElement('div');
   banner.className = 'lectura-banner-float';
-  banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:6px 16px;font-family:Rajdhani,sans-serif;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:0.75rem;';
-  banner.innerHTML = `📋 Mode lectura &nbsp;·&nbsp; <button onclick="sortirLectura()" style="background:none;border:1px solid rgba(245,166,35,0.4);color:var(--acc);border-radius:2px;padding:2px 10px;font-family:Rajdhani,sans-serif;font-size:0.72rem;cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;">← Tornar a l'historial</button>`;
+  banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:6px 16px;font-family:Rajdhani,sans-serif;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:0.75rem;white-space:nowrap;';
+  banner.innerHTML = "📋 Mode lectura &nbsp;·&nbsp; <button onclick="sortirLectura()" style="background:none;border:1px solid rgba(245,166,35,0.4);color:var(--acc);border-radius:2px;padding:2px 10px;font-family:Rajdhani,sans-serif;font-size:0.72rem;cursor:pointer;">← Tornar a l'historial</button>";
   document.body.appendChild(banner);
 }
 
@@ -2704,6 +2804,10 @@ function sortirLectura() {
   document.querySelectorAll('.lectura-banner-float').forEach(b => b.remove());
   go('scr-historial');
 }
+
+// ─────────────────────────────────────────
+//  LOGOUT
+// ─────────────────────────────────────────
 function doLogout() {
   if (!confirm('Vols tancar la sessió? El teu progrés s\'ha guardat.')) return;
   user = null;
@@ -3080,6 +3184,8 @@ function renderS5RolCard() {
 // ─────────────────────────────────────────
 let sessioOberta = 'S1';
 let esperaTimer  = null;
+let modeLectura = false;
+let histRetorn = 'scr-benv';
 let ultimaPantallaActiva = 'scr-benv';
 
 const SESSIO_ORDRE = { S1:1, S2:2, S3:3, S4:4, S5:5, S6:6, S7:7 };
