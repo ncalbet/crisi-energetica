@@ -2677,6 +2677,8 @@ function toggleMarcCriteria() {
 document.addEventListener('click', e => {
   const panel = document.getElementById('marc-criteria');
   if (!panel || panel.style.display === 'none') return;
+  // Només tancar si el clic NO és al login ni a cap botó principal
+  if (e.target.closest('#scr-login')) return;
   if (!panel.contains(e.target) && !e.target.classList.contains('marc-label')) {
     panel.style.display = 'none';
   }
@@ -2795,7 +2797,7 @@ function actualitzarBannerLectura(screenId) {
   const banner = document.createElement('div');
   banner.className = 'lectura-banner-float';
   banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.3);border-radius:3px;padding:6px 16px;font-family:Rajdhani,sans-serif;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--acc);display:flex;align-items:center;gap:0.75rem;white-space:nowrap;';
-  banner.innerHTML = "📋 Mode lectura &nbsp;·&nbsp; <button onclick="sortirLectura()" style="background:none;border:1px solid rgba(245,166,35,0.4);color:var(--acc);border-radius:2px;padding:2px 10px;font-family:Rajdhani,sans-serif;font-size:0.72rem;cursor:pointer;">← Tornar a l'historial</button>";
+  banner.innerHTML = '📋 Mode lectura &nbsp;·&nbsp; <button onclick="sortirLectura()" style="background:none;border:1px solid rgba(245,166,35,0.4);color:var(--acc);border-radius:2px;padding:2px 10px;font-family:Rajdhani,sans-serif;font-size:0.72rem;cursor:pointer;">← Tornar a l\'historial</button>';
   document.body.appendChild(banner);
 }
 
