@@ -98,12 +98,12 @@
       background: rgba(255,255,255,0.05);
       transition: background 0.6s, box-shadow 0.6s;
     }
-    .marc-seg.on-0 { background:#9b0000; box-shadow:0 0 7px #9b0000; }
-    .marc-seg.on-1 { background:#e63946; box-shadow:0 0 7px #e63946; }
-    .marc-seg.on-2 { background:#f77f00; box-shadow:0 0 7px #f77f00; }
-    .marc-seg.on-3 { background:#fcbf49; box-shadow:0 0 7px #fcbf49; }
-    .marc-seg.on-4 { background:#90be6d; box-shadow:0 0 7px #90be6d; }
-    .marc-seg.on-5 { background:#52b788; box-shadow:0 0 7px #52b788; }
+    .marc-seg.on-5 { background:#9b0000; box-shadow:0 0 7px #9b0000; }
+    .marc-seg.on-4 { background:#e63946; box-shadow:0 0 7px #e63946; }
+    .marc-seg.on-3 { background:#f77f00; box-shadow:0 0 7px #f77f00; }
+    .marc-seg.on-2 { background:#fcbf49; box-shadow:0 0 7px #fcbf49; }
+    .marc-seg.on-1 { background:#90be6d; box-shadow:0 0 7px #90be6d; }
+    .marc-seg.on-0 { background:#52b788; box-shadow:0 0 7px #52b788; }
     .marc-text {
       font-family: 'Rajdhani', sans-serif;
       font-size: 0.78rem;
@@ -962,7 +962,7 @@
     <!-- Panel de criteris -->
     <div id="marc-criteria" style="display:none; position:absolute; top:48px; left:50%; transform:translateX(-50%); width:320px; background:var(--bg2); border:1px solid var(--border); border-top:3px solid var(--acc); border-radius:2px; padding:1rem 1.1rem; z-index:300; box-shadow:0 8px 32px rgba(0,0,0,0.5);">
       <div style="font-family:'Rajdhani',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--acc); margin-bottom:0.75rem;">Com funciona el marcador</div>
-      <div style="font-size:0.82rem; color:var(--text-dim); line-height:1.65; margin-bottom:0.75rem;">El docent el controla. <strong style="color:var(--text);">Puja quan el Consell:</strong></div>
+      <div style="font-size:0.82rem; color:var(--text-dim); line-height:1.65; margin-bottom:0.75rem;">El docent el controla. <strong style="color:var(--text);">Baixa quan el Consell:</strong></div>
       <div style="display:grid; gap:0.4rem; margin-bottom:0.85rem;">
         <div style="display:flex; gap:0.6rem; font-size:0.82rem; line-height:1.5; align-items:flex-start;">
           <span style="color:var(--green); flex-shrink:0; font-weight:700;">→</span>
@@ -1065,7 +1065,7 @@
     <div class="card">
       <div class="card-label">Com funciona la plataforma</div>
       <p>Cada sessió avança pas a pas: obertura, reflexió individual, treball de grup i tancament. No pots saltar passos ni tornar enrere. El botó «Continuar» s'activa quan has completat l'acció requerida.</p>
-      <p>A la barra superior veuràs sempre el <em>marcador d'alerta energètica</em>: l'indicador de l'estat de la crisi. Comença en vermell. Depèn de vosaltres que millori.</p>
+      <p>A la barra superior veuràs sempre el <em>marcador d'alerta energètica</em>: l'indicador de l'estat de la crisi. Comença en vermell (alerta màxima). Depèn de vosaltres que baixi.</p>
     </div>
 
     <button class="btn-cont" onclick="go('scr-s1-ob')">Iniciar Missió 1 →</button>
@@ -1168,35 +1168,31 @@
     </div>
 
     <h2 class="page-h2">Diagnosi inicial — La teva visió</h2>
-    <p class="page-lead" style="margin-bottom:1.5rem;">Respon individualment. Les teves respostes es guardaran i les podràs comparar amb el que penses al final del projecte.</p>
 
-    <div class="qblock">
-      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+    <div class="paper-note">
+      <div class="paper-note-icon">📝</div>
+      <div>Respon aquestes preguntes al teu <strong>dossier personal en paper</strong>. Quan hagis acabat, fes clic a «Continuar».</div>
+    </div>
+
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 1 de 2</div>
       <div class="qtxt">Quan sents «crisi energètica», de què creus que parla?</div>
-      <textarea class="finput" id="r1" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
-    <div class="qblock">
-      <div class="qnum"><span class="act-label act-web">💻 Activitat a la web</span></div>
+    <div class="qblock-paper">
+      <div class="qnum"><span class="act-label act-paper">📝 Activitat a paper</span></div>
       <div class="qnum" style="margin-top:0.2rem;">Pregunta 2 de 2</div>
       <div class="qtxt">Creus que t'afecta? Com?</div>
-      <textarea class="finput" id="r2" placeholder="Escriu la teva resposta aquí..." oninput="chkInd()"></textarea>
     </div>
 
-    <!-- Bonus — apareix després de guardar -->
-    <div class="bonus-wrap" id="bonus-wrap">
+    <div class="bonus-wrap vis" id="bonus-wrap">
       <div class="bonus-tag">⭐ Fast finisher — opcional <span class="act-label act-paper" style="margin-left:0.5rem;">📝 Activitat a paper</span></div>
-      <div class="qtxt" style="margin-bottom:0.8rem; font-size:0.93rem;">Qui creus que té la culpa? (intuïció, no cal justificar)</div>
-      <textarea class="finput" id="r-bonus" placeholder="Resposta opcional..." style="min-height:72px;"></textarea>
+      <div class="qtxt" style="margin-bottom:0; font-size:0.93rem;">Qui creus que té la culpa? (intuïció, no cal justificar)</div>
     </div>
 
-    <div class="row-actions">
-      <button class="btn-ghost" id="btn-save" onclick="saveInd()" disabled>Guardar respostes</button>
-      <button class="btn-cont" id="btn-cont-ind" onclick="go('scr-s1-grup')" disabled style="display:none;">
-        Continuar → Tasca de grup
-      </button>
-      <span class="saved-ok" id="saved-ok">✓ Respostes guardades</span>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-cont" onclick="go('scr-s1-grup')">He respost al dossier → Continuar</button>
     </div>
 
   </div>
@@ -1316,7 +1312,7 @@
       <div class="source-card" data-src="A">
         <div class="src-meta"><span class="src-tag tag-corp">Empresa · Gas</span><span class="src-name">GasEuropa Consortium — Butlletí de mercat</span></div>
         <div class="src-head">«El gas natural segueix sent l'única garantia de subministrament estable per a la indústria europea»</div>
-        <div class="src-body">«Les energies renovables no poden cobrir la demanda base en condicions de fred extrem. En les dues últimes onades de fred, la generació eòlica va caure un 60% mentre el gas compensava el dèficit. Sense infraestructura gasística robusta, Europa s'arrisca a apagades industrials que podrien costar 2,3 milions de llocs de treball. La transició energètica és necessària, però ha de ser gradual i realista, no ideològica.»</div>
+        <div class="src-body">«Les energies renovables no poden cobrir la demanda base en condicions de fred extrem. En les dues últimes onades de fred, la generació eòlica va caure un 63% mentre el gas compensava el dèficit. Sense infraestructura gasística robusta, Europa s'arrisca a apagades industrials que podrien costar 2,3 milions de llocs de treball. La transició energètica és necessària, però ha de ser gradual i realista, no ideològica.»</div>
       </div>
 
       <div class="source-card" data-src="B">
@@ -1481,7 +1477,7 @@
 
     <div class="card" style="background:rgba(230,57,70,0.04); border-color:rgba(230,57,70,0.18); margin-bottom:1.1rem;">
       <div class="card-label" style="color:var(--red);">Marcador d'alerta energètica</div>
-      <p style="font-size:0.9rem; line-height:1.7;">La crisi s'ha entès però no s'ha resolt. El Consell ha guanyat perspectiva crítica. El marcador no puja encara — la comprensió del problema és el primer pas, no la solució.</p>
+      <p style="font-size:0.9rem; line-height:1.7;">La crisi s'ha entès però no s'ha resolt. El Consell ha guanyat perspectiva crítica. El marcador no baixa encara — la comprensió del problema és el primer pas, no la solució.</p>
     </div>
 
     <div class="briefing">
@@ -1937,6 +1933,11 @@
     <div class="badge badge-gro">🟡 Missió 3 — Negociar o trencar</div>
     <h2 class="page-h2">Les reaccions internacionals</h2>
     <p class="page-lead">Les opcions energètiques que el Consell ha analitzat han generat reaccions. Ara cal preparar una estratègia de negociació.</p>
+
+    <div class="card" style="margin-bottom:1.25rem; border-left: 3px solid var(--acc);">
+      <div class="card-label">💡 Connexió amb la Missió 2</div>
+      <p style="font-size:0.9rem; line-height:1.7; margin-bottom:0;">La decisió que va prendre el vostre grup a la Sessió 4 és exactament el tipus de decisió que aquests actors internacionals estaven intentant influir. Ara veureu per quins motius — i haureu de negociar amb ells des de la posició que heu triat.</p>
+    </div>
 
     <div style="display:grid; gap:0.85rem; margin-bottom:1.75rem;">
       <div class="react-card react-rus">
@@ -2558,12 +2559,12 @@ const delay = ms => new Promise(r => setTimeout(r, ms));
 let user = null;
 
 const MARC = {
-  0:{ txt:'Crisi màxima',     col:'#9b0000' },
-  1:{ txt:'Situació crítica', col:'#e63946' },
-  2:{ txt:'Situació greu',    col:'#f77f00' },
-  3:{ txt:'Millora moderada', col:'#fcbf49' },
-  4:{ txt:'Bona evolució',    col:'#90be6d' },
-  5:{ txt:'Crisi resolta',    col:'#52b788' },
+  5:{ txt:'Alerta màxima',    col:'#9b0000' },
+  4:{ txt:'Situació crítica', col:'#e63946' },
+  3:{ txt:'Situació greu',    col:'#f77f00' },
+  2:{ txt:'Millora moderada', col:'#fcbf49' },
+  1:{ txt:'Bona evolució',    col:'#90be6d' },
+  0:{ txt:'Crisi resolta',    col:'#52b788' },
 };
 
 // ─────────────────────────────────────────
@@ -2606,7 +2607,7 @@ function go(id) {
 //  MARCADOR
 // ─────────────────────────────────────────
 function setMarcador(v) {
-  const cfg = MARC[v] || MARC[0];
+  const cfg = MARC[v] !== undefined ? MARC[v] : MARC[5];
   document.getElementById('marc-text').textContent = cfg.txt;
   document.getElementById('marc-text').style.color  = cfg.col;
   for (let i = 0; i <= 5; i++) {
@@ -2652,7 +2653,7 @@ async function doLogin() {
     document.getElementById('h-nom').textContent  = user.nom;
     document.getElementById('h-grup').textContent = 'Grup ' + user.grup;
     document.getElementById('benv-grup').textContent = user.grup;
-    setMarcador(mr.valor ?? 0);
+    setMarcador(mr.valor ?? 5);
 
     // Comprovar quina sessió ha obert el docent
     const sr = await api('sessioActiva', { curs: user.curs });
@@ -3103,7 +3104,7 @@ const ROLS_S4 = {
       'Infraestructura existent i operativa: reduiria preu a la meitat respecte al GNL',
       'Condicions russes per reprendre: fi d\'algunes sancions i garanties de neutralitat energètica',
       'Impacte en la credibilitat europea: considerada una rendició per molts socis de la UE',
-      'Risc de tall unilateral: l\'experiència 2022 demostra que Rússia ho pot fer en 48h'
+      'Risc de tall unilateral: l\'experiència 2022 demostra que Rússia ho pot fer en 72 hores'
     ]
   },
   4: {
@@ -3370,7 +3371,7 @@ async function renderMap() {
 // ─────────────────────────────────────────
 //  INIT
 // ─────────────────────────────────────────
-setMarcador(0);
+setMarcador(5);
 renderMap().catch(() => {
   const el = document.getElementById('map-loading');
   if (el) el.textContent = 'Error carregant el mapa. Comprova la connexió.';
