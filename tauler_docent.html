@@ -222,12 +222,12 @@
       background:rgba(255,255,255,0.05);
       transition:background 0.5s, box-shadow 0.5s;
     }
-    .marc-seg.on-0 { background:#9b0000; box-shadow:0 0 8px #9b0000; }
-    .marc-seg.on-1 { background:#e63946; box-shadow:0 0 8px #e63946; }
-    .marc-seg.on-2 { background:#f77f00; box-shadow:0 0 8px #f77f00; }
-    .marc-seg.on-3 { background:#fcbf49; box-shadow:0 0 8px #fcbf49; }
-    .marc-seg.on-4 { background:#90be6d; box-shadow:0 0 8px #90be6d; }
-    .marc-seg.on-5 { background:#52b788; box-shadow:0 0 8px #52b788; }
+    .marc-seg.on-5 { background:#9b0000; box-shadow:0 0 8px #9b0000; }
+    .marc-seg.on-4 { background:#e63946; box-shadow:0 0 8px #e63946; }
+    .marc-seg.on-3 { background:#f77f00; box-shadow:0 0 8px #f77f00; }
+    .marc-seg.on-2 { background:#fcbf49; box-shadow:0 0 8px #fcbf49; }
+    .marc-seg.on-1 { background:#90be6d; box-shadow:0 0 8px #90be6d; }
+    .marc-seg.on-0 { background:#52b788; box-shadow:0 0 8px #52b788; }
     .marc-btns {
       display:flex; gap:0.65rem;
     }
@@ -473,8 +473,7 @@
       <div class="login-err" id="login-err">Contrasenya incorrecta.</div>
     </div>
     <div class="demo-note">
-      Sense SCRIPT_URL real: <button onclick="doDemo()">entrar en mode prova</button><br>
-      <span style="font-size:0.65rem; opacity:0.6;">(contrasenya de prova: <code>matadepera2025</code>)</span>
+      Mode sense servidor: <button onclick="doDemo()">entrar en mode prova</button>
     </div>
   </div>
 </div>
@@ -494,6 +493,7 @@
       <option value="3rE">3r E</option>
     </select>
     <select class="sess-sel" id="sess-sel" onchange="onSessioChange()">
+      <option value="TOTES">Totes les sessions</option>
       <option value="S1">S1 — El món s'apaga</option>
       <option value="S2">S2 — A qui creure?</option>
       <option value="S3">S3 — Qui decideix?</option>
@@ -505,6 +505,7 @@
     <button class="btn-refresh" onclick="refresca()">↻ Refrescar</button>
     <div class="topbar-sep"></div>
     <div class="topbar-docent" id="topbar-docent">Docent</div>
+    <button class="btn-refresh" onclick="doLogout()" style="color:var(--red); border-color:rgba(230,57,70,0.2);">↩ Sortir</button>
   </div>
 
   <div class="layout">
@@ -527,7 +528,7 @@
         <span class="sb-icon">💬</span> Per grup
       </button>
       <button class="sb-btn" id="nav-totes" onclick="showPanel('totes')">
-        <span class="sb-icon">🔍</span> Per alumne
+        <span class="sb-icon">📋</span> Totes (per grup)
       </button>
 
       <div class="sb-section">Manteniment</div>
@@ -548,7 +549,7 @@
           <div class="marc-display">
             <div class="marc-valor" id="marc-valor">0</div>
             <div class="marc-info">
-              <div class="marc-estat" id="marc-estat">Crisi màxima</div>
+              <div class="marc-estat" id="marc-estat">Crisi màxima (5)</div>
               <div class="marc-desc" id="marc-desc">El Consell comença a treballar. La crisi no s'ha resolt.</div>
             </div>
           </div>
@@ -561,20 +562,20 @@
             <div class="marc-seg" id="ms5"></div>
           </div>
           <div class="marc-btns">
-            <button class="btn-marc btn-baixar" id="btn-baixar" onclick="canviaMarcador(-1)">▼ Baixar un nivell</button>
-            <button class="btn-marc btn-pujar"  id="btn-pujar"  onclick="canviaMarcador(+1)">▲ Pujar un nivell</button>
+            <button class="btn-marc btn-baixar" id="btn-baixar" onclick="canviaMarcador(+1)">▲ Augmentar alerta</button>
+            <button class="btn-marc btn-pujar"  id="btn-pujar"  onclick="canviaMarcador(-1)">▼ Reduir alerta</button>
           </div>
           <div class="marc-saved" id="marc-saved"></div>
 
           <div style="margin-top:1.5rem; border-top:1px solid var(--border); padding-top:1.1rem;">
             <div style="font-family:'Rajdhani',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--dim); margin-bottom:0.75rem;">Referència de nivells</div>
             <div style="display:grid; gap:0.4rem;">
-              <div class="nivel-row" data-v="0" style="--lc:#9b0000;"><span class="niv-dot" style="background:#9b0000;"></span><span class="niv-val">0</span><span class="niv-txt">Crisi màxima</span></div>
-              <div class="nivel-row" data-v="1" style="--lc:#e63946;"><span class="niv-dot" style="background:#e63946;"></span><span class="niv-val">1</span><span class="niv-txt">Situació crítica</span></div>
-              <div class="nivel-row" data-v="2" style="--lc:#f77f00;"><span class="niv-dot" style="background:#f77f00;"></span><span class="niv-val">2</span><span class="niv-txt">Situació greu</span></div>
-              <div class="nivel-row" data-v="3" style="--lc:#fcbf49;"><span class="niv-dot" style="background:#fcbf49;"></span><span class="niv-val">3</span><span class="niv-txt">Millora moderada</span></div>
-              <div class="nivel-row" data-v="4" style="--lc:#90be6d;"><span class="niv-dot" style="background:#90be6d;"></span><span class="niv-val">4</span><span class="niv-txt">Bona evolució</span></div>
-              <div class="nivel-row" data-v="5" style="--lc:#52b788;"><span class="niv-dot" style="background:#52b788;"></span><span class="niv-val">5</span><span class="niv-txt">Crisi resolta</span></div>
+              <div class="nivel-row" data-v="5" style="--lc:#9b0000;"><span class="niv-dot" style="background:#9b0000;"></span><span class="niv-val">5</span><span class="niv-txt">Crisi màxima</span></div>
+              <div class="nivel-row" data-v="4" style="--lc:#e63946;"><span class="niv-dot" style="background:#e63946;"></span><span class="niv-val">4</span><span class="niv-txt">Situació crítica</span></div>
+              <div class="nivel-row" data-v="3" style="--lc:#f77f00;"><span class="niv-dot" style="background:#f77f00;"></span><span class="niv-val">3</span><span class="niv-txt">Situació greu</span></div>
+              <div class="nivel-row" data-v="2" style="--lc:#fcbf49;"><span class="niv-dot" style="background:#fcbf49;"></span><span class="niv-val">2</span><span class="niv-txt">Millora moderada</span></div>
+              <div class="nivel-row" data-v="1" style="--lc:#90be6d;"><span class="niv-dot" style="background:#90be6d;"></span><span class="niv-val">1</span><span class="niv-txt">Bona evolució</span></div>
+              <div class="nivel-row" data-v="0" style="--lc:#52b788;"><span class="niv-dot" style="background:#52b788;"></span><span class="niv-val">0</span><span class="niv-txt">Crisi resolta</span></div>
             </div>
             <div style="margin-top:0.85rem; font-size:0.8rem; line-height:1.65; color:var(--dim);">
               <strong style="color:var(--text);">Criteri pedagògic:</strong> puja quan els grups argumenten amb <em style="color:var(--acc);">valors</em> (justícia, democràcia, responsabilitat global), no només amb dades econòmiques o interessos pràctics. Reacciona al tancament de cada missió completada.
@@ -612,10 +613,16 @@
               <option value="5">Grup 5</option>
               <option value="6">Grup 6</option>
             </select>
+            <select class="sel" id="sel-tipus">
+              <option value="">Tots els tipus</option>
+              <option value="grupal">Grup</option>
+              <option value="individual">Individual</option>
+              <option value="bonus">Bonus</option>
+            </select>
             <button class="btn-load" onclick="carregaRespostesGrup()">Carregar</button>
           </div>
           <div id="resp-grup-body">
-            <div class="resp-empty">Selecciona grup i prem «Carregar».</div>
+            <div class="resp-empty">Selecciona grup i sessió i prem «Carregar».</div>
           </div>
         </div>
       </div>
@@ -623,17 +630,20 @@
       <!-- ── PANEL: TOTES ── -->
       <div class="panel view-none" id="panel-totes">
         <div class="panel-head">
-          <div class="panel-title">🔍 Per alumne — <span id="totes-sess-label">totes les sessions</span></div>
+          <div class="panel-title">📋 Totes les respostes — <span id="totes-sess-label">S1</span></div>
         </div>
         <div class="panel-body">
-          <p style="font-size:0.85rem; color:var(--dim); margin-bottom:1rem; line-height:1.6;">Escriu el nom o part del correu de l'alumne i prem «Cercar» per veure totes les seves respostes a la web (respostes de grup de totes les sessions).</p>
           <div class="filtre-row" style="margin-bottom:1rem;">
-            <input class="sel" id="inp-alumne" type="text" placeholder="Nom o correu de l'alumne..."
-              style="flex:2; font-family:'IBM Plex Sans',sans-serif;" onkeydown="if(event.key==='Enter')carregaPerAlumne()">
-            <button class="btn-load" onclick="carregaPerAlumne()">Cercar</button>
+            <select class="sel" id="sel-tipus-totes" style="max-width:200px;">
+              <option value="">Tots els tipus</option>
+              <option value="grupal">Grup</option>
+              <option value="individual">Individual</option>
+              <option value="bonus">Bonus</option>
+            </select>
+            <button class="btn-load" onclick="carregaTotes()">Carregar</button>
           </div>
           <div id="totes-body">
-            <div class="resp-empty">Escriu el nom o correu i prem «Cercar».</div>
+            <div class="resp-empty">Prem «Carregar» per veure totes les respostes de la sessió.</div>
           </div>
         </div>
       </div>
@@ -695,7 +705,7 @@
 // ══════════════════════════════════════════════════════════════════
 //  CONFIG
 // ══════════════════════════════════════════════════════════════════
-const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbxeCVZFCfXKGFGUFnDITdcXWM3bs4BvmAJfYVaIBNTp1v_P7p-687ImC8BEOCvU4Y5jRw/exec";
+const SCRIPT_URL  = "https://script.google.com/macros/s/AKfycbz533nbwDTQ5URTX8O2SD3d7-hFfF3Yd40yrNng7eR4nbrW-hiMqrD8_5zNm5MQxJEhCQ/exec";
 const CLAU_DOCENT = "matadepera2025";
 
 const SESSIONS = [
@@ -790,12 +800,12 @@ let cursActual    = '3rA';
 let clauDocent    = '';
 
 const MARC_INFO = {
-  0:{txt:'Crisi màxima',col:'#9b0000',desc:'El Consell comença. La crisi no s\'ha resolt.'},
-  1:{txt:'Situació crítica',col:'#e63946',desc:'La crisi és present i pressiona.'},
-  2:{txt:'Situació greu',col:'#f77f00',desc:'Hi ha progrés però la situació continua sent greu.'},
-  3:{txt:'Millora moderada',col:'#fcbf49',desc:'El Consell ha pres decisions ben argumentades.'},
-  4:{txt:'Bona evolució',col:'#90be6d',desc:'La proposta del Consell és sòlida i amb valors.'},
-  5:{txt:'Crisi resolta',col:'#52b788',desc:'El Consell ha demostrat pensament crític i responsabilitat.'},
+  5:{txt:'Crisi màxima',col:'#9b0000',desc:'El Consell comença. La crisi no s\'ha resolt.'},
+  4:{txt:'Situació crítica',col:'#e63946',desc:'La crisi és present i pressiona.'},
+  3:{txt:'Situació greu',col:'#f77f00',desc:'Hi ha progrés però la situació continua sent greu.'},
+  2:{txt:'Millora moderada',col:'#fcbf49',desc:'El Consell ha pres decisions ben argumentades.'},
+  1:{txt:'Bona evolució',col:'#90be6d',desc:'La proposta del Consell és sòlida i amb valors.'},
+  0:{txt:'Crisi resolta',col:'#52b788',desc:'El Consell ha demostrat pensament crític i responsabilitat.'},
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -871,10 +881,22 @@ function onCursChange() {
 
 function onSessioChange() {
   sessionActual = document.getElementById('sess-sel').value;
-  document.getElementById('grups-sess-label').textContent = sessionActual;
-  document.getElementById('totes-sess-label').textContent = sessionActual;
+  const label = sessionActual === 'TOTES' ? 'Totes les sessions' : sessionActual;
+  document.getElementById('grups-sess-label').textContent = label;
+  document.getElementById('totes-sess-label').textContent = label;
   const actiu = PANELS.find(p => !document.getElementById('panel-'+p).classList.contains('view-none'));
   if (actiu==='grups') carregaEstatGrups();
+  if (actiu==='grup-resp') carregaRespostesGrup();
+  if (actiu==='totes') carregaTotes();
+}
+
+function doLogout() {
+  if (!confirm('Vols tancar la sessió del tauler?')) return;
+  document.getElementById('app').classList.remove('on');
+  document.getElementById('scr-login').style.display = 'flex';
+  document.getElementById('inp-clau').value = '';
+  document.getElementById('login-err').style.display = 'none';
+  clauDocent = '';
 }
 
 function refresca() {
@@ -903,13 +925,13 @@ function renderMarcador(v) {
   document.getElementById('marc-desc').textContent  = info.desc;
   for (let i=0;i<=5;i++) {
     const seg = document.getElementById('ms'+i);
-    seg.className = 'marc-seg'+(i<=v?' on-'+v:'');
+    seg.className = 'marc-seg'+(i<v?' on-'+v:'');
   }
   document.querySelectorAll('.nivel-row').forEach(row => {
     row.classList.toggle('current', parseInt(row.dataset.v)===v);
   });
-  document.getElementById('btn-baixar').disabled = v<=0;
-  document.getElementById('btn-pujar').disabled  = v>=5;
+  document.getElementById('btn-baixar').disabled = v>=5;
+  document.getElementById('btn-pujar').disabled  = v<=0;
   marcadorActual = v;
 }
 
@@ -1061,66 +1083,38 @@ async function carregaEstatGrups() {
 //  RESPOSTES PER GRUP
 // ══════════════════════════════════════════════════════════════════
 async function carregaRespostesGrup() {
-  const grup = document.getElementById('sel-grup').value;
-  const body = document.getElementById('resp-grup-body');
+  const grup  = document.getElementById('sel-grup').value;
+  const tipus = document.getElementById('sel-tipus').value;
+  const body  = document.getElementById('resp-grup-body');
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
-  const r = await api('respostesGrup', { grup:grup||'', sessio:sessionActual, curs:cursActual, clau:clauDocent });
+  const r = await api('respostesGrup', { grup:grup||'', sessio:sessionActual==='TOTES'?'':sessionActual, curs:cursActual, clau:clauDocent });
   if (!r.ok) { body.innerHTML='<div class="resp-empty">Error carregant respostes.</div>'; return; }
-  const respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
+  let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
+  if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
   body.innerHTML = respostes.length
     ? `<div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div>`
     : '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  PER ALUMNE — cerca per nom o correu, totes les sessions
+//  TOTES LES RESPOSTES
 // ══════════════════════════════════════════════════════════════════
-async function carregaPerAlumne() {
-  const cerca = document.getElementById('inp-alumne').value.trim().toLowerCase();
+async function carregaTotes() {
+  const tipus = document.getElementById('sel-tipus-totes').value;
   const body  = document.getElementById('totes-body');
-  if (!cerca) { body.innerHTML='<div class="resp-empty">Escriu el nom o correu de l\'alumne.</div>'; return; }
-
-  body.innerHTML = '<div class="resp-loading">Cercant <span class="dots"><span></span><span></span><span></span></span></div>';
-
-  // Carregar totes les respostes del curs (sense filtre de sessió ni grup)
+  body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
   const resultats = await Promise.all(
-    [1,2,3,4,5,6].map(g => api('respostesGrup', { grup:g, sessio:'', curs:cursActual, clau:clauDocent }))
+    [1,2,3,4,5,6].map(g => api('respostesGrup', { grup:g, sessio:sessionActual, curs:cursActual, clau:clauDocent }))
   );
-
-  // Aplegar i filtrar per l'alumne cercat
-  let totes = [];
-  resultats.forEach(r => { if (r.ok) totes = totes.concat(r.respostes||[]); });
-  totes = totes.filter(rr =>
-    rr.tipus !== 'sistema' &&
-    ((rr.nom||'').toLowerCase().includes(cerca) || (rr.email||'').toLowerCase().includes(cerca))
-  );
-
-  if (!totes.length) {
-    body.innerHTML = '<div class="resp-empty">No s\'han trobat respostes per a «' + escHtml(cerca) + '».</div>';
-    return;
-  }
-
-  // Agrupar per sessió
-  const perSessio = {};
-  totes.forEach(rr => { (perSessio[rr.sessio] = perSessio[rr.sessio]||[]).push(rr); });
-  const sessions = ['S1','S2','S3','S4','S5','S6','S7'];
-
-  const nomAlumne = totes[0].nom || totes[0].email;
-  const grupAlumne = totes[0].grup;
-  let html = `<div style="font-family:'Rajdhani',sans-serif; font-size:0.78rem; color:var(--dim); margin-bottom:1rem; letter-spacing:0.06em; text-transform:uppercase;">
-    ${nomAlumne} &nbsp;·&nbsp; Grup ${grupAlumne} &nbsp;·&nbsp; ${totes.length} respostes trobades
-  </div>`;
-
-  sessions.forEach(s => {
-    const r = perSessio[s];
-    if (!r || !r.length) return;
-    html += `<div class="grup-block">
-      <div class="grup-block-head">${s}</div>
-      <div class="resp-list">${r.map(rr=>renderRespCard(rr)).join('')}</div>
-    </div>`;
+  let html = '';
+  resultats.forEach((r,idx)=>{
+    if (!r.ok) return;
+    let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
+    if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
+    if (!respostes.length) return;
+    html += `<div class="grup-block"><div class="grup-block-head">Grup ${idx+1}</div><div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div></div>`;
   });
-
-  body.innerHTML = html;
+  body.innerHTML = html || '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1180,7 +1174,7 @@ function renderRespCard(rr) {
   return `<div class="resp-card">
     <div class="resp-meta">
       <div class="resp-tag ${tagCls}">${tagLabel}</div>
-      <div class="resp-nom">Grup ${rr.grup} · ${rr.nom||rr.email}${ts?' · '+ts:''}</div>
+      <div class="resp-nom">${rr.nom||rr.email}${ts?' · '+ts:''}</div>
     </div>
     <div class="resp-q">${qLabel}</div>
     <div class="resp-r">${escHtml(rr.resposta||'')}</div>
