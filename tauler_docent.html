@@ -613,12 +613,6 @@
               <option value="5">Grup 5</option>
               <option value="6">Grup 6</option>
             </select>
-            <select class="sel" id="sel-tipus">
-              <option value="">Tots els tipus</option>
-              <option value="grupal">Grup</option>
-              <option value="individual">Individual</option>
-              <option value="bonus">Bonus</option>
-            </select>
             <button class="btn-load" onclick="carregaRespostesGrup()">Carregar</button>
           </div>
           <div id="resp-grup-body">
@@ -634,11 +628,8 @@
         </div>
         <div class="panel-body">
           <div class="filtre-row" style="margin-bottom:1rem;">
-            <select class="sel" id="sel-tipus-totes" style="max-width:200px;">
-              <option value="">Tots els tipus</option>
-              <option value="grupal">Grup</option>
-              <option value="individual">Individual</option>
-              <option value="bonus">Bonus</option>
+            <select class="sel" id="sel-alumne-totes" onchange="if(todesTotesData.length) renderTotes()">
+              <option value="">Tots els alumnes</option>
             </select>
             <button class="btn-load" onclick="carregaTotes()">Carregar</button>
           </div>
@@ -1083,14 +1074,12 @@ async function carregaEstatGrups() {
 //  RESPOSTES PER GRUP
 // ══════════════════════════════════════════════════════════════════
 async function carregaRespostesGrup() {
-  const grup  = document.getElementById('sel-grup').value;
-  const tipus = document.getElementById('sel-tipus').value;
-  const body  = document.getElementById('resp-grup-body');
+  const grup = document.getElementById('sel-grup').value;
+  const body = document.getElementById('resp-grup-body');
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
   const r = await api('respostesGrup', { grup:grup||'', sessio:sessionActual==='TOTES'?'':sessionActual, curs:cursActual, clau:clauDocent });
   if (!r.ok) { body.innerHTML='<div class="resp-empty">Error carregant respostes.</div>'; return; }
-  let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
-  if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
+  const respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
   body.innerHTML = respostes.length
     ? `<div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div>`
     : '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
@@ -1099,22 +1088,59 @@ async function carregaRespostesGrup() {
 // ══════════════════════════════════════════════════════════════════
 //  TOTES LES RESPOSTES
 // ══════════════════════════════════════════════════════════════════
+let todesTotesData = [];
+
 async function carregaTotes() {
-  const tipus = document.getElementById('sel-tipus-totes').value;
-  const body  = document.getElementById('totes-body');
+  const body = document.getElementById('totes-body');
   body.innerHTML = '<div class="resp-loading">Carregant <span class="dots"><span></span><span></span><span></span></span></div>';
   const resultats = await Promise.all(
     [1,2,3,4,5,6].map(g => api('respostesGrup', { grup:g, sessio:sessionActual, curs:cursActual, clau:clauDocent }))
   );
-  let html = '';
-  resultats.forEach((r,idx)=>{
+
+  todesTotesData = [];
+  resultats.forEach((r, idx) => {
     if (!r.ok) return;
-    let respostes = (r.respostes||[]).filter(rr=>rr.tipus!=='sistema');
-    if (tipus) respostes = respostes.filter(rr=>rr.tipus===tipus);
-    if (!respostes.length) return;
-    html += `<div class="grup-block"><div class="grup-block-head">Grup ${idx+1}</div><div class="resp-list">${respostes.map(rr=>renderRespCard(rr)).join('')}</div></div>`;
+    const respostes = (r.respostes||[]).filter(rr => rr.tipus !== 'sistema');
+    respostes.forEach(rr => todesTotesData.push({ ...rr, grup: rr.grup || idx+1 }));
   });
-  body.innerHTML = html || '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
+
+  // Poblar selector d'alumnes (individuals, no grupal)
+  const vists = new Map();
+  todesTotesData.filter(rr => rr.tipus !== 'grupal').forEach(rr => {
+    if (!vists.has(rr.email)) vists.set(rr.email, rr.nom || rr.email);
+  });
+  const alumnes = [...vists.entries()].sort((a,b) => a[1].localeCompare(b[1]));
+  const sel = document.getElementById('sel-alumne-totes');
+  sel.innerHTML = '<option value="">Tots els alumnes</option>' +
+    alumnes.map(([email, nom]) => `<option value="${email.replace(/"/g,'&quot;')}">${escHtml(nom)}</option>`).join('');
+
+  renderTotes();
+}
+
+function renderTotes() {
+  const body   = document.getElementById('totes-body');
+  const alumne = document.getElementById('sel-alumne-totes').value;
+
+  if (alumne) {
+    // Vista per alumne: totes les seves respostes individuals
+    const respostes = todesTotesData.filter(rr => rr.email === alumne);
+    body.innerHTML = respostes.length
+      ? `<div class="resp-list">${respostes.map(rr => renderRespCard(rr)).join('')}</div>`
+      : '<div class="resp-empty">No hi ha respostes per a aquest alumne.</div>';
+  } else {
+    // Vista per grup (comportament original)
+    const byGrup = {};
+    todesTotesData.forEach(rr => {
+      const g = rr.grup || '?';
+      if (!byGrup[g]) byGrup[g] = [];
+      byGrup[g].push(rr);
+    });
+    let html = '';
+    Object.keys(byGrup).sort((a,b) => parseInt(a)-parseInt(b)).forEach(g => {
+      html += `<div class="grup-block"><div class="grup-block-head">Grup ${g}</div><div class="resp-list">${byGrup[g].map(rr => renderRespCard(rr)).join('')}</div></div>`;
+    });
+    body.innerHTML = html || '<div class="resp-empty">No hi ha respostes per als filtres seleccionats.</div>';
+  }
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -1168,7 +1194,7 @@ async function doReset() {
 // ══════════════════════════════════════════════════════════════════
 function renderRespCard(rr) {
   const tagCls   = {grupal:'rt-grup',individual:'rt-ind',bonus:'rt-bon'}[rr.tipus]||'';
-  const tagLabel = {grupal:'Grup',individual:'Individual',bonus:'Bonus'}[rr.tipus]||rr.tipus;
+  const tagLabel = rr.tipus==='grupal' ? ('Grup '+(rr.grup||'')) : ({individual:'Individual',bonus:'Bonus'}[rr.tipus]||rr.tipus);
   const qLabel   = PREGUNTES_LABEL[rr.pregunta]||rr.pregunta;
   const ts = rr.timestamp ? new Date(rr.timestamp).toLocaleTimeString('ca',{hour:'2-digit',minute:'2-digit'}) : '';
   return `<div class="resp-card">

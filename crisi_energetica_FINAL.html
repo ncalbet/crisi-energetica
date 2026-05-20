@@ -989,6 +989,7 @@
   <div class="h-user">
     <span id="h-nom">—</span>
     <span class="h-grup" id="h-grup">—</span>
+    <button class="btn-hist" id="btn-back" onclick="goBack()" title="Tornar a la pàgina anterior" style="display:none;">← Tornar</button>
     <button class="btn-hist" onclick="go('scr-historial')" title="Revisar sessions anteriors">📋 Historial</button>
     <button class="btn-logout" onclick="doLogout()" title="Tancar sessió">↩ Sortir</button>
   </div>
@@ -2570,7 +2571,19 @@ const MARC = {
 // ─────────────────────────────────────────
 //  NAVEGACIÓ
 // ─────────────────────────────────────────
+const navHistory = [];
+let _goingBack = false;
+
 function go(id) {
+  // Guardar pantalla actual a l'historial (excepte login i espera)
+  if (!_goingBack) {
+    const current = document.querySelector('.screen.on');
+    if (current && current.id !== 'scr-login' && current.id !== 'scr-espera'
+        && id !== 'scr-login' && id !== 'scr-espera') {
+      navHistory.push(current.id);
+    }
+  }
+
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
   const scr = document.getElementById(id);
   if (!scr) return;
@@ -2583,6 +2596,10 @@ function go(id) {
 
   // Header
   document.getElementById('header').classList.toggle('vis', id !== 'scr-login');
+
+  // Botó tornar: visible si hi ha historial i no som al login
+  const btnBack = document.getElementById('btn-back');
+  if (btnBack) btnBack.style.display = (navHistory.length > 0 && id !== 'scr-login') ? '' : 'none';
 
   // Historial: guardar pantalla activa i gestionar mode lectura
   if (id !== 'scr-historial') ultimaPantallaActiva = id;
@@ -2601,6 +2618,14 @@ function go(id) {
   if (id === 'scr-s2-rol') renderRolCard();
   if (id === 'scr-s4-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS4RolCard(); }
   if (id === 'scr-s5-rol') { user && (user.posicio = user.posicioEfectiva || user.posicio); renderS5RolCard(); }
+}
+
+function goBack() {
+  if (!navHistory.length) return;
+  const prev = navHistory.pop();
+  _goingBack = true;
+  go(prev);
+  _goingBack = false;
 }
 
 // ─────────────────────────────────────────
@@ -2815,6 +2840,7 @@ function doLogout() {
   if (!confirm('Vols tancar la sessió? El teu progrés s\'ha guardat.')) return;
   user = null;
   sessioOberta = 'S1';
+  navHistory.length = 0;
   if (esperaTimer) clearInterval(esperaTimer);
   // Buidar formulari login
   document.getElementById('inp-nom').value = '';
